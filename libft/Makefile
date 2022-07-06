@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/02 01:28:06 by crazyd            #+#    #+#              #
-#    Updated: 2022/07/04 17:28:45 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/05 15:59:28 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = ft_bzero.c		\
 		ft_tolower.c	\
 		ft_strchr.c		\
 		ft_strrchr.c	\
+		ft_strcmp.c		\
 		ft_strncmp.c	\
 		ft_strlcpy.c	\
 		ft_strlcat.c	\
