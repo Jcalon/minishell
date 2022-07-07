@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/07/06 18:09:39 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/07 15:47:39 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,9 @@ SRCS 	=	srcs/main.c	\
 			srcs/parsing/syntax_error.c \
 			srcs/builtin.c \
 			srcs/exec.c \
-			srcs/utils.c
+			srcs/utils.c \
+			srcs/signal.c \
+			srcs/history.c
 
 OBJS 	= ${SRCS:.c=.o}
 
@@ -36,7 +38,7 @@ all: 	${NAME}
 ${NAME}: ${OBJS}
 		@echo "----Compiling lib----"
 		@make re -C libft --no-print-directory
-		@$(CC) $(CFLAGS) ${OBJS} -Llibft -lft ${INCLUDES} -o ${NAME}
+		@$(CC) $(CFLAGS) ${OBJS} -Llibft -lft -lreadline ${INCLUDES} -o ${NAME}
 		@echo "\nminishell Compiled!\n"
 
 clean:

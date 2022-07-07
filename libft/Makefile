@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/02 01:28:06 by crazyd            #+#    #+#              #
-#    Updated: 2022/07/05 15:59:28 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/07 16:40:18 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,8 @@ SRCS = ft_bzero.c		\
 		ft_print_conv.c	\
 		ft_print_conv_2.c \
 		get_next_line.c	\
-		ft_strcpy.c
+		ft_strcpy.c		\
+		ft_join_more.c
 
 SRCSB = ft_lstnew.c	\
 		ft_lstadd_back.c	\

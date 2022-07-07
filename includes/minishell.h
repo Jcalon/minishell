@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/06 18:53:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/07 17:14:13 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,28 @@
 # include <errno.h>
 # include <stdbool.h>
 # include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 # include <sys/wait.h>
 # include <signal.h>
 # include <linux/limits.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
+typedef struct s_global
+{
+	char	**env;
+	int		child_pid;
+	int		return_code;
+}			t_global;
+
+extern t_global	g_global;
 
 typedef struct s_pipe
 {
 	char			*str;
 	struct s_pipe	*next;
-}						t_pipe;
+}					t_pipe;
 
 typedef struct s_separate
 {
@@ -33,6 +46,13 @@ typedef struct s_separate
 	t_pipe				*pipe;
 	struct s_separate	*next;
 }						t_separate;
+
+char	*ft_prompt(void);
+
+void	handler(int sig_num);
+
+void	ft_add_history(char *buffer);
+void	ft_load_history(void);
 
 void	exec(t_separate *list);
 
@@ -50,5 +70,6 @@ void	builtin_exit(void);
 
 void	free_array(char	**array);
 int		error_msg(char *str, int i, char c);
+void	ft_exit(void);
 
 #endif

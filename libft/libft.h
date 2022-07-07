@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:07:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/05 15:59:11 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/07 16:38:52 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strdup(const char *src);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
+void	ft_join_more(char **str, char *new_value);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *str, char *c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));

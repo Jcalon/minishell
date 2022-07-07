@@ -6,54 +6,63 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/06 18:53:53 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/07 19:42:13 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	prompt(void)
+t_global	g_global;
+
+char	*ft_prompt(void)
 {
 	char	*tmp;
+	char	*str;
 	size_t	len;
 	size_t	count_slash;
 
-	ft_putstr_fd("\033[32;1m", 1);
-	ft_putstr_fd("minishell", 1);
-	ft_putstr_fd("@\033[0m:", 1);
-	tmp = getcwd(NULL, 0);
-	len = ft_strlen(tmp);
+	tmp = ft_strdup("\033[32;1mminishell@\033[0m:\e[1;34m");
+	str = getcwd(NULL, 0);
+	len = ft_strlen(str);
 	count_slash = 0;
 	while (--len && count_slash < 3)
-		if (tmp[len] == '/')
+		if (str[len] == '/')
 			count_slash++;
-	ft_putstr_fd("\e[1;34m", 1);
-	while (tmp[++len])
-		ft_putchar_fd(tmp[len], 1);
-	ft_putstr_fd("$\e[0m ", 1);
-	free(tmp);
+	ft_join_more(&tmp, str + len + 2);
+	ft_join_more(&tmp, "$\e[0m ");
+	free(str);
+	return (tmp);
 }
 
 int	main(void)
 {
 	char		*buffer;
+	char		*prompt;
 	t_separate	list;
 
 	list.next = NULL;
 	list.pipe = NULL;
 	list.str = NULL;
-	prompt();
-	buffer = get_next_line(STDIN_FILENO);
-	while (buffer)
+	signal(SIGINT, handler);
+	signal(SIGQUIT, handler);
+	ft_load_history();
+	while (1)
 	{
+		prompt = ft_prompt();
+		buffer = readline(prompt);
+			// 	if (!in)
+			// ft_exit(0);
+		if (!buffer)
+			ft_exit();
+		if (buffer[0])
+			ft_add_history(buffer);
 		if (syntax_error(buffer, '|') != -1 && syntax_error(buffer, ';') != -1)
 		{
 			parsing(buffer, &list);
 			exec(&list);
 		}
-		prompt();
 		free(buffer);
-		buffer = get_next_line(STDIN_FILENO);
+		free(prompt);
 	}
 	free (buffer);
 	return (0);

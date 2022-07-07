@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/06 18:28:44 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/07 17:10:16 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ static int	syntax_error_newline(char *str, size_t i)
 
 static int	syntax_error_last(char *str, size_t i, char c)
 {
+	if (i == 0)
+		return (-1);
 	i--;
 	if (str[i] && str[i] == '|')
 		return (error_msg(str, i, c));
