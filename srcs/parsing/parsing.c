@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/06 18:32:17 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/08 14:26:31 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static size_t		find_pipe(char *str, char c)
 			return (i);
 		i++;
 	}
-	return (-1);
+	return (0);
 }
 
 static t_separate	*add_list(char	*sep)
@@ -75,6 +75,8 @@ static t_separate	*add_list(char	*sep)
 	new->next = NULL;
 	new->str = ft_strdup(sep);
 	new->pipe = NULL;
+	new->in = NULL;
+	new->out = NULL;
 	if (find_pipe(new->str, '|'))
 		new->pipe = make_pipe(new);
 	else

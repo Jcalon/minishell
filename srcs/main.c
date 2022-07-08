@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/07 19:42:13 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/08 16:49:22 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,16 @@ char	*ft_prompt(void)
 	return (tmp);
 }
 
+char	**get_path()
+{
+	char	*path;
+	char	**paths;
+
+	path = ft_strdup(getenv("PATH"));
+	paths = ft_split(path, ":");
+	return (paths);
+}
+
 int	main(void)
 {
 	char		*buffer;
@@ -43,6 +53,7 @@ int	main(void)
 	list.next = NULL;
 	list.pipe = NULL;
 	list.str = NULL;
+	g_global.env = get_path();
 	signal(SIGINT, handler);
 	signal(SIGQUIT, handler);
 	ft_load_history();
@@ -54,7 +65,7 @@ int	main(void)
 			// ft_exit(0);
 		if (!buffer)
 			ft_exit();
-		if (buffer[0])
+		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
 			ft_add_history(buffer);
 		if (syntax_error(buffer, '|') != -1 && syntax_error(buffer, ';') != -1)
 		{

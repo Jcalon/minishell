@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/07 17:14:13 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/08 14:20:26 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <string.h>
 # include <linux/limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -45,7 +46,21 @@ typedef struct s_separate
 	char				*str;
 	t_pipe				*pipe;
 	struct s_separate	*next;
+	char				*in;
+	char				*out;
 }						t_separate;
+
+typedef struct s_data
+{
+	int		*bouts;
+	char	*cmdpath;
+	pid_t	*pids;
+	int		fdin;
+	int		fdout;
+	char	**cmd;
+	int		cmds;
+	int		here_doc;
+}				t_data;
 
 char	*ft_prompt(void);
 
@@ -55,6 +70,11 @@ void	ft_add_history(char *buffer);
 void	ft_load_history(void);
 
 void	exec(t_separate *list);
+void	exec_cmd(char **cmd);
+void	exec_pipe(t_separate *list);
+bool	is_builtin(char *cmd);
+char	*get_absolute_path(char **cmd);
+void	exec_builtin(char **builtin);
 
 void	parsing(char *cmd_line, t_separate *list);
 int		syntax_error(char *str, char c);
@@ -71,5 +91,13 @@ void	builtin_exit(void);
 void	free_array(char	**array);
 int		error_msg(char *str, int i, char c);
 void	ft_exit(void);
+
+char	*errinfo(char *str1, char *str2);
+int		errmsg(char *str1, char *str2, char *str3);
+int		cmderr(char *str1, char *str2, char *str3);
+void	ft_error(t_data *pipex, int err);
+void	close_files(t_data *pipex);
+void	children(t_data *pipex, t_pipe *pipe, int i);
+int		parent(t_data *pipex, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/06 18:52:39 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/08 17:10:01 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,44 +63,31 @@ void	exec_cmd(char **cmd)
 	else
 	{
 		if (execve(cmd[0], cmd, NULL) == -1)
-			perror("shell");
+			perror("minishell");
 		exit(EXIT_FAILURE);
 	}
 }
 
 char	*get_absolute_path(char **cmd)
 {
-	char	*path;
-	char	**paths;
 	char	*cmd_absolute;
 	char	*tmp;
 	size_t	i;
 
 	if (access(cmd[0], F_OK | X_OK) == 0)
 		return (cmd[0]);
-	path = ft_strdup(getenv("PATH"));
-	if (path == NULL)
-		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
-	paths = ft_split(path, ":");
-	free(path);
 	i = 0;
-	while (paths[i])
+	while (g_global.env[i])
 	{
-		tmp = ft_strjoin(paths[i], "/");
+		tmp = ft_strjoin(g_global.env[i], "/");
 		if (!tmp)
-		{
-			free(paths);
 			return (cmd[0]);
-		}
 		cmd_absolute = ft_strjoin(tmp, cmd[0]);
 		free(tmp);
 		if (!cmd_absolute)
 			return (cmd[0]);
 		if (access(cmd_absolute, X_OK) == 0)
-		{
-			free(cmd[0]);
 			return (cmd_absolute);
-		}
 		free(cmd_absolute);
 		i++;
 	}
@@ -114,16 +101,21 @@ void	exec(t_separate *list)
 	list = list->next;
 	while (list)
 	{
-		cmd = ft_split(list->str, " \n\t");
-		if (cmd[0] == NULL)
-			ft_printf("Command not found\n");
-		else if (is_builtin(cmd[0]) == false)
+		if (list->pipe == NULL)
 		{
-			cmd[0] = get_absolute_path(cmd);
-			exec_cmd(cmd);
+			cmd = ft_split(list->str, " \n\t");
+			if (cmd[0] == NULL)
+				ft_printf("Command not found\n");
+			else if (is_builtin(cmd[0]) == false)
+			{
+				cmd[0] = get_absolute_path(cmd);
+				exec_cmd(cmd);
+			}
+			else
+				exec_builtin(cmd);
 		}
 		else
-			exec_builtin(cmd);
+			exec_pipe(list);
 		list = list->next;
 	}
 }
