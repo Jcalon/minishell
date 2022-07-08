@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/08 16:49:22 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/08 17:13:46 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,11 @@ int	main(void)
 		if (!buffer)
 			ft_exit();
 		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
+		{
+			if (buffer[ft_strlen(buffer) - 1] == '\n')
+				buffer[ft_strlen(buffer) - 1] = '\0';
 			ft_add_history(buffer);
+		}
 		if (syntax_error(buffer, '|') != -1 && syntax_error(buffer, ';') != -1)
 		{
 			parsing(buffer, &list);
