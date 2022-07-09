@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/08 17:10:01 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/09 17:18:38 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	is_builtin(char *cmd)
 void	exec_builtin(char **builtin)
 {
 	if (!ft_strcmp(builtin[0], "echo"))
-		builtin_echo(builtin[1]);
+		builtin_echo(builtin);
 	else if (!ft_strcmp(builtin[0], "cd"))
 		builtin_cd(builtin[1]);
 	else if (!ft_strcmp(builtin[0], "pwd"))
@@ -109,7 +109,10 @@ void	exec(t_separate *list)
 			else if (is_builtin(cmd[0]) == false)
 			{
 				cmd[0] = get_absolute_path(cmd);
-				exec_cmd(cmd);
+				if (cmd[0] == NULL)
+					cmderr("command not found", ": ", cmd[0]);
+				else
+					exec_cmd(cmd);
 			}
 			else
 				exec_builtin(cmd);

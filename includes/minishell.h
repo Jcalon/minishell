@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/08 14:20:26 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/09 16:44:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	parsing(char *cmd_line, t_separate *list);
 int		syntax_error(char *str, char c);
 size_t	in_quote(char *str, size_t i);
 
-void	builtin_echo(char *options);
+void	builtin_echo(char **options);
 void	builtin_cd(char	*path);
 void	builtin_pwd(void);
 void	builtin_export(void);

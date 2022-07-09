@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/07/08 13:07:05 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/09 14:00:55 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,13 +17,13 @@ SRCS 	=	srcs/main.c	\
 			srcs/parsing/parsing.c \
 			srcs/parsing/init.c \
 			srcs/parsing/syntax_error.c \
-			srcs/builtin.c \
-			srcs/exec.c \
+			srcs/exec/builtin.c \
+			srcs/exec/exec.c \
 			srcs/utils.c \
 			srcs/signal.c \
 			srcs/history.c \
-			srcs/pipe.c	\
-			srcs/children.c \
+			srcs/exec/pipe.c	\
+			srcs/exec/children.c \
 			srcs/error.c
 
 OBJS 	= ${SRCS:.c=.o}
