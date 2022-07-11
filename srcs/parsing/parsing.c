@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/08 14:26:31 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/11 17:58:35 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_pipe	*make_pipe(t_separate *sep)
 	size_t	i;
 
 	i = 1;
-	cmds = ft_split(sep->str, "|");
+	cmds = ft_split_minishell(sep->str, "|");
 	pipe = add_pipe(cmds[0]);
 	tmp = pipe;
 	while (cmds[i])
@@ -45,7 +45,7 @@ static t_pipe	*make_pipe(t_separate *sep)
 	return (pipe);
 }
 
-static size_t		find_pipe(char *str, char c)
+static size_t	find_pipe(char *str, char c)
 {
 	size_t		i;
 
@@ -92,7 +92,7 @@ void	parsing(char *cmd_line, t_separate *list)
 
 	i = 0;
 	tmp = list;
-	sep = ft_split(cmd_line, ";");
+	sep = ft_split_minishell(cmd_line, ";");
 	while (sep[i])
 	{
 		tmp->next = add_list(sep[i]);

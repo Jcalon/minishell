@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/09 17:18:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/11 19:54:32 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,30 @@ bool	is_builtin(char *cmd)
 	return (false);
 }
 
-void	exec_builtin(char **builtin)
+void	exec_builtin(char **cmd)
 {
-	if (!ft_strcmp(builtin[0], "echo"))
-		builtin_echo(builtin);
-	else if (!ft_strcmp(builtin[0], "cd"))
-		builtin_cd(builtin[1]);
-	else if (!ft_strcmp(builtin[0], "pwd"))
+	if (!ft_strcmp(cmd[0], "echo"))
+		builtin_echo(cmd);
+	else if (!ft_strcmp(cmd[0], "cd"))
+		builtin_cd(cmd[1]);
+	else if (!ft_strcmp(cmd[0], "pwd"))
 		builtin_pwd();
-	else if (!ft_strcmp(builtin[0], "export"))
+	else if (!ft_strcmp(cmd[0], "export"))
 		builtin_export();
-	else if (!ft_strcmp(builtin[0], "unset"))
+	else if (!ft_strcmp(cmd[0], "unset"))
 		builtin_unset();
-	else if (!ft_strcmp(builtin[0], "env"))
+	else if (!ft_strcmp(cmd[0], "env"))
 		builtin_env();
-	else if (!ft_strcmp(builtin[0], "exit"))
-		builtin_exit();
+	else if (!ft_strcmp(cmd[0], "exit"))
+	{
+		if (cmd[1] != NULL)
+			builtin_exit(cmd[1]);
+		else
+		{
+			ft_putendl_fd("exit", 2);
+			exit(0);
+		}
+	}
 }
 
 void	exec_cmd(char **cmd)
@@ -72,20 +80,18 @@ char	*get_absolute_path(char **cmd)
 {
 	char	*cmd_absolute;
 	char	*tmp;
+	char	**paths;
 	size_t	i;
 
 	if (access(cmd[0], F_OK | X_OK) == 0)
 		return (cmd[0]);
 	i = 0;
-	while (g_global.env[i])
+	paths = get_path();
+	while (paths[i])
 	{
-		tmp = ft_strjoin(g_global.env[i], "/");
-		if (!tmp)
-			return (cmd[0]);
+		tmp = ft_strjoin(paths[i], "/");
 		cmd_absolute = ft_strjoin(tmp, cmd[0]);
 		free(tmp);
-		if (!cmd_absolute)
-			return (cmd[0]);
 		if (access(cmd_absolute, X_OK) == 0)
 			return (cmd_absolute);
 		free(cmd_absolute);
@@ -97,22 +103,29 @@ char	*get_absolute_path(char **cmd)
 void	exec(t_separate *list)
 {
 	char	**cmd;
+	char	*cmdpath;
 
 	list = list->next;
 	while (list)
 	{
 		if (list->pipe == NULL)
 		{
-			cmd = ft_split(list->str, " \n\t");
+			cmd = ft_split_minishell(list->str, " \n\t");
+			if (ft_strcmp(cmd[0], "echo"))
+				clear_quote(cmd);
 			if (cmd[0] == NULL)
 				ft_printf("Command not found\n");
 			else if (is_builtin(cmd[0]) == false)
 			{
-				cmd[0] = get_absolute_path(cmd);
-				if (cmd[0] == NULL)
+				cmdpath = get_absolute_path(cmd);
+				if (cmdpath == NULL)
 					cmderr("command not found", ": ", cmd[0]);
 				else
+				{
+					free(cmd[0]);
+					cmd[0] = cmdpath;
 					exec_cmd(cmd);
+				}
 			}
 			else
 				exec_builtin(cmd);

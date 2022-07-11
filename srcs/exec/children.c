@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/09 17:25:16 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/11 19:55:24 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ int	parent(t_data *pipex, int i)
 
 static void	exec_child(t_data *pipex, t_pipe *pipe)
 {
-	pipex->cmd = ft_split(pipe->str, " \n\t");
+	pipex->cmd = ft_split_minishell(pipe->str, " \n\t");
+	if (ft_strcmp(pipex->cmd[0], "echo"))
+		clear_quote(pipex->cmd);
 	if (!pipex->cmd)
 		ft_error(pipex, errmsg("Unexpected error", "", ""));
 	if (is_builtin(pipex->cmd[0]) == true)

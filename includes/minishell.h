@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/09 16:44:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/11 18:39:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,13 @@ void	parsing(char *cmd_line, t_separate *list);
 int		syntax_error(char *str, char c);
 size_t	in_quote(char *str, size_t i);
 
-void	builtin_echo(char **options);
-void	builtin_cd(char	*path);
-void	builtin_pwd(void);
-void	builtin_export(void);
-void	builtin_unset(void);
-void	builtin_env(void);
-void	builtin_exit(void);
+int		builtin_echo(char **options);
+int		builtin_cd(char	*path);
+int		builtin_pwd(void);
+int		builtin_export(void);
+int		builtin_unset(void);
+int		builtin_env(void);
+int		builtin_exit(char *str);
 
 void	free_array(char	**array);
 int		error_msg(char *str, int i, char c);
@@ -99,5 +99,12 @@ void	ft_error(t_data *pipex, int err);
 void	close_files(t_data *pipex);
 void	children(t_data *pipex, t_pipe *pipe, int i);
 int		parent(t_data *pipex, int i);
+
+void	get_env(char **envp);
+char	**get_path();
+char	*ft_getenv(char *str);
+char	**ft_split_minishell(char const *s, char *c);
+
+void	clear_quote(char **cmd);
 
 #endif

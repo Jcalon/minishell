@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/09 17:05:10 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/11 14:42:46 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 // 		ft_printf("%s\n", path);
 // }
 
-void	builtin_echo(char **cmd)
+int	builtin_echo(char **cmd)
 {
 	size_t	i;
 	size_t	j;
@@ -53,15 +53,17 @@ void	builtin_echo(char **cmd)
 		i++;
 	}
 	write(1, "\n", 1);
+	return (0);
 }
 
-void	builtin_cd(char	*path)
+int	builtin_cd(char	*path)
 {
 	if (chdir(path) == -1)
 		perror("cd");
+	return (0);
 }
 
-void	builtin_pwd(void)
+int	builtin_pwd(void)
 {
 	char	cwd[PATH_MAX];
 
@@ -69,24 +71,55 @@ void	builtin_pwd(void)
 		ft_printf("%s\n", cwd);
 	else
 		perror("pwd");
+	return (0);
 }
 
-void	builtin_export(void)
+int	builtin_export(void)
 {
 	ft_printf("export\n");
+	return (0);
 }
 
-void	builtin_unset(void)
+int	builtin_unset(void)
 {
 	ft_printf("unset\n");
+	return (0);
 }
 
-void	builtin_env(void)
+int	builtin_env(void)
 {
-	ft_printf("env\n");
+	size_t	i;
+
+	i = 0;
+	while (g_global.env[i])
+	{
+		ft_putendl_fd(g_global.env[i], 1);
+		i++;
+	}
+	return (0);
 }
 
-void	builtin_exit(void)
+int	builtin_exit(char *status)
 {
-	ft_printf("exit\n");
+	size_t	i;
+
+	i = 0;
+	while (status[i])
+	{
+		if (!ft_isdigit(status[i]))
+			break ;
+		i++;
+	}
+	if (i != ft_strlen(status))
+	{
+		printf("minishell: exit: %s: numeric argument required\n", status);
+		ft_putendl_fd("exit", 2);
+		exit(2);
+	}
+	else
+	{
+		ft_putendl_fd("exit", 2);
+		exit(ft_atoi(status));
+	}
+	return (0);
 }
