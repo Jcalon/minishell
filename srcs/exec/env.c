@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 14:12:44 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/12 15:17:14 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ char	*ft_get_var_env(char *str, size_t len)
 	{
 		i++;
 	}
-	return (g_global.env[i] + len);
+	if (g_global.env[i])
+		return (g_global.env[i] + len + 1);
+	else
+		return (NULL);
 }
 
 char	*ft_getenv(char *str)

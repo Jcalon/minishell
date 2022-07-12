@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 14:13:21 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/12 15:22:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,28 @@ static char	*replace_by_code_var_env(char *cmd)
 	size_t	new_size;
 	size_t	i;
 	size_t	j;
+	size_t	m;
 	char	*tmp;
 	char	*env;
 
 	env = ft_itoa(g_global.return_code);
 	size_var = ft_strlen(env) - 1;
-	new_size = size_var + ft_strlen(cmd) - 2;
+	new_size = size_var + ft_strlen(cmd);
 	tmp = malloc(sizeof(char) * new_size);
 	j = 0;
 	i = 0;
+	m = 0;
 	while (cmd[j])
 	{
 		while (cmd[j] && cmd[j] != '$')
 			tmp[i++] = cmd[j++];
 		j += 2;
-		while (*env)
-			tmp[i++] = *env++;
+		while (env[m])
+			tmp[i++] = env[m++];
 		while (cmd[j] && cmd[j] != '$')
 			tmp[i++] = cmd[j++];
 	}
+	tmp[i] = '\0';
 	free(cmd);
 	free(env);
 	return (tmp);
@@ -48,56 +51,59 @@ static char	*replace_var_env(char *cmd, size_t i, size_t j)
 	size_t	new_size;
 	size_t	k;
 	size_t	l;
+	size_t	m;
 	char	*tmp;
 	char	*env;
 
 	env = ft_strdup(ft_get_var_env((cmd + j), (i - j)));
 	size_var = ft_strlen(env) - 1;
-	new_size = size_var + ft_strlen(cmd) - (i - j) - 1;
+	new_size = size_var + ft_strlen(cmd) - (i - j) + 1;
 	tmp = malloc(sizeof(char) * new_size);
 	l = 0;
 	k = 0;
+	m = 0;
 	while (cmd[l])
 	{
 		while (cmd[l] && cmd[l] != '$')
 			tmp[k++] = cmd[l++];
-		l += (i - j);
-		while (*env)
-			tmp[k++] = *env++;
-		while (cmd[l] && cmd[l] != '$')
+		l = i;
+		while (env[m])
+			tmp[k++] = env[m++];
+		while (cmd[l])
 			tmp[k++] = cmd[l++];
 	}
+	tmp[k] = '\0';
 	free(cmd);
 	free(env);
 	return (tmp);
 }
 
-static int	check_var_env(char	*cmd)
+static int	check_var_env(char	**cmds, size_t index)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
-	while (cmd[i])
+	while (cmds[index][i])
 	{
-		j = (in_quote(cmd, i));
-		if (j == ft_strlen(cmd))
+		j = (in_quote(cmds[index], i));
+		if (j == ft_strlen(cmds[index]))
 			break;
 		else if (i < j)
 			i = j;
-		if (cmd[i] == '$')
+		if (cmds[index][i] == '$')
 		{
 			j = ++i;
-			while (cmd[i] && ft_isalnum(cmd[i]))
+			while (cmds[index][i] && ft_isalnum(cmds[index][i]))
 				i++;
-			if (ft_get_var_env((cmd + j), (i - j)))
+			if (ft_get_var_env((cmds[index] + j), (i - j)))
 			{
-				cmd = replace_var_env(cmd, i, j);
+				cmds[index] = replace_var_env(cmds[index], i, j);
 				return (1);
 			}
-			else if (cmd[i] && cmd[i] == '?')
+			else if (cmds[index][i] && cmds[index][i] == '?')
 			{
-				cmd = replace_by_code_var_env(cmd);
+				cmds[index] = replace_by_code_var_env(cmds[index]);
 				return (1);
 			}
 		}
@@ -117,7 +123,7 @@ void	do_var_env(char **cmds)
 		{
 			while (1)
 			{
-				if (!check_var_env(cmds[i]))
+				if (!check_var_env(cmds, i))
 					break;
 			}
 		}
