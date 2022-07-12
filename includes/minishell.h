@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 18:39:17 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/12 13:00:57 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int		parent(t_data *pipex, int i);
 void	get_env(char **envp);
 char	**get_path();
 char	*ft_getenv(char *str);
+char	*ft_get_var_env(char *str, size_t len);
+void	do_var_env(char **cmds);
 char	**ft_split_minishell(char const *s, char *c);
 
 void	clear_quote(char **cmd);

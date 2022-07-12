@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 19:54:32 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/12 14:02:18 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void	exec(t_separate *list)
 		if (list->pipe == NULL)
 		{
 			cmd = ft_split_minishell(list->str, " \n\t");
+			do_var_env(cmd);
 			if (ft_strcmp(cmd[0], "echo"))
 				clear_quote(cmd);
 			if (cmd[0] == NULL)

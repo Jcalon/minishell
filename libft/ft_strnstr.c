@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:40:39 by jcalon            #+#    #+#             */
-/*   Updated: 2022/05/04 09:47:22 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/12 12:22:26 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,9 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 			pt = (char *)big + i;
 			j = 0;
 			while (big[i + j] == little[j] && i + j < len)
-			{
-				if (little[j + 1] == 0)
-					return (pt);
 				j++;
-			}
+			if (i + j == len)
+				return (pt);
 			pt = 0;
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:22:29 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 17:39:24 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/12 11:32:23 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	countword(char const *str, char *c)
 	while (str[i] != '\0')
 	{
 		while (str[i] && is_c(str[i], c))
-				i++;
+			i++;
 		if (str[i])
 			count++;
 		while (str[i] && !is_c(str[i], c))

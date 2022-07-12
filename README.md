@@ -4,8 +4,8 @@ Prompt : OK
 Historique : OK
 Récuperer le PATH : A faire
 Une variable globale : OK
-Gérer ' :
-Gérer " :
+Gérer ' : Ok
+Gérer " : Ok
 Implémenter les redirections :
 Implémenter les pipes : OK
 Gérer les variables $ :
@@ -15,7 +15,7 @@ Gérer les signaux : OK
 BUILTINS :
 echo
 cd
-pwd
+pwd Ok
 export
 unset
 env
