@@ -12,7 +12,7 @@ Gérer ' : Ok
 
 Gérer " : Ok
 
-Implémenter les redirections :
+Implémenter les redirections : KO
 
 Implémenter les pipes : OK
 
@@ -22,19 +22,21 @@ Gérer $? : OK
 
 Gérer les signaux : OK
 
+Code erreur : KO
+
 
 BUILTINS :
 
-echo
+echo : KO
 
 cd : Ok
 
 pwd : Ok
 
-export
+export : KO
 
-unset
+unset : KO
 
-env
+env : KO
 
 exit : OK
