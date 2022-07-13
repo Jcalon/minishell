@@ -2,15 +2,15 @@ A FAIRE :
 
 Prompt : OK
 
-Historique : OK
+Historique : OK -> check le decalage
 
 Récuperer le PATH : OK
 
 Une variable globale : OK
 
-Gérer ' : Ok
+Gérer ' : Ok ->check pas fermé
 
-Gérer " : Ok
+Gérer " : Ok -> check pas fermé
 
 Implémenter les redirections : KO
 
@@ -20,23 +20,25 @@ Gérer les variables $ : OK
 
 Gérer $? : OK
 
-Gérer les signaux : OK
+Gérer les signaux : OK -> des check a faire pour cat
 
-Code erreur : KO
+Code erreur : KO -> Faire un gros check global et les chasser a la fin
 
 
-BUILTINS :
+BUILTINS : -> Gérer les too many args
 
-echo : KO
+echo : KO -> Gérer les $
 
-cd : Ok
+cd : OK
 
-pwd : Ok
+pwd : OK
 
-export : KO
+export : OK -> rajouter concatenage
 
-unset : KO
+unset : OK
 
 env : OK
 
-exit : OK
+exit : OK -> A améliorer
+
+LEAKS : KO

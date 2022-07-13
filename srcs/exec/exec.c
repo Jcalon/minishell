@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 12:54:04 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/13 16:33:11 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	exec_builtin(char **cmd)
 	else if (!ft_strcmp(cmd[0], "export"))
 		builtin_export(cmd);
 	else if (!ft_strcmp(cmd[0], "unset"))
-		builtin_unset();
+		builtin_unset(cmd);
 	else if (!ft_strcmp(cmd[0], "env"))
 		builtin_env(false);
 	else if (!ft_strcmp(cmd[0], "exit"))
@@ -56,17 +56,16 @@ void	exec_builtin(char **cmd)
 
 void	exec_cmd(char **cmd)
 {
-	pid_t	pid;
 	int		status;
 
 	status = 0;
-	pid = fork();
-	if (pid == -1)
+	g_global.child_pid = fork();
+	if (g_global.child_pid == -1)
 		perror("fork");
-	else if (pid > 0)
+	else if (g_global.child_pid > 0)
 	{
-		waitpid(pid, &status, 0);
-		kill(pid, SIGTERM);
+		waitpid(g_global.child_pid, &status, 0);
+		kill(g_global.child_pid, SIGTERM);
 	}
 	else
 	{
@@ -112,8 +111,8 @@ void	exec(t_separate *list)
 	{
 		if (list->pipe == NULL)
 		{
-			cmd = ft_split_minishell(list->str, " \n\t");
 			do_var_env(cmd);
+			cmd = ft_split_minishell(list->str, " \n\t");
 			if (ft_strcmp(cmd[0], "echo"))
 				clear_quote(cmd);
 			if (cmd[0] == NULL)

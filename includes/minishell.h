@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 12:17:46 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/13 15:08:50 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,11 @@ int		builtin_echo(char **options);
 int		builtin_cd(char	*path);
 int		builtin_pwd(void);
 int		builtin_export(char **cmd);
-int		builtin_unset(void);
+int		builtin_unset(char **cmd);
 int		builtin_env(bool export);
 int		builtin_exit(char *str);
+int		check_double_env(char *str, size_t len);
+size_t	ft_strlen_equal(const char *s);
 
 void	free_array(char	**array);
 int		error_msg(char *str, int i, char c);
