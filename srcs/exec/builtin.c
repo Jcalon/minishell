@@ -6,19 +6,11 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 14:42:46 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/13 11:41:11 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void	builtin_echo(char *path)
-// {
-// 	if (path == NULL)
-// 		ft_printf("\n");
-// 	else
-// 		ft_printf("%s\n", path);
-// }
 
 int	builtin_echo(char **cmd)
 {
@@ -71,31 +63,6 @@ int	builtin_pwd(void)
 		ft_printf("%s\n", cwd);
 	else
 		perror("pwd");
-	return (0);
-}
-
-int	builtin_export(void)
-{
-	ft_printf("export\n");
-	return (0);
-}
-
-int	builtin_unset(void)
-{
-	ft_printf("unset\n");
-	return (0);
-}
-
-int	builtin_env(void)
-{
-	size_t	i;
-
-	i = 0;
-	while (g_global.env[i])
-	{
-		ft_putendl_fd(g_global.env[i], 1);
-		i++;
-	}
 	return (0);
 }
 

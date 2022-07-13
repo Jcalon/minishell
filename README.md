@@ -37,6 +37,6 @@ export : KO
 
 unset : KO
 
-env : KO
+env : OK
 
 exit : OK

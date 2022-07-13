@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 15:10:30 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/13 12:54:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ void	exec_builtin(char **cmd)
 	else if (!ft_strcmp(cmd[0], "pwd"))
 		builtin_pwd();
 	else if (!ft_strcmp(cmd[0], "export"))
-		builtin_export();
+		builtin_export(cmd);
 	else if (!ft_strcmp(cmd[0], "unset"))
 		builtin_unset();
 	else if (!ft_strcmp(cmd[0], "env"))
-		builtin_env();
+		builtin_env(false);
 	else if (!ft_strcmp(cmd[0], "exit"))
 	{
 		if (cmd[1] != NULL)
@@ -87,6 +87,8 @@ char	*get_absolute_path(char **cmd)
 		return (cmd[0]);
 	i = 0;
 	paths = get_path();
+	if (paths == NULL)
+		return (NULL);
 	while (paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");

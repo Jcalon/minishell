@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 15:17:14 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/13 12:52:22 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,13 @@ char	**get_path()
 	char	*path;
 	char	**paths;
 
-	path = ft_strdup(ft_getenv("PATH"));
-	paths = ft_split(path, ":");
+	if (g_global.env[0] == NULL)
+		return (NULL);
+	if (ft_getenv("PATH"))
+	{
+		path = ft_strdup(ft_getenv("PATH"));
+		paths = ft_split(path, ":");
+	}
 	return (paths);
 }
 
@@ -55,7 +60,7 @@ void	get_env(char **envp)
 	i = 0;
 	while (envp[i])
 		i++;
-	g_global.env = malloc(sizeof(char *) * (i + 1));
+	g_global.env = ft_calloc(sizeof(char *), (i + 1));
 	i = 0;
 	while (envp[i])
 	{

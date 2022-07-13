@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:07:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/08 12:05:08 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/13 11:38:20 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ char	**ft_split(char const *str, char *c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	ft_strcpy(const char *src, char *dest);
+size_t	ft_array_size(char **array);
+void	ft_free_array(char **array);
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
