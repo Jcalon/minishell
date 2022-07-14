@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 15:59:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 13:01:08 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,28 @@ int	builtin_echo(char **cmd)
 int	builtin_cd(char	*path)
 {
 	if (chdir(path) == -1)
-		perror("cd");
+		g_global.return_code = errmsg("cd: ", path, ": No such file or directory");
+	else
+		g_global.return_code = 0;
 	return (0);
 }
 
-int	builtin_pwd(void)
+int	builtin_pwd(char **cmd)
 {
 	char	cwd[PATH_MAX];
 
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	if (ft_array_size(cmd) != 1)
+	{
+		g_global.return_code = 2;
+		errmsg("pwd: ", "too many args", NULL);
+	}
+	else if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
 		ft_printf("%s\n", cwd);
+		g_global.return_code = 0;
+	}
 	else
-		perror("pwd");
+		g_global.return_code = errmsg("pwd: ", "unexpected error", NULL);
 	return (0);
 }
 
