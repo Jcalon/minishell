@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 12:40:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 20:20:03 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ size_t	num_to_export(char	**cmd)
 	while (cmd[i])
 	{
 		if (ft_isalpha(cmd[i][0]) && !check_double_env(cmd[i], ft_strlen_equal(cmd[i])))
-			if (cmd[i][ft_strlen_equal(cmd[i])] != '+')
 				count++;
 		i++;
 	}
@@ -62,15 +61,41 @@ void	update_double(char	**cmd)
 	}
 }
 
+char	*concat_new(char *cmd)
+{
+	size_t	i;
+	size_t	j;
+	char	*new;
+	int		plus;
+
+	i = 0;
+	j = 0;
+	plus = 0;
+	new = malloc(sizeof(char) * ft_strlen(cmd));
+	while (cmd[i])
+	{
+		if (cmd[i] == '+' && plus == 0)
+		{
+			plus++;
+			i++;
+		}
+		new[j++] = cmd[i++];
+	}
+	new[j] = '\0';
+	return (new);
+}
+
 int	builtin_export(char	**cmd)
 {
 	size_t	i;
 	size_t	j;
 	size_t	size;
 	int		err;
+	bool	update;
 	char	**new_env;
 
 	err = 0;
+	update = true;
 	if (!cmd[1])
 		builtin_env(true);
 	else
@@ -92,14 +117,23 @@ int	builtin_export(char	**cmd)
 			if (!ft_isalpha(cmd[j][0]))
 				err = errmsg("export: ", cmd[j], ": not a valid identifier");	
 			else if (!check_double_env(cmd[j], ft_strlen_equal(cmd[j])))
-				new_env[i++] = ft_strdup(cmd[j]);
+			{
+				if (!ft_strnstr(cmd[j], "+", ft_strlen_equal(cmd[j]) + 1))
+					new_env[i++] = ft_strdup(cmd[j]);
+				else
+				{
+					new_env[i++] = concat_new(cmd[j]);
+					update = false;
+				}
+			}
 			j++;
 		}
 		new_env[i] = NULL;
 		ft_free_array(g_global.env);
 		g_global.env = new_env;
 	}
-	update_double(cmd);
+	if (update == true)
+		update_double(cmd);
 	g_global.return_code = err;
 	return (0);
 }

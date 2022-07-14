@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 12:58:45 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 17:41:43 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int		builtin_pwd(char **cmd);
 int		builtin_export(char **cmd);
 int		builtin_unset(char **cmd);
 int		builtin_env(bool export);
-int		builtin_exit(char *str);
+int		builtin_exit(char **str);
 int		check_double_env(char *str, size_t len);
 size_t	ft_strlen_equal(const char *s);
 

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 15:18:45 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 18:29:23 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ int	main(int argc, char *argv[], char *envp[])
 // {
 // 	char	**test;
 	
-// 	test = ft_split_minishell("echo lol | 'l's", "|");
-// 	clear_quote(test);
+// 	test = ft_split_minishell("export a='test$test'", ";");
+// 	// clear_quote(test);
 // 	for (int i = 0; test[i]; i++)
 // 		ft_putendl_fd(test[i], 1);
 // }

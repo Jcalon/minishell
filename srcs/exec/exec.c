@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 14:40:27 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 19:04:25 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,7 @@ void	exec_builtin(char **cmd)
 		else
 			g_global.return_code = errmsg("env: ", "too many args", NULL);
 	else if (!ft_strcmp(cmd[0], "exit"))
-	{
-		if (cmd[1] != NULL)
-			builtin_exit(cmd[1]);
-		else
-		{
-			ft_putendl_fd("exit", 2);
-			exit(0);
-		}
-	}
+			builtin_exit(cmd);
 }
 
 void	exec_cmd(char **cmd)

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 15:56:22 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 19:26:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,26 @@ static char	*replace_var_env(char *cmd, size_t i, size_t j)
 	return (tmp);
 }
 
-static int	check_var_env(char	**cmds, size_t index)
+int	counterr(int err)
+{
+	int	count;
+
+	count = 1;
+	while (err > 9)
+	{
+		count++;
+		err /= 10;
+	}
+	return (count);
+}
+
+static int	check_var_env(char	**cmds, size_t index, size_t check)
 {
 	size_t	i;
 	size_t	j;
+	size_t	k;
 
-	i = 0;
+	i = check;
 	while (cmds[index][i])
 	{
 		j = (in_quote(cmds[index], i));
@@ -98,13 +112,14 @@ static int	check_var_env(char	**cmds, size_t index)
 				i++;
 			if (ft_get_var_env((cmds[index] + j), (i - j)))
 			{
+				k = ft_strlen(ft_get_var_env((cmds[index] + j), (i - j)));
 				cmds[index] = replace_var_env(cmds[index], i, j);
-				return (1);
+				return (j + k - 1);
 			}
 			else if (cmds[index][i] && cmds[index][i] == '?')
 			{
 				cmds[index] = replace_by_code_var_env(cmds[index]);
-				return (1);
+				return(j + counterr(g_global.return_code) - 1);
 			}
 		}
 		i++;
@@ -115,15 +130,18 @@ static int	check_var_env(char	**cmds, size_t index)
 void	do_var_env(char **cmds)
 {
 	size_t	i;
+	size_t	checkpoint;
 
 	i = 0;
+	checkpoint = 0;
 	while (cmds[i])
 	{
 		if (ft_strchr(cmds[i], '$'))
 		{
 			while (1)
 			{
-				if (!check_var_env(cmds, i))
+				checkpoint = check_var_env(cmds, i, checkpoint);
+				if (!checkpoint)
 					break;
 			}
 		}

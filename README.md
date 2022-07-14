@@ -25,9 +25,9 @@ Gérer les signaux : OK -> des check a faire pour cat
 Code erreur : KO -> Faire un gros check global et les chasser a la fin
 
 
-BUILTINS : -> Gérer les too many args
+BUILTINS :
 
-echo : KO -> Gérer les $
+echo : OK
 
 cd : OK
 
@@ -39,6 +39,6 @@ unset : OK
 
 env : OK
 
-exit : OK -> A améliorer
+exit : OK
 
 LEAKS : KO

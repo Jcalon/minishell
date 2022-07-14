@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 13:51:26 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 18:08:49 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,35 @@ int	builtin_pwd(char **cmd)
 	return (0);
 }
 
-int	builtin_exit(char *status)
+int	builtin_exit(char **status)
 {
 	size_t	i;
 
 	i = 0;
-	while (status[i])
+	if (status[1][i] == '-')
+		i++;
+	while (status[1][i])
 	{
-		if (!ft_isdigit(status[i]))
+		if (!ft_isdigit(status[1][i]))
 			break ;
 		i++;
 	}
-	if (i != ft_strlen(status))
+	if (i != ft_strlen(status[1]) || ft_strlen(status[1]) > 12)
 	{
-		printf("minishell: exit: %s: numeric argument required\n", status);
 		ft_putendl_fd("exit", 2);
+		errmsg("exit: ", status[1], ": numeric argument required");
 		exit(2);
+	}
+	else if (ft_array_size(status) == 2)
+	{
+		ft_putendl_fd("exit", 2);
+		exit(ft_atoi(status[1]));
 	}
 	else
 	{
 		ft_putendl_fd("exit", 2);
-		exit(ft_atoi(status));
+		g_global.return_code = errmsg("exit: ", "too many args", NULL);
+		return (1);
 	}
 	return (0);
 }
