@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 14:01:29 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 14:41:21 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	parent(t_data *pipex, int i)
 
 static void	exec_child(t_data *pipex, t_pipe *pipe)
 {
+	do_var_env(&pipe->str);
 	pipex->cmd = ft_split_minishell(pipe->str, " \n\t");
-	do_var_env(pipex->cmd);
 	if (ft_strcmp(pipex->cmd[0], "echo"))
 		clear_quote(pipex->cmd);
 	if (!pipex->cmd)

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:22:29 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/12 11:32:23 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 14:40:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static int	countword(char const *str, char *c)
 {
 	int		count;
 	size_t	i;
+	size_t	j;
 
 	count = 0;
 	i = 0;
@@ -41,10 +42,15 @@ static int	countword(char const *str, char *c)
 			count++;
 		while (str[i] && !is_c(str[i], c))
 		{
-			if ((i = (in_quote((char *)str, i))) == ft_strlen(str))
+			if ((j = (in_quote((char *)str, i))) == ft_strlen(str))
+			{
+				i = j;
 				break ;
-			else
+			}
+			else if (i == j)
 				i++;
+			else if (i < j)
+				i = j;
 		}
 	}
 	return (count);
@@ -53,15 +59,19 @@ static int	countword(char const *str, char *c)
 static int	countletter(char const *s, char *c)
 {
 	int	i;
+	int	j;
 
 	i = 0;
 	while (s[i])
 	{
 		if (is_c(s[i], c))
 			break ;
-		if ((i = ((int)in_quote((char *)s, i))) == (int)ft_strlen(s))
+		if ((j = ((int)in_quote((char *)s, i))) == (int)ft_strlen(s))
 			break ;
-		i++;
+		else if (i == j)
+			i++;
+		else if (i < j)
+			i = j;
 	}
 	return (i);
 }
