@@ -33,7 +33,7 @@ cd : OK
 
 pwd : OK
 
-export : OK -> rajouter concatenage
+export : OK
 
 unset : OK
 

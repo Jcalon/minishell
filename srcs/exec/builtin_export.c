@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 15:08:41 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 12:40:38 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ size_t	num_to_export(char	**cmd)
 	while (cmd[i])
 	{
 		if (ft_isalpha(cmd[i][0]) && !check_double_env(cmd[i], ft_strlen_equal(cmd[i])))
-			count++;
+			if (cmd[i][ft_strlen_equal(cmd[i])] != '+')
+				count++;
 		i++;
 	}
 	return (count);
@@ -40,6 +41,14 @@ void	update_double(char	**cmd)
 		while (cmd[i])
 		{
 			if (!ft_strncmp(g_global.env[j], cmd[i], ft_strlen_equal(cmd[i]))
+				&& ft_strlen_equal(g_global.env[j]) == ft_strlen_equal(cmd[i])
+					&& cmd[i][ft_strlen_equal(cmd[i]) + 1] == '='
+						&& cmd[i][ft_strlen_equal(cmd[i]) + 2] != '\0'
+							&& cmd[i][ft_strlen_equal(cmd[i])] == '+')
+			{
+				ft_join_more(&g_global.env[j], (cmd[i] + ft_strlen_equal(cmd[i]) + 2));
+			}
+			else if (!ft_strncmp(g_global.env[j], cmd[i], ft_strlen_equal(cmd[i]))
 				&& ft_strlen_equal(g_global.env[j]) == ft_strlen_equal(cmd[i])
 					&& cmd[i][ft_strlen_equal(cmd[i])] == '='
 						&& cmd[i][ft_strlen_equal(cmd[i]) + 1] != '\0')

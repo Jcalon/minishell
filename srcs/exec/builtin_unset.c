@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 15:37:49 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/14 12:29:48 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ size_t	ft_strlen_equal(const char *s)
 	while (s[i] != '\0')
 	{
 		if (s[i] == '=')
-			break ;	
+			break ;
 		i++;
 	}
+	if (s[i] == '=' && s[i - 1] == '+')
+		return (i - 1);
 	return (i);
 }
 
