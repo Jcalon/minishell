@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:53:46 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 15:46:24 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 14:54:56 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	handle_process(int sig_num)
 	{
 		if (sig_num == SIGQUIT)
 		{
-			ft_putstr_fd("Quit: 3\n", 1);
+			ft_putstr_fd("Quit (core dumped)\n", 2);
 			g_global.return_code = 131;
 		}
 		else if (sig_num == SIGINT)

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 19:04:25 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 12:04:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	exec_builtin(char **cmd)
 	if (!ft_strcmp(cmd[0], "echo"))
 		builtin_echo(cmd);
 	else if (!ft_strcmp(cmd[0], "cd"))
-		builtin_cd(cmd[1]);
+		builtin_cd(cmd);
 	else if (!ft_strcmp(cmd[0], "pwd"))
 		builtin_pwd(cmd);
 	else if (!ft_strcmp(cmd[0], "export"))

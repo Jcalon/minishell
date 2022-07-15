@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 18:44:00 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 11:56:49 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	builtin_echo(char **cmd)
 					j++;
 				}
 			}
-			if (cmd[i][j] && cmd[i][j] == '$')
+			if (cmd[i][j] && cmd[i][j] == '$' && c != '\'')
 			{
 				if (cmd[i][j + 1] && cmd[i][j + 1] == '?')
 				{
@@ -83,7 +83,7 @@ int	builtin_echo(char **cmd)
 					ft_putstr_fd(ft_get_var_env(cmd[i] + j, k), 1);
 					j += k - 1;
 				}
-				else
+				else if (cmd[i][j + 1] != '\'' && cmd[i][j + 1] != '\"')
 				{
 					write(1, "$", 1);
 					j++;

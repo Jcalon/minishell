@@ -8,9 +8,9 @@ Récuperer le PATH : OK
 
 Une variable globale : OK
 
-Gérer ' : Ok ->check pas fermé
+Gérer ' : Ok
 
-Gérer " : Ok -> check pas fermé
+Gérer " : Ok
 
 Implémenter les redirections : KO
 

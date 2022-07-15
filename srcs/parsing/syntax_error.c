@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 17:19:41 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 12:21:29 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,39 @@ size_t	in_quote(char *str, size_t i)
 			i++;
 	}
 	return (i);
+}
+
+static int	syntax_error_quote(char *str)
+{
+	size_t	i;
+	char	c;
+	bool	closed;
+
+	i = 0;
+	closed = true;
+	while (str[i])
+	{
+		if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		{
+			c = str[i];
+			closed = false;
+			i++;
+			if (str[i] && str[i] == c)
+				closed = true;
+			else
+			{
+				while (str[i] && str[i] != c)
+					i++;
+				if (str[i] && str[i] == c)
+					closed = true;
+			}
+		}
+		if (str[i])
+			i++;
+	}
+	if (closed == false)
+		return (errmsg("syntax error: ", "quote doesn't guard", NULL));
+	return (0);
 }
 
 static int	syntax_error_redir(char *str, char c)
@@ -81,13 +114,16 @@ static int	syntax_error_newline(char *str, size_t i)
 static int	syntax_error_last(char *str, size_t i, char c)
 {
 	if (i == 0)
-		return (-1);
+		return (1);
 	i--;
 	if (str[i] && str[i] == '|')
 		return (error_msg(str, i, c));
-	if (syntax_error_redir(str, '>') == -1 || syntax_error_redir(str, '<') == -1
-		|| syntax_error_newline(str, i) == -1)
-		return (-1);
+	if (syntax_error_redir(str, '>') || syntax_error_redir(str, '<')
+		|| syntax_error_newline(str, i) || syntax_error_quote(str))
+	{
+		g_global.return_code = 2;
+		return (1);
+	}
 	return (0);
 }
 

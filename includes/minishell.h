@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 17:41:43 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 15:21:29 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ typedef struct s_separate
 	char				*str;
 	t_pipe				*pipe;
 	struct s_separate	*next;
-	char				*in;
-	char				*out;
+	char				**in;
+	char				**out;
 }						t_separate;
 
 typedef struct s_data
@@ -81,7 +81,7 @@ int		syntax_error(char *str, char c);
 size_t	in_quote(char *str, size_t i);
 
 int		builtin_echo(char **options);
-int		builtin_cd(char	*path);
+int		builtin_cd(char	**path);
 int		builtin_pwd(char **cmd);
 int		builtin_export(char **cmd);
 int		builtin_unset(char **cmd);

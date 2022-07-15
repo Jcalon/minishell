@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/13 16:23:45 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 12:17:31 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_getenv(char *str)
 	size_t	i;
 
 	i = 0;
-	while (g_global.env[i] && !ft_strnstr(g_global.env[i], str, ft_strlen(str)))
+	while (g_global.env[i] && ft_strncmp(g_global.env[i], str, ft_strlen(str)))
 		i++;
 	if (!g_global.env[i])
 		return (NULL);

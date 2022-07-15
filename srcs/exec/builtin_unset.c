@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 12:29:48 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/15 11:30:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ size_t	num_to_unset(char	**cmd)
 	while (cmd[i])
 	{
 		if (ft_isalpha(cmd[i][0])
-			&& cmd[i][ft_strlen_equal(cmd[i])] != '='
 				&& check_double_env(cmd[i], ft_strlen_equal(cmd[i])))
 		{
 			count++;	
@@ -94,9 +93,7 @@ int	builtin_unset(char **cmd)
 		j = 1;
 		dup = true;
 		while (cmd[j])
-		{
-			if (!ft_isalpha(cmd[j][0]) || cmd[j][ft_strlen_equal(cmd[j])] == '=')
-				err = errmsg("unset: ", cmd[j], ": not a valid identifier");	
+		{	
 			if (ft_strnstr(g_global.env[i], cmd[j], ft_strlen(cmd[j]))
 				&& (ft_strlen_equal(g_global.env[i]) == ft_strlen(cmd[j])))
 				dup = false;
@@ -106,7 +103,7 @@ int	builtin_unset(char **cmd)
 			new_env[k++] = ft_strdup(g_global.env[i]);
 		i++;
 	}
-	new_env[i] = NULL;
+	new_env[k] = NULL;
 	ft_free_array(g_global.env);
 	g_global.env = new_env;
 	g_global.return_code = err;
