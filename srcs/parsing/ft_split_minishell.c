@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:22:29 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 18:30:13 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/16 17:58:23 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	countword(char const *str, char *c)
 			}
 			else if (i < j)
 				i = j;
-			if (i == j)
+			else
 				i++;
 		}
 	}
@@ -73,7 +73,7 @@ static int	countletter(char const *s, char *c)
 		}
 		else if (i < j)
 			i = j;
-		if (i == j)
+		else
 			i++;
 	}
 	return (i);

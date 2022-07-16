@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/02 01:28:06 by crazyd            #+#    #+#              #
-#    Updated: 2022/07/13 11:38:35 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/16 16:56:54 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS = ft_bzero.c		\
 		ft_isalnum.c	\
 		ft_isascii.c	\
 		ft_isprint.c	\
+		ft_iswhitespace.c \
 		ft_toupper.c	\
 		ft_tolower.c	\
 		ft_strchr.c		\

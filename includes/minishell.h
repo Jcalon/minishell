@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 15:21:29 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/16 18:46:44 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ typedef struct s_separate
 	struct s_separate	*next;
 	char				**in;
 	char				**out;
+	int					fdin;
+	int					fdout;
+	int					heredoc;
 }						t_separate;
 
 typedef struct s_data
@@ -70,7 +73,6 @@ void	ft_add_history(char *buffer);
 void	ft_load_history(void);
 
 void	exec(t_separate *list);
-void	exec_cmd(char **cmd);
 void	exec_pipe(t_separate *list);
 bool	is_builtin(char *cmd);
 char	*get_absolute_path(char **cmd);
@@ -110,5 +112,7 @@ void	do_var_env(char **cmds);
 char	**ft_split_minishell(char const *s, char *c);
 
 void	clear_quote(char **cmd);
+
+void	get_fd_redir(char **cmds, t_separate *list);
 
 #endif

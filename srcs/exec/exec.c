@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 12:04:17 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/16 18:48:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	exec_builtin(char **cmd)
 			builtin_exit(cmd);
 }
 
-void	exec_cmd(char **cmd)
+void	exec_cmd(char **cmd, t_separate *list)
 {
 	int		status;
 
@@ -64,6 +64,10 @@ void	exec_cmd(char **cmd)
 	}
 	else
 	{
+		if (dup2(list->fdin, STDIN_FILENO) == -1)
+			g_global.return_code = 1;
+		if (list->fdin != -1)
+		close(list->fdin);
 		if (execve(cmd[0], cmd, NULL) == -1)
 			perror("minishell");
 		exit(EXIT_FAILURE);
@@ -107,21 +111,33 @@ void	exec(t_separate *list)
 		if (list->pipe == NULL)
 		{
 			do_var_env(&list->str);
+			get_fd_redir(&list->str, list);
+			if (list->in)
+				clear_quote(list->in);
 			cmd = ft_split_minishell(list->str, " \n\t");
 			if (ft_strcmp(cmd[0], "echo"))
 				clear_quote(cmd);
+			if (list->in)
+			{
+				list->fdin = open(list->in[0], O_RDONLY);
+				if (list->fdin == -1)
+				{
+					g_global.return_code = errmsg(list->in[0], ": ", "No such file or directory");
+					break ;
+				}
+			}
 			if (cmd[0] == NULL)
-				ft_printf("Command not found\n");
+				g_global.return_code = cmderr("command not found", ": null", NULL);
 			else if (is_builtin(cmd[0]) == false)
 			{
 				cmdpath = get_absolute_path(cmd);
 				if (cmdpath == NULL)
-					cmderr("command not found", ": ", cmd[0]);
+					g_global.return_code = cmderr("command not found", ": ", cmd[0]);
 				else
 				{
 					free(cmd[0]);
 					cmd[0] = cmdpath;
-					exec_cmd(cmd);
+					exec_cmd(cmd, list);
 				}
 			}
 			else

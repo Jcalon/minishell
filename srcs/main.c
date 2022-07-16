@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 10:25:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/16 18:39:20 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ int	main(int argc, char *argv[], char *envp[])
 	list.next = NULL;
 	list.pipe = NULL;
 	list.str = NULL;
+	list.in = NULL;
+	list.out = NULL;
+	list.fdin = -1;
+	list.fdout = -1;
 	g_global.return_code = 0;
 	get_env(envp);
 	signal(SIGINT, handler);
