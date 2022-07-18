@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 18:18:05 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 18:53:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data 
 		g_global.return_code = errmsg(list->in[0], ": ", strerror(errno));
 		return (-1);
 	}
-	printf("fd %d\n", list->fdin);
 	if (pipex && list->fdin != 0)
 		pipex->fdin = list->fdin;
 	newline = malloc(sizeof(char) * (ft_strlen(cmds[ind]) - len - whitespace + 1));

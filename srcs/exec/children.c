@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 18:11:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 19:18:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@ static void	exec_child(t_data *pipex)
 	if (!pipex->cmd)
 		ft_error(pipex, errmsg("Unexpected error", "", ""));
 	if (is_builtin(pipex->cmd[0]) == true)
-	{
 		exec_builtin(pipex->cmd);
-		exit(1);
-	}
 	if (access(pipex->cmd[0], F_OK | X_OK) == 0)
 		pipex->cmdpath = ft_strdup(pipex->cmd[0]);
 	else
@@ -77,7 +74,6 @@ void	children(t_data *pipex, int i)
 	}
 	else if (i == pipex->cmds - 1)
 	{
-		printf("CMD2 %d\n", pipex->fdin);
 		if (pipex->fdin != 0)
 		{
 			if (dup2(pipex->fdin, STDIN_FILENO) == -1)

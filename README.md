@@ -12,7 +12,7 @@ Gérer ' : Ok
 
 Gérer " : Ok
 
-Implémenter les redirections : KO
+Implémenter les redirections : > OK < OK >> KO << KO
 
 Implémenter les pipes : OK
 
@@ -41,4 +41,11 @@ env : OK
 
 exit : OK
 
-LEAKS : KO
+
+
+LEAKS
+MAXI KO
+
+
+NORMINETTE
+GIGA KO

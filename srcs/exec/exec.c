@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 17:51:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 19:25:11 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ void	exec_builtin(char **cmd)
 			g_global.return_code = errmsg("env: ", "too many args", NULL);
 	else if (!ft_strcmp(cmd[0], "exit"))
 			builtin_exit(cmd);
+	exit(g_global.return_code);
 }
 
-void	exec_cmd(char **cmd, t_separate *list)
+void	exec_cmd(char **cmd, t_separate *list, bool builtin)
 {
 	int		status;
 
@@ -76,8 +77,13 @@ void	exec_cmd(char **cmd, t_separate *list)
 				g_global.return_code = 1;
 			close(list->fdout);
 		}
-		if (execve(cmd[0], cmd, NULL) == -1)
-			perror("minishell");
+		if (builtin == false)
+		{
+			if (execve(cmd[0], cmd, NULL) == -1)
+				perror("minishell");
+		}
+		else if (builtin == true)
+			exec_builtin(cmd);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -118,6 +124,8 @@ void	exec_no_pipe(t_separate *list)
 		return ;
 	if (list->in)
 		clear_quote(list->in);
+	if (list->str[0] == '\0')
+		return ;
 	cmd = ft_split_minishell(list->str, " \n\t");
 	if (ft_strcmp(cmd[0], "echo"))
 		clear_quote(cmd);
@@ -132,11 +140,11 @@ void	exec_no_pipe(t_separate *list)
 		{
 			free(cmd[0]);
 			cmd[0] = cmdpath;
-			exec_cmd(cmd, list);
+			exec_cmd(cmd, list, false);
 		}
 	}
 	else
-		exec_builtin(cmd);
+		exec_cmd(cmd, list, true);
 }
 
 void	exec(t_separate *list)
