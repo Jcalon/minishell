@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 12:18:54 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 14:40:56 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,30 +60,36 @@ int	builtin_exit(char **status)
 	size_t	i;
 
 	i = 0;
-	if (status[1][i] == '-')
+	if (status[1] && status[1][i] == '-')
 		i++;
-	while (status[1][i])
+	if (status[1])
 	{
-		if (!ft_isdigit(status[1][i]))
-			break ;
-		i++;
+		while (status[1][i])
+		{
+			if (!ft_isdigit(status[1][i]))
+				break ;
+			i++;
+		}
+		if (i != ft_strlen(status[1]) || ft_strlen(status[1]) > 12)
+		{
+			ft_putendl_fd("exit", 1);
+			errmsg("exit: ", status[1], ": numeric argument required");
+			exit(2);
+		}
+		else if (ft_array_size(status) == 2)
+		{
+			ft_putendl_fd("exit", 1);
+			exit(ft_atoi(status[1]));
+		}
+		else
+		{
+			ft_putendl_fd("exit", 1);
+			g_global.return_code = errmsg("exit: ", "too many args", NULL);
+			return (1);
+		}
 	}
-	if (i != ft_strlen(status[1]) || ft_strlen(status[1]) > 12)
-	{
-		ft_putendl_fd("exit", 1);
-		errmsg("exit: ", status[1], ": numeric argument required");
-		exit(2);
-	}
-	else if (ft_array_size(status) == 2)
-	{
-		ft_putendl_fd("exit", 1);
-		exit(ft_atoi(status[1]));
-	}
-	else
-	{
-		ft_putendl_fd("exit", 1);
-		g_global.return_code = errmsg("exit: ", "too many args", NULL);
-		return (1);
-	}
+	ft_putendl_fd("exit", 1);
+	ft_free_array(g_global.env);
+	exit(1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 17:58:35 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 14:31:29 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ static t_separate	*add_list(char	*sep)
 	new->pipe = NULL;
 	new->in = NULL;
 	new->out = NULL;
+	new->fdin = -1;
+	new->fdout = -1;
 	if (find_pipe(new->str, '|'))
 		new->pipe = make_pipe(new);
 	else

@@ -6,32 +6,34 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/16 18:17:54 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 18:18:05 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_istoken(int c)
+int	ft_istoken(int c)
 {
 	if (c != '<' && c != '>' && c != '|' && c != ';')
 		return (0);
 	return (1);
 }
 
-static void	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list)
+static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex)
 {
 	size_t	len;
 	size_t	j;
 	size_t	k;
 	size_t	save;
+	size_t	whitespace;
 	char	*newline;
 
-	len = 0;
-	i++;
-	while (ft_iswhitespace(cmds[ind][i]))
-		i++;
+	len = 1;
 	save = i;
+	i++;
+	whitespace = 1;
+	while (ft_iswhitespace(cmds[ind][i++]))
+		whitespace++;
 	while (!ft_iswhitespace(cmds[ind][i]) && !ft_istoken(cmds[ind][i]))
 	{
 		j = (in_quote(cmds[ind], i));
@@ -52,22 +54,49 @@ static void	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list)
 			len++;
 		}
 	}
-	list->in = malloc(sizeof(char *) * (2));
-	list->in[0] = malloc(sizeof(char) * (len));
-	ft_strlcpy(list->in[0], cmds[ind] + save, len + 1);
-	newline = malloc(sizeof(char) * (ft_strlen(cmds[ind] - len + 1)));
+	if (list->in == NULL)
+		list->in = calloc(sizeof(char *), 2);
+	if (list->in[0] != NULL)
+	{
+		if (list->fdin != -1)
+			close(list->fdin);
+		free(list->in[0]);
+	}
+	list->in[0] = malloc(sizeof(char) * (len + 1));
+	ft_strlcpy(list->in[0], cmds[ind] + save + whitespace, len + 1);
+	list->fdin = open(list->in[0], O_RDONLY);
+	if (list->fdin == -1)
+	{
+		g_global.return_code = errmsg(list->in[0], ": ", strerror(errno));
+		return (-1);
+	}
+	printf("fd %d\n", list->fdin);
+	if (pipex && list->fdin != 0)
+		pipex->fdin = list->fdin;
+	newline = malloc(sizeof(char) * (ft_strlen(cmds[ind]) - len - whitespace + 1));
 	k = 0;
-	while (k < save - 1)
+	while (k < save)
 	{
 		newline[k] = cmds[ind][k];
 		k++;
 	}
-	ft_strcpy(cmds[ind] + save + len + 1, newline + k);
+	ft_strcpy(cmds[ind] + save + whitespace + len, newline + k);
 	free (cmds[ind]);
 	cmds[ind] = newline;
+	return (1);
 }
 
-static int	check_fd(char	**cmds, size_t ind, t_separate *list)
+			// if (list->in)
+			// {
+			// 	list->fdin = open(list->in[0], O_RDONLY);
+			// 	if (list->fdin == -1)
+			// 	{
+			// 		g_global.return_code = errmsg(list->in[0], ": ", "No such file or directory");
+			// 		break ;
+			// 	}
+			// }
+
+static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 {
 	size_t	i;
 	size_t	j;
@@ -92,7 +121,14 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list)
 		// else 
 		if (cmds[ind][i] == '<')
 		{
-			get_fdin(cmds, ind, i, list);
+			if (get_fdin(cmds, ind, i, list, pipex) == -1)
+				return (-1);
+			return (1);
+		}
+		else if (cmds[ind][i] == '>')
+		{
+			if (get_fdout(cmds, ind, i, list, pipex) == -1)
+				return (-1);
 			return (1);
 		}
 		// else if (cmds[ind][i] == '>' && cmds[ind][i + 1] == '>')
@@ -109,26 +145,27 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list)
 		if (i == j)
 			i++;
 	}
-	return (i);
+	return (0);
 }
 
-void	get_fd_redir(char **cmds, t_separate *list)
+int	get_fd_redir(char **cmds, t_separate *list, t_data *pipex)
 {
 	size_t	i;
+	int		check_val;
 
 	i = 0;
-	while (cmds[i])
+	if (ft_strchr(cmds[i], '<') || ft_strchr(cmds[i], '>'))
 	{
-		if (ft_strchr(cmds[i], '<'))
+		while (1)
 		{
-			// while (1)
-			// {
-				if (!check_fd(cmds, i, list))
-					break ;
-			// }
+			check_val = check_fd(cmds, i, list, pipex);
+			if (check_val == -1)
+				return (0);
+			else if (check_val == 0)
+				break ;
 		}
-		i++;
 	}
+	return (1);
 }
 
 

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/16 18:46:44 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 15:38:31 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int		errmsg(char *str1, char *str2, char *str3);
 int		cmderr(char *str1, char *str2, char *str3);
 void	ft_error(t_data *pipex, int err);
 void	close_files(t_data *pipex);
-void	children(t_data *pipex, t_pipe *pipe, int i);
+void	children(t_data *pipex, int i);
 int		parent(t_data *pipex, int i);
 
 void	get_env(char **envp);
@@ -113,6 +113,8 @@ char	**ft_split_minishell(char const *s, char *c);
 
 void	clear_quote(char **cmd);
 
-void	get_fd_redir(char **cmds, t_separate *list);
+int		get_fd_redir(char **cmds, t_separate *list, t_data *pipex);
+int		get_fdout(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
+int		ft_istoken(int c);
 
 #endif

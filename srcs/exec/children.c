@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 11:07:22 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 18:11:38 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,8 @@ int	parent(t_data *pipex, int i)
 	return (exit_status);
 }
 
-static void	exec_child(t_data *pipex, t_pipe *pipe)
+static void	exec_child(t_data *pipex)
 {
-	do_var_env(&pipe->str);
-	pipex->cmd = ft_split_minishell(pipe->str, " \n\t");
-	if (ft_strcmp(pipex->cmd[0], "echo"))
-		clear_quote(pipex->cmd);
 	if (!pipex->cmd)
 		ft_error(pipex, errmsg("Unexpected error", "", ""));
 	if (is_builtin(pipex->cmd[0]) == true)
@@ -65,29 +61,50 @@ static void	exec_child(t_data *pipex, t_pipe *pipe)
 	// free(pipex->cmdpath);
 }
 
-void	children(t_data *pipex, t_pipe *pipe, int i)
+void	children(t_data *pipex, int i)
 {
 	if (i == 0)
 	{
 		if (dup2(pipex->fdin, STDIN_FILENO) == -1)
 			ft_error(pipex, 1);
-		if (dup2(pipex->bouts[1], STDOUT_FILENO) == -1)
+		if (pipex->fdout != 1)
+		{
+			if (dup2(pipex->fdout, STDOUT_FILENO) == -1)
+				ft_error(pipex, 1);
+		}
+		else if (dup2(pipex->bouts[1], STDOUT_FILENO) == -1)
 			ft_error(pipex, 1);
 	}
 	else if (i == pipex->cmds - 1)
 	{
-		if (dup2(pipex->bouts[i * 2 - 2], STDIN_FILENO) == -1)
+		printf("CMD2 %d\n", pipex->fdin);
+		if (pipex->fdin != 0)
+		{
+			if (dup2(pipex->fdin, STDIN_FILENO) == -1)
+				ft_error(pipex, 1);
+		}
+		else if (dup2(pipex->bouts[i * 2 - 2], STDIN_FILENO) == -1)
 			ft_error(pipex, 1);
 		if (dup2(pipex->fdout, STDOUT_FILENO) == -1)
 			ft_error(pipex, 1);
 	}
 	else
 	{
-		if (dup2(pipex->bouts[2 * i - 2], STDIN_FILENO) == -1)
+		if (pipex->fdin != 0)
+		{
+			if (dup2(pipex->fdin, STDIN_FILENO) == -1)
+				ft_error(pipex, 1);
+		}
+		else if (dup2(pipex->bouts[2 * i - 2], STDIN_FILENO) == -1)
 			ft_error(pipex, 1);
-		if (dup2(pipex->bouts[2 * i + 1], STDOUT_FILENO) == -1)
+		if (pipex->fdout != 1)
+		{
+			if (dup2(pipex->fdout, STDOUT_FILENO) == -1)
+				ft_error(pipex, 1);
+		}
+		else if (dup2(pipex->bouts[2 * i + 1], STDOUT_FILENO) == -1)
 			ft_error(pipex, 1);
 	}
 	close_files(pipex);
-	exec_child(pipex, pipe);
+	exec_child(pipex);
 }

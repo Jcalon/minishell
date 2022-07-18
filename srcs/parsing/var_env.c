@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 11:21:52 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 17:49:36 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void	do_var_env(char **cmds)
 
 	i = 0;
 	checkpoint = 0;
-	while (cmds[i])
+	while (i < 1)
 	{
 		if (ft_strchr(cmds[i], '$'))
 		{

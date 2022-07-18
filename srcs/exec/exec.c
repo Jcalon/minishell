@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/16 18:48:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 17:51:28 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,18 @@ void	exec_cmd(char **cmd, t_separate *list)
 	}
 	else
 	{
-		if (dup2(list->fdin, STDIN_FILENO) == -1)
-			g_global.return_code = 1;
 		if (list->fdin != -1)
-		close(list->fdin);
+		{
+			if (dup2(list->fdin, STDIN_FILENO) == -1)
+				g_global.return_code = 1;	
+			close(list->fdin);
+		}
+		if (list->fdout != -1)
+		{
+			if (dup2(list->fdout, STDOUT_FILENO) == -1)
+				g_global.return_code = 1;
+			close(list->fdout);
+		}
 		if (execve(cmd[0], cmd, NULL) == -1)
 			perror("minishell");
 		exit(EXIT_FAILURE);
@@ -100,49 +108,44 @@ char	*get_absolute_path(char **cmd)
 	return (NULL);
 }
 
-void	exec(t_separate *list)
+void	exec_no_pipe(t_separate *list)
 {
 	char	**cmd;
 	char	*cmdpath;
+	
+	do_var_env(&list->str);
+	if (!get_fd_redir(&list->str, list, NULL))
+		return ;
+	if (list->in)
+		clear_quote(list->in);
+	cmd = ft_split_minishell(list->str, " \n\t");
+	if (ft_strcmp(cmd[0], "echo"))
+		clear_quote(cmd);
+	if (cmd[0] == NULL)
+		g_global.return_code = cmderr("command not found", ": null", NULL);
+	else if (is_builtin(cmd[0]) == false)
+	{
+		cmdpath = get_absolute_path(cmd);
+		if (cmdpath == NULL)
+			g_global.return_code = cmderr("command not found", ": ", cmd[0]);
+		else
+		{
+			free(cmd[0]);
+			cmd[0] = cmdpath;
+			exec_cmd(cmd, list);
+		}
+	}
+	else
+		exec_builtin(cmd);
+}
 
+void	exec(t_separate *list)
+{
 	list = list->next;
 	while (list)
 	{
 		if (list->pipe == NULL)
-		{
-			do_var_env(&list->str);
-			get_fd_redir(&list->str, list);
-			if (list->in)
-				clear_quote(list->in);
-			cmd = ft_split_minishell(list->str, " \n\t");
-			if (ft_strcmp(cmd[0], "echo"))
-				clear_quote(cmd);
-			if (list->in)
-			{
-				list->fdin = open(list->in[0], O_RDONLY);
-				if (list->fdin == -1)
-				{
-					g_global.return_code = errmsg(list->in[0], ": ", "No such file or directory");
-					break ;
-				}
-			}
-			if (cmd[0] == NULL)
-				g_global.return_code = cmderr("command not found", ": null", NULL);
-			else if (is_builtin(cmd[0]) == false)
-			{
-				cmdpath = get_absolute_path(cmd);
-				if (cmdpath == NULL)
-					g_global.return_code = cmderr("command not found", ": ", cmd[0]);
-				else
-				{
-					free(cmd[0]);
-					cmd[0] = cmdpath;
-					exec_cmd(cmd, list);
-				}
-			}
-			else
-				exec_builtin(cmd);
-		}
+			exec_no_pipe(list);
 		else
 			exec_pipe(list);
 		list = list->next;

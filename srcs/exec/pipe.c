@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 19:26:35 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 18:17:10 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,10 @@ static t_data	data_init(t_separate *sep)
 	// 	pipex.here_doc = 1;
 	// else
 	pipex.here_doc = 0;
-	if (sep->in == NULL)
-		pipex.fdin = 0;
-	if (sep->out == NULL)
-		pipex.fdout = 1;
 	// else
 	// 	get_in_out_files(&pipex, sep->in, sep->out);
-	// pipex.fdin = sep->fdin;
-	// pipex.fdout = sep->fdout;
+	pipex.fdin = 0;
+	pipex.fdout = 1;
 	pipex.bouts = ft_calloc(2 * (pipex.cmds - 1), sizeof(int));
 	if (pipex.bouts == NULL)
 		ft_error(&pipex, errmsg("PIPE ERROR", "", ""));
@@ -74,6 +70,34 @@ static t_data	data_init(t_separate *sep)
 	if (pipex.pids == NULL)
 		ft_error(&pipex, errmsg("PID ERROR", strerror(errno), ""));
 	return (pipex);
+}
+
+static void	init_children(t_data *pipex, t_separate *list, int i)
+{
+	if (list->fdin > 0)
+		close(list->fdin);
+	if (list->fdout > 1)
+		close(list->fdout);
+	list->fdin = 0;
+	list->fdout = 1;
+	pipex->fdin = 0;
+	pipex->fdout = 1;
+	do_var_env(&list->pipe->str);
+	if (!get_fd_redir(&list->pipe->str, list, pipex))
+		return ;
+	printf("after fd %d\n", pipex->fdin);
+	printf("after fd %d\n", pipex->fdout);
+	if (list->in)
+		clear_quote(list->in);
+	pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
+	if (ft_strcmp(pipex->cmd[0], "echo"))
+		clear_quote(pipex->cmd);
+	pipex->pids[i] = fork();
+	if (pipex->pids[i] == -1)
+		ft_error(pipex, errmsg("Fork", ": ", strerror(errno)));
+	if (pipex->pids[i] == 0)
+		children(pipex, i);
+	ft_free_array(pipex->cmd);
 }
 
 static int	ft_pipex(t_data *pipex, t_separate *list)
@@ -91,11 +115,7 @@ static int	ft_pipex(t_data *pipex, t_separate *list)
 	i = 0;
 	while (i < pipex->cmds)
 	{
-		pipex->pids[i] = fork();
-		if (pipex->pids[i] == -1)
-			ft_error(pipex, errmsg("Fork", ": ", strerror(errno)));
-		if (pipex->pids[i] == 0)
-			children(pipex, list->pipe, i);
+		init_children(pipex, list, i);
 		i++;
 		list->pipe = list->pipe->next;
 	}

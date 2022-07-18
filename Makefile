@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/07/15 15:17:49 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/18 14:05:37 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,8 @@ SRCS 	=	srcs/main.c	\
 			srcs/parsing/var_env.c \
 			srcs/parsing/ft_split_minishell.c \
 			srcs/parsing/clear_quote.c \
-			srcs/parsing/redirections.c
+			srcs/parsing/redirections.c \
+			srcs/parsing/redirections_out.c
 
 OBJS 	= ${SRCS:.c=.o}
 

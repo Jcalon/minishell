@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 12:48:13 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/18 18:28:20 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ void	close_files(t_data *pipex)
 	int	j;
 
 	j = 0;
-	// if (pipex->fdin != -1)
+	// if (pipex->fdin != -1 && pipex->fdin != 0)
 	// 	close(pipex->fdin);
-	// if (pipex->fdout != -1)
+	// if (pipex->fdout != -1 && pipex->fdout != 1)
 	// 	close(pipex->fdout);
 	while (j < (pipex->cmds - 1) * 2)
 	{
