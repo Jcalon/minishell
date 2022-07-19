@@ -12,7 +12,7 @@ Gérer ' : Ok
 
 Gérer " : Ok
 
-Implémenter les redirections : > OK < OK >> KO << KO
+Implémenter les redirections : > OK < OK >> OK << KO
 
 Implémenter les pipes : OK
 

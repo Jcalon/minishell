@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 18:53:17 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 12:31:01 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,14 @@ static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data 
 
 	len = 1;
 	save = i;
-	i++;
-	whitespace = 1;
-	while (ft_iswhitespace(cmds[ind][i++]))
+	whitespace = 0;
+	while (ft_iswhitespace(cmds[ind][++i]))
 		whitespace++;
+	if (cmds[ind][i] == '$')
+	{
+		g_global.return_code = errmsg(cmds[ind] + i, ": ", "ambiguous redirect");
+		return (-1);
+	}
 	while (!ft_iswhitespace(cmds[ind][i]) && !ft_istoken(cmds[ind][i]))
 	{
 		j = (in_quote(cmds[ind], i));
@@ -62,8 +66,8 @@ static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data 
 			close(list->fdin);
 		free(list->in[0]);
 	}
-	list->in[0] = malloc(sizeof(char) * (len + 1));
-	ft_strlcpy(list->in[0], cmds[ind] + save + whitespace, len + 1);
+	list->in[0] = malloc(sizeof(char) * len);
+	ft_strlcpy(list->in[0], cmds[ind] + save + whitespace + 1, len);
 	list->fdin = open(list->in[0], O_RDONLY);
 	if (list->fdin == -1)
 	{
@@ -84,16 +88,6 @@ static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data 
 	cmds[ind] = newline;
 	return (1);
 }
-
-			// if (list->in)
-			// {
-			// 	list->fdin = open(list->in[0], O_RDONLY);
-			// 	if (list->fdin == -1)
-			// 	{
-			// 		g_global.return_code = errmsg(list->in[0], ": ", "No such file or directory");
-			// 		break ;
-			// 	}
-			// }
 
 static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 {
@@ -117,10 +111,22 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 		// 	i++;
 		// 	return (1);
 		// }
-		// else 
+		// else
+		if (cmds[ind][i] == '<' && cmds[ind][i + 1] == '<')
+		{
+			if (get_heredoc(cmds, ind, i, list, pipex) == -1)
+				return (-1);
+			return (1);
+		}
 		if (cmds[ind][i] == '<')
 		{
 			if (get_fdin(cmds, ind, i, list, pipex) == -1)
+				return (-1);
+			return (1);
+		}
+		else if (cmds[ind][i] == '>' && cmds[ind][i + 1] == '>')
+		{
+			if (get_fdout_append(cmds, ind, i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
@@ -132,7 +138,7 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 		}
 		// else if (cmds[ind][i] == '>' && cmds[ind][i + 1] == '>')
 		// {
-		// 	get_fdout_appen(cmds, ind, i, list);
+		// 	get_fdout_append(cmds, ind, i, list, pipex);
 		// 	i++;
 		// 	return (1);
 		// }

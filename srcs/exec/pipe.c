@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 19:05:01 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 12:54:32 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,40 +27,12 @@ size_t	ft_lstsize(t_pipe *pipe)
 	return (i);
 }
 
-void	get_in_out_files(t_data *pipex, char *fdin, char *fdout)
-{
-	// if (pipex->here_doc == 1)
-	// {
-	// 	get_here_doc(pipex, argv);
-	// 	pipex->fdin = open(".heredoc.tmp", O_RDONLY);
-	// 	if (pipex->fdin == -1)
-	// 		ft_error(pipex, errmsg("ERROR HERE_DOC :", "", strerror(errno)));
-	// 	pipex->fdout = open(argv[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-	// 	if (pipex->fdout == -1)
-	// 		ft_error(pipex, errmsg(strerror(errno), ": ", argv[ac - 1]));
-	// }
-	// else
-	{
-		pipex->fdin = open(fdin, O_RDONLY);
-		if (pipex->fdin == -1)
-			errmsg(strerror(errno), ": ", fdin);
-		pipex->fdout = open(fdout, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (pipex->fdout == -1)
-			errmsg(strerror(errno), ": ", fdout);
-	}
-}
-
 static t_data	data_init(t_separate *sep)
 {
 	t_data	pipex;
 
 	pipex.cmds = ft_lstsize(sep->pipe);
-	// if (!ft_strncmp("here_doc", argv[1], 9))
-	// 	pipex.here_doc = 1;
-	// else
-	pipex.here_doc = 0;
-	// else
-	// 	get_in_out_files(&pipex, sep->in, sep->out);
+	pipex.heredoc = 0;
 	pipex.fdin = 0;
 	pipex.fdout = 1;
 	pipex.bouts = ft_calloc(2 * (pipex.cmds - 1), sizeof(int));
@@ -129,4 +101,5 @@ void	exec_pipe(t_separate *list)
 
 	pipex = data_init(list);
 	g_global.return_code = ft_pipex(&pipex, list);
+	
 }

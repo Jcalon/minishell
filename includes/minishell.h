@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 19:17:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 12:39:45 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_data
 	int		fdout;
 	char	**cmd;
 	int		cmds;
-	int		here_doc;
+	int		heredoc;
 }				t_data;
 
 char	*ft_prompt(void);
@@ -115,6 +115,8 @@ void	clear_quote(char **cmd);
 
 int		get_fd_redir(char **cmds, t_separate *list, t_data *pipex);
 int		get_fdout(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
+int		get_fdout_append(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
+int		get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
 int		ft_istoken(int c);
 
 #endif

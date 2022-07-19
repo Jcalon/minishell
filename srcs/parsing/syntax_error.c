@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 12:21:29 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 12:00:26 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,7 @@ size_t	in_quote(char *str, size_t i)
 		c = str[i];
 		i++;
 		while (str[i] && str[i] != c)
-		{
-			if (str[i] && str[i] == '\\')
 				i++;
-			if (str[i])
-				i++;
-		}
 		if (!str[i])
 			break ;
 		else
@@ -76,19 +71,22 @@ static int	syntax_error_redir(char *str, char c)
 	i = 0;
 	while (str[i])
 	{
-		j = 0;
 		if ((i = (in_quote(str, i))) == ft_strlen(str))
 			break ;
-		while (str[i] && (str[i] == c || str[i] == ' '))
+		j = 0;
+		while (str[i] && str[i] == c)
 		{
 			if (str[i] == c)
 				j++;
 			i++;
 			if (j == 3)
 				return (error_msg(str, i + 1, c));
-			if (j > 3)
-				return (error_msg(str, i, c));
 		}
+		j = i - 1;
+		while (str[i] && ft_iswhitespace(str[i]))
+			i++;
+		if (str[i] && str[i] == c && str[j] == c && i - 1 > j)
+			return (error_msg(str, i, c));
 		if (!str[i])
 			break ;
 		i++;

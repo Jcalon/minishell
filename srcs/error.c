@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 18:28:20 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 12:57:15 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,6 @@ void	close_files(t_data *pipex)
 			close(pipex->bouts[j]);
 		j++;
 	}
-	if (pipex->here_doc == 1)
+	if (pipex->heredoc == 1)
 		unlink(".heredoc.tmp");
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 19:25:11 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 12:38:09 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,11 @@ void	exec(t_separate *list)
 	while (list)
 	{
 		if (list->pipe == NULL)
+		{
 			exec_no_pipe(list);
+			if (list->heredoc == 1)
+				unlink(".heredoc.tmp");
+		}
 		else
 			exec_pipe(list);
 		list = list->next;
