@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 12:38:09 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 15:32:51 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,12 @@ void	exec_builtin(char **cmd)
 
 void	exec_cmd(char **cmd, t_separate *list, bool builtin)
 {
-	int		status;
-
-	status = 0;
-	g_global.child_pid = fork();
-	if (g_global.child_pid == -1)
-		perror("fork");
-	else if (g_global.child_pid > 0)
-	{
-		waitpid(g_global.child_pid, &status, 0);
-		kill(g_global.child_pid, SIGTERM);
-	}
-	else
-	{
+		if (list->heredoc == 1)
+		{
+			list->fdin = open(".heredoc.tmp", O_RDONLY, 0644);
+			if (list->fdin == -1)
+				g_global.return_code = errmsg(list->in[0], ": ", strerror(errno));
+		}
 		if (list->fdin != -1)
 		{
 			if (dup2(list->fdin, STDIN_FILENO) == -1)
@@ -85,7 +78,6 @@ void	exec_cmd(char **cmd, t_separate *list, bool builtin)
 		else if (builtin == true)
 			exec_builtin(cmd);
 		exit(EXIT_FAILURE);
-	}
 }
 
 char	*get_absolute_path(char **cmd)
@@ -118,33 +110,46 @@ void	exec_no_pipe(t_separate *list)
 {
 	char	**cmd;
 	char	*cmdpath;
-	
-	do_var_env(&list->str);
-	if (!get_fd_redir(&list->str, list, NULL))
-		return ;
-	if (list->in)
-		clear_quote(list->in);
-	if (list->str[0] == '\0')
-		return ;
-	cmd = ft_split_minishell(list->str, " \n\t");
-	if (ft_strcmp(cmd[0], "echo"))
-		clear_quote(cmd);
-	if (cmd[0] == NULL)
-		g_global.return_code = cmderr("command not found", ": null", NULL);
-	else if (is_builtin(cmd[0]) == false)
+	int		status;
+
+	status = 0;
+	g_global.child_pid = fork();
+	if (g_global.child_pid == -1)
+		perror("fork");
+	else if (g_global.child_pid > 0)
 	{
-		cmdpath = get_absolute_path(cmd);
-		if (cmdpath == NULL)
-			g_global.return_code = cmderr("command not found", ": ", cmd[0]);
-		else
-		{
-			free(cmd[0]);
-			cmd[0] = cmdpath;
-			exec_cmd(cmd, list, false);
-		}
+		waitpid(g_global.child_pid, &status, 0);
+		kill(g_global.child_pid, SIGTERM);
 	}
 	else
-		exec_cmd(cmd, list, true);
+	{
+		do_var_env(&list->str);
+		if (!get_fd_redir(&list->str, list, NULL))
+			return ;
+		if (list->in)
+			clear_quote(list->in);
+		if (list->str[0] == '\0')
+			return ;
+		cmd = ft_split_minishell(list->str, " \n\t");
+		if (ft_strcmp(cmd[0], "echo"))
+			clear_quote(cmd);
+		if (cmd[0] == NULL)
+			g_global.return_code = cmderr("command not found", ": null", NULL);
+		else if (is_builtin(cmd[0]) == false)
+		{
+			cmdpath = get_absolute_path(cmd);
+			if (cmdpath == NULL)
+				g_global.return_code = cmderr("command not found", ": ", cmd[0]);
+			else
+			{
+				free(cmd[0]);
+				cmd[0] = cmdpath;
+				exec_cmd(cmd, list, false);
+			}
+		}
+		else
+			exec_cmd(cmd, list, true);
+	}
 }
 
 void	exec(t_separate *list)
@@ -153,13 +158,11 @@ void	exec(t_separate *list)
 	while (list)
 	{
 		if (list->pipe == NULL)
-		{
 			exec_no_pipe(list);
-			if (list->heredoc == 1)
-				unlink(".heredoc.tmp");
-		}
 		else
 			exec_pipe(list);
+		if (list->heredoc == 1)
+				unlink(".heredoc.tmp");
 		list = list->next;
 	}
 }

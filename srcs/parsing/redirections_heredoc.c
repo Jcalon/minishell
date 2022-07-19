@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 12:59:51 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 15:58:00 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 	ft_strcpy(cmds[ind] + save + whitespace + len + 1, newline + k);
 	free (cmds[ind]);
 	cmds[ind] = newline;
-	list->fdin = open(".heredoc.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	list->fdin = open(".heredoc.tmp", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (list->fdin == -1)
 	{
 		g_global.return_code = errmsg(list->in[0], ": ", strerror(errno));
@@ -78,7 +78,6 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 	if (pipex && list->fdin != 0)
 	{
 		pipex->fdin = list->fdin;
-		printf("here %d", pipex->heredoc);
 		pipex->heredoc = list->heredoc;	
 	}
 	line = "";
@@ -88,6 +87,11 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
 			break ;
+		if (g_global.return_code == 130)
+        {
+			free(line);
+			break ;
+        }
 		if (ft_strlen(list->in[0]) + 1 == ft_strlen(line)
 			&& !ft_strncmp(line, list->in[0], ft_strlen(list->in[0] + 1)))
 		{
@@ -99,5 +103,7 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 		free(line);
 	}
 	close(list->fdin);
+	if (g_global.return_code == 130)
+			return (-1);
 	return (1);
 }

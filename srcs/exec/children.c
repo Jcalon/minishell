@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 12:48:06 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 14:33:03 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,12 @@ static void	exec_child(t_data *pipex)
 
 void	children(t_data *pipex, int i)
 {
+	if (pipex->heredoc == 1)
+	{
+		pipex->fdin = open(".heredoc.tmp", O_RDONLY, 0644);
+		if (pipex->fdin == -1)
+			g_global.return_code = errmsg("Heredoc", ": ", strerror(errno));
+	}
 	if (i == 0)
 	{
 		if (dup2(pipex->fdin, STDIN_FILENO) == -1)

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:53:46 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 14:54:56 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/19 16:00:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	handle_process(int sig_num)
 {
-	if (!kill(g_global.child_pid, sig_num))
+	if (!kill(g_global.child_pid, SIGQUIT))
 	{
 		if (sig_num == SIGQUIT)
 		{
@@ -23,13 +23,17 @@ static void	handle_process(int sig_num)
 		}
 		else if (sig_num == SIGINT)
 		{
-			ft_putchar_fd('\n', 1);
+			ft_putstr_fd("\n", 1);
 			g_global.return_code = 130;
+			ft_putnbr_fd(g_global.return_code, 1);
 		}
 	}
 	else if (sig_num == SIGINT)
 	{
 		ft_putchar_fd('\n', 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 		g_global.return_code = 1;
 	}	
 }
