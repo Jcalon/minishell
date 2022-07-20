@@ -12,7 +12,7 @@ Gérer ' : Ok
 
 Gérer " : Ok
 
-Implémenter les redirections : OK -> petit truc chelou sur << avec un ctrl -C
+Implémenter les redirections : Améliorer pour les builtins
 
 Implémenter les pipes : OK
 

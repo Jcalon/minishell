@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 14:40:56 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/20 23:30:34 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	builtin_exit(char **status)
 		{
 			ft_putendl_fd("exit", 1);
 			g_global.return_code = errmsg("exit: ", "too many args", NULL);
-			return (1);
+			exit(1);
 		}
 	}
 	ft_putendl_fd("exit", 1);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
+#    By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/07/20 18:35:44 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/20 23:09:12 by crazyd           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,6 @@ NAME	= minishell
 
 SRCS 	=	srcs/main.c	\
 			srcs/parsing/parsing.c \
-			srcs/parsing/init.c \
 			srcs/parsing/syntax_error.c \
 			srcs/exec/builtin.c \
 			srcs/exec/builtin_echo.c \
