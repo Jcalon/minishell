@@ -6,11 +6,20 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:53:46 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 16:00:02 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/20 18:29:34 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	handle_heredoc(int	sig_num)
+{
+	if (sig_num == SIGINT)
+	{
+		g_global.return_code = 130;
+		exit(g_global.return_code);
+	}
+}
 
 static void	handle_process(int sig_num)
 {
@@ -18,14 +27,13 @@ static void	handle_process(int sig_num)
 	{
 		if (sig_num == SIGQUIT)
 		{
-			ft_putstr_fd("Quit (core dumped)\n", 2);
+			ft_putstr_fd(" Quit (core dumped)\n", 2);
 			g_global.return_code = 131;
 		}
 		else if (sig_num == SIGINT)
 		{
 			ft_putstr_fd("\n", 1);
 			g_global.return_code = 130;
-			ft_putnbr_fd(g_global.return_code, 1);
 		}
 	}
 	else if (sig_num == SIGINT)
@@ -35,7 +43,7 @@ static void	handle_process(int sig_num)
 		rl_replace_line("", 0);
 		rl_redisplay();
 		g_global.return_code = 1;
-	}	
+	}
 }
 
 void	handler(int sig_num)
@@ -48,7 +56,8 @@ void	handler(int sig_num)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		g_global.return_code = 130;
 	}
 	else if (sig_num == SIGQUIT)
-		ft_putstr_fd("\b\b  \b\b", 1);
+		signal(SIGQUIT, handler);
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 15:32:51 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/20 18:18:59 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void	exec_no_pipe(t_separate *list)
 	int		status;
 
 	status = 0;
+	signal(SIGQUIT, handler);
 	g_global.child_pid = fork();
 	if (g_global.child_pid == -1)
 		perror("fork");
@@ -125,11 +126,13 @@ void	exec_no_pipe(t_separate *list)
 	{
 		do_var_env(&list->str);
 		if (!get_fd_redir(&list->str, list, NULL))
-			return ;
+			exit(EXIT_FAILURE);
 		if (list->in)
 			clear_quote(list->in);
+		if (list->out)
+			clear_quote(list->out);
 		if (list->str[0] == '\0')
-			return ;
+			exit(EXIT_FAILURE);
 		cmd = ft_split_minishell(list->str, " \n\t");
 		if (ft_strcmp(cmd[0], "echo"))
 			clear_quote(cmd);
@@ -139,7 +142,10 @@ void	exec_no_pipe(t_separate *list)
 		{
 			cmdpath = get_absolute_path(cmd);
 			if (cmdpath == NULL)
+			{
 				g_global.return_code = cmderr("command not found", ": ", cmd[0]);
+				exit(EXIT_FAILURE);	
+			}
 			else
 			{
 				free(cmd[0]);

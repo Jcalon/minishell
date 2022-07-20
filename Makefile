@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/07/19 10:53:25 by jcalon           ###   ########.fr        #
+#    Updated: 2022/07/20 18:35:44 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,6 @@ SRCS 	=	srcs/main.c	\
 			srcs/exec/exec.c \
 			srcs/utils.c \
 			srcs/signal.c \
-			srcs/history.c \
 			srcs/exec/pipe.c	\
 			srcs/exec/children.c \
 			srcs/error.c \

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 14:41:43 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/20 18:30:19 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_data
 char	*ft_prompt(void);
 
 void	handler(int sig_num);
+void	handle_heredoc(int	sig_num);
 
 void	ft_add_history(char *buffer);
 void	ft_load_history(void);

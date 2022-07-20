@@ -1,8 +1,8 @@
 A FAIRE :
-
+	
 Prompt : OK
 
-Historique : Check le decalage
+Historique : Ok
 
 Récuperer le PATH : OK
 
@@ -12,7 +12,7 @@ Gérer ' : Ok
 
 Gérer " : Ok
 
-Implémenter les redirections : OK
+Implémenter les redirections : OK -> petit truc chelou sur << avec un ctrl -C
 
 Implémenter les pipes : OK
 
@@ -20,7 +20,7 @@ Gérer les variables $ : OK
 
 Gérer $? : OK
 
-Gérer les signaux : KO -> des check a faire pour cat et heredoc
+Gérer les signaux : OK
 
 Code erreur : KO -> Faire un gros check global et les chasser a la fin
 

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 12:31:01 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/20 17:49:26 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,6 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 		}
 		else if (i < j)
 			i = j;
-		// if (cmds[ind][i] == '<' && cmds[ind][i + 1] == '<')
-		// {
-		// 	get_heredoc(cmds, ind, i, list);
-		// 	i++;
-		// 	return (1);
-		// }
-		// else
 		if (cmds[ind][i] == '<' && cmds[ind][i + 1] == '<')
 		{
 			if (get_heredoc(cmds, ind, i, list, pipex) == -1)
@@ -136,17 +129,6 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 				return (-1);
 			return (1);
 		}
-		// else if (cmds[ind][i] == '>' && cmds[ind][i + 1] == '>')
-		// {
-		// 	get_fdout_append(cmds, ind, i, list, pipex);
-		// 	i++;
-		// 	return (1);
-		// }
-		// else if (cmds[ind][i] == '<')
-		// {
-		// 	get_fdout(cmds, ind, i, list);
-		// 	return (1);
-		// }
 		if (i == j)
 			i++;
 	}

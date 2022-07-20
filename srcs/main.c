@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 15:19:49 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/20 18:33:35 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_prompt(void)
 	size_t	len;
 	size_t	count_slash;
 
-	tmp = ft_strdup("\033[32;1mminishell@\033[0m:\e[1;34m");
+	tmp = ft_strdup("\033[32;1mminishell@\033[0m\e[1;34m");
 	str = getcwd(NULL, 0);
 	len = ft_strlen(str);
 	count_slash = 0;
@@ -29,7 +29,7 @@ char	*ft_prompt(void)
 		if (str[len] == '/')
 			count_slash++;
 	ft_join_more(&tmp, str + len + 2);
-	ft_join_more(&tmp, "$\e[0m ");
+	ft_join_more(&tmp, "$>\e[0m ");
 	free(str);
 	return (tmp);
 }
@@ -42,32 +42,20 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
-	list.next = NULL;
-	list.pipe = NULL;
-	list.str = NULL;
-	list.in = NULL;
-	list.out = NULL;
-	list.fdin = -1;
-	list.fdout = -1;
 	g_global.return_code = 0;
+	g_global.child_pid = 0;
 	get_env(envp);
 	signal(SIGINT, handler);
-	signal(SIGQUIT, handler);
-	ft_load_history();
+	signal(SIGQUIT, SIG_IGN);
+	//ft_load_history();
 	while (1)
 	{
 		prompt = ft_prompt();
 		buffer = readline(prompt);
-			// 	if (!in)
-			// ft_exit(0);
 		if (!buffer)
 			ft_exit();
 		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
-		{
-			if (buffer[ft_strlen(buffer) - 1] == '\n')
-				buffer[ft_strlen(buffer) - 1] = '\0';
-			ft_add_history(buffer);
-		}
+			add_history(buffer);
 		if (!syntax_error(buffer, '|') && !syntax_error(buffer, ';') && buffer[0] != '\n')
 		{
 			parsing(buffer, &list);
@@ -79,13 +67,3 @@ int	main(int argc, char *argv[], char *envp[])
 	free (buffer);
 	return (0);
 }
-
-// int main()
-// {
-// 	char	**test;
-	
-// 	test = ft_split_minishell("export a='test$test'", ";");
-// 	// clear_quote(test);
-// 	for (int i = 0; test[i]; i++)
-// 		ft_putendl_fd(test[i], 1);
-// }
