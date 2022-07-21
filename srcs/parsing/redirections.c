@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 17:49:26 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:10:04 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_istoken(int c)
 	return (1);
 }
 
-static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex)
+static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 {
 	size_t	len;
 	size_t	j;
@@ -31,17 +31,17 @@ static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data 
 	len = 1;
 	save = i;
 	whitespace = 0;
-	while (ft_iswhitespace(cmds[ind][++i]))
+	while (ft_iswhitespace(list->str[++i]))
 		whitespace++;
-	if (cmds[ind][i] == '$')
+	if (list->str[i] == '$')
 	{
-		g_global.return_code = errmsg(cmds[ind] + i, ": ", "ambiguous redirect");
+		g_global.return_code = errmsg(list->str + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
-	while (!ft_iswhitespace(cmds[ind][i]) && !ft_istoken(cmds[ind][i]))
+	while (!ft_iswhitespace(list->str[i]) && !ft_istoken(list->str[i]))
 	{
-		j = (in_quote(cmds[ind], i));
-		if (j == ft_strlen(cmds[ind]))
+		j = (in_quote(list->str, i));
+		if (j == ft_strlen(list->str))
 		{
 			len += (j - i);
 			i = j;
@@ -58,74 +58,73 @@ static int	get_fdin(char **cmds, size_t ind, size_t i, t_separate *list, t_data 
 			len++;
 		}
 	}
-	if (list->in == NULL)
-		list->in = calloc(sizeof(char *), 2);
-	if (list->in[0] != NULL)
+	if (list->in != NULL)
 	{
 		if (list->fdin != -1)
 			close(list->fdin);
-		free(list->in[0]);
+		free(list->in);
 	}
-	list->in[0] = malloc(sizeof(char) * len);
-	ft_strlcpy(list->in[0], cmds[ind] + save + whitespace + 1, len);
-	list->fdin = open(list->in[0], O_RDONLY);
+	list->heredoc = 0;
+	list->in = malloc(sizeof(char) * len);
+	ft_strlcpy(list->in, list->str + save + whitespace + 1, len);
+	list->fdin = open(list->in, O_RDONLY);
 	if (list->fdin == -1)
 	{
-		g_global.return_code = errmsg(list->in[0], ": ", strerror(errno));
+		g_global.return_code = errmsg(list->in, ": ", strerror(errno));
 		return (-1);
 	}
 	if (pipex && list->fdin != 0)
 		pipex->fdin = list->fdin;
-	newline = malloc(sizeof(char) * (ft_strlen(cmds[ind]) - len - whitespace + 1));
+	newline = malloc(sizeof(char) * (ft_strlen(list->str) - len - whitespace + 1));
 	k = 0;
 	while (k < save)
 	{
-		newline[k] = cmds[ind][k];
+		newline[k] = list->str[k];
 		k++;
 	}
-	ft_strcpy(cmds[ind] + save + whitespace + len, newline + k);
-	free (cmds[ind]);
-	cmds[ind] = newline;
+	ft_strcpy(list->str + save + whitespace + len, newline + k);
+	free(list->str);
+	list->str = newline;
 	return (1);
 }
 
-static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
+static int	check_fd(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
-	while (cmds[ind][i])
+	while (list->str[i])
 	{
-		j = (in_quote(cmds[ind], i));
-		if (j == ft_strlen(cmds[ind]))
+		j = (in_quote(list->str, i));
+		if (j == ft_strlen(list->str))
 		{
 			i = j;
 			break;
 		}
 		else if (i < j)
 			i = j;
-		if (cmds[ind][i] == '<' && cmds[ind][i + 1] == '<')
+		if (list->str[i] == '<' && list->str[i + 1] == '<')
 		{
-			if (get_heredoc(cmds, ind, i, list, pipex) == -1)
+			if (get_heredoc(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
-		if (cmds[ind][i] == '<')
+		if (list->str[i] == '<')
 		{
-			if (get_fdin(cmds, ind, i, list, pipex) == -1)
+			if (get_fdin(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
-		else if (cmds[ind][i] == '>' && cmds[ind][i + 1] == '>')
+		else if (list->str[i] == '>' && list->str[i + 1] == '>')
 		{
-			if (get_fdout_append(cmds, ind, i, list, pipex) == -1)
+			if (get_fdout_append(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
-		else if (cmds[ind][i] == '>')
+		else if (list->str[i] == '>')
 		{
-			if (get_fdout(cmds, ind, i, list, pipex) == -1)
+			if (get_fdout(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
@@ -135,17 +134,15 @@ static int	check_fd(char	**cmds, size_t ind, t_separate *list, t_data *pipex)
 	return (0);
 }
 
-int	get_fd_redir(char **cmds, t_separate *list, t_data *pipex)
+int	get_fd_redir(t_separate *list, t_data *pipex)
 {
-	size_t	i;
 	int		check_val;
 
-	i = 0;
-	if (ft_strchr(cmds[i], '<') || ft_strchr(cmds[i], '>'))
+	if (ft_strchr(list->str, '<') || ft_strchr(list->str, '>'))
 	{
 		while (1)
 		{
-			check_val = check_fd(cmds, i, list, pipex);
+			check_val = check_fd(list, pipex);
 			if (check_val == -1)
 				return (0);
 			else if (check_val == 0)

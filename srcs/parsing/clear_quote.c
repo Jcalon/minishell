@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/11 19:52:18 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 08:49:19 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,23 @@ static int	count_quote(char *str)
 
 	count = 0;
 	i = 0;
-	// while (str[i] != '\0')
-	// {
-		while (str[i])
+	while (str[i])
+	{
+		k = (in_quote((char *)str, i));
+		if (k == ft_strlen(str))
 		{
-			k = (in_quote((char *)str, i));
-			if (k == ft_strlen(str))
-			{
-				count += 2;
-				i = k;
-				break;
-			}
-			else if (i == k)
-				i++;
-			else if (i < k)
-			{
-				count += 2;
-				i = k;
-			}
+			count += 2;
+			i = k;
+			break;
 		}
-	// }
+		else if (i == k)
+			i++;
+		else if (i < k)
+		{
+			count += 2;
+			i = k;
+		}
+	}
 	return (count);
 }
 
@@ -70,15 +67,25 @@ static char	*cut_quote(char	*cmd)
 	return(dequoted);
 }
 
-void	clear_quote(char **cmd)
+void	clear_quote(t_separate *list)
 {
 	size_t	i;
 
 	i = 0;
-	while (cmd[i])
+	while (list->cmds[i])
 	{
-		if (ft_strchr(cmd[i], '\'') || ft_strchr(cmd[i], '\"'))
-			cmd[i] = cut_quote(cmd[i]);
+		if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
+			list->cmds[i] = cut_quote(list->cmds[i]);
 		i++;
+	}
+	if (list->in)
+	{
+		if (ft_strchr(list->in, '\'') || ft_strchr(list->in, '\"'))
+			list->in = cut_quote(list->in);
+	}
+	if (list->out)
+	{
+		if (ft_strchr(list->out, '\'') || ft_strchr(list->out, '\"'))
+			list->out = cut_quote(list->out);
 	}
 }

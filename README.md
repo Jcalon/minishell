@@ -1,5 +1,7 @@
 A FAIRE :
-	
+
+NETTOYER LE CODE ET REGLER LES NOUVEAUX PBMS GENERER AVEC LES BUILTINS ET REDIRECTIONS DANS LES PIPE
+
 Prompt : OK
 
 Historique : Ok
@@ -12,7 +14,7 @@ Gérer ' : Ok
 
 Gérer " : Ok
 
-Implémenter les redirections : Améliorer pour les builtins
+Implémenter les redirections : OK
 
 Implémenter les pipes : OK
 

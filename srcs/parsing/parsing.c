@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 18:30:15 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 08:32:48 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static t_separate	*add_list(char	*sep)
 		return (NULL);
 	new->next = NULL;
 	new->str = ft_strdup(sep);
+	new->cmds = NULL;
 	new->pipe = NULL;
 	new->in = NULL;
 	new->out = NULL;

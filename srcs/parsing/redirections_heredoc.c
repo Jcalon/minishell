@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 18:30:08 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:11:48 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex)
+int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
 {
 	char	*line;
 	size_t	len;
@@ -26,12 +26,12 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 	save = i;
 	i += 1;
 	whitespace = 0;
-	while (ft_iswhitespace(cmds[ind][++i]))
+	while (ft_iswhitespace(list->str[++i]))
 		whitespace++;
-	while (!ft_iswhitespace(cmds[ind][i]) && !ft_istoken(cmds[ind][i]))
+	while (!ft_iswhitespace(list->str[i]) && !ft_istoken(list->str[i]))
 	{
-		j = (in_quote(cmds[ind], i));
-		if (j == ft_strlen(cmds[ind]))
+		j = (in_quote(list->str, i));
+		if (j == ft_strlen(list->str))
 		{
 			len += (j - i);
 			i = j;
@@ -48,30 +48,28 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 			len++;
 		}
 	}
-	if (list->in == NULL)
-		list->in = calloc(sizeof(char *), 2);
-	if (list->in[0] != NULL)
+	if (list->in != NULL)
 	{
 		if (list->fdin != -1)
 			close(list->fdin);
-		free(list->in[0]);
+		free(list->in);
 	}
-	list->in[0] = malloc(sizeof(char) * len);
-	ft_strlcpy(list->in[0], cmds[ind] + save + whitespace + 2, len);
-	newline = malloc(sizeof(char) * (ft_strlen(cmds[ind]) - len - whitespace + 1));
+	list->in = malloc(sizeof(char) * len);
+	ft_strlcpy(list->in, list->str + save + whitespace + 2, len);
+	newline = malloc(sizeof(char) * (ft_strlen(list->str) - len - whitespace + 1));
 	k = 0;
 	while (k < save)
 	{
-		newline[k] = cmds[ind][k];
+		newline[k] = list->str[k];
 		k++;
 	}
-	ft_strcpy(cmds[ind] + save + whitespace + len + 1, newline + k);
-	free (cmds[ind]);
-	cmds[ind] = newline;
+	ft_strcpy(list->str + save + whitespace + len + 1, newline + k);
+	free (list->str);
+	list->str = newline;
 	list->fdin = open(".heredoc.tmp", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (list->fdin == -1)
 	{
-		g_global.return_code = errmsg(list->in[0], ": ", strerror(errno));
+		g_global.return_code = errmsg(list->in, ": ", strerror(errno));
 		return (-1);
 	}
 	list->heredoc = 1;
@@ -81,15 +79,15 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 		pipex->heredoc = list->heredoc;	
 	}
 	line = "";
-	signal(SIGINT, handle_heredoc);
+	// signal(SIGINT, handle_heredoc);
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
 			break ;
-		if (ft_strlen(list->in[0]) + 1 == ft_strlen(line)
-			&& !ft_strncmp(line, list->in[0], ft_strlen(list->in[0] + 1)))
+		if (ft_strlen(list->in) + 1 == ft_strlen(line)
+			&& !ft_strncmp(line, list->in, ft_strlen(list->in + 1)))
 		{
 			free(line);
 			break ;
@@ -99,7 +97,7 @@ int	get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pip
 		free(line);
 	}
 	close(list->fdin);
-	if (g_global.return_code == 130)
-			return (-1);
+	// if (g_global.return_code == 130)
+	// 		return (-1);
 	return (1);
 }

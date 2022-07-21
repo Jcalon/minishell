@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/18 17:49:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 08:43:28 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,34 +91,34 @@ int	counterr(int err)
 	return (count);
 }
 
-static int	check_var_env(char	**cmds, size_t index, size_t check)
+static int	check_var_env(t_separate *list, size_t check)
 {
 	size_t	i;
 	size_t	j;
 	size_t	k;
 
 	i = check;
-	while (cmds[index][i])
+	while (list->str[i])
 	{
-		j = (in_quote(cmds[index], i));
-		if (j == ft_strlen(cmds[index]))
+		j = (in_quote(list->str, i));
+		if (j == ft_strlen(list->str))
 			break;
 		else if (i < j)
 			i = j;
-		if (cmds[index][i] == '$')
+		if (list->str[i] == '$')
 		{
 			j = ++i;
-			while (cmds[index][i] && ft_isalnum(cmds[index][i]))
+			while (list->str[i] && ft_isalnum(list->str[i]))
 				i++;
-			if (ft_get_var_env((cmds[index] + j), (i - j)))
+			if (ft_get_var_env((list->str + j), (i - j)))
 			{
-				k = ft_strlen(ft_get_var_env((cmds[index] + j), (i - j)));
-				cmds[index] = replace_var_env(cmds[index], i, j);
+				k = ft_strlen(ft_get_var_env((list->str + j), (i - j)));
+				list->str = replace_var_env(list->str, i, j);
 				return (j + k - 1);
 			}
-			else if (cmds[index][i] && cmds[index][i] == '?')
+			else if (list->str[i] && list->str[i] == '?')
 			{
-				cmds[index] = replace_by_code_var_env(cmds[index]);
+				list->str = replace_by_code_var_env(list->str);
 				return(j + counterr(g_global.return_code) - 1);
 			}
 		}
@@ -127,24 +127,18 @@ static int	check_var_env(char	**cmds, size_t index, size_t check)
 	return (0);
 }
 
-void	do_var_env(char **cmds)
+void	do_var_env(t_separate *list)
 {
-	size_t	i;
 	size_t	checkpoint;
 
-	i = 0;
 	checkpoint = 0;
-	while (i < 1)
+	if (ft_strchr(list->str, '$'))
 	{
-		if (ft_strchr(cmds[i], '$'))
+		while (1)
 		{
-			while (1)
-			{
-				checkpoint = check_var_env(cmds, i, checkpoint);
-				if (!checkpoint)
-					break;
-			}
+			checkpoint = check_var_env(list, checkpoint);
+			if (!checkpoint)
+				break;
 		}
-		i++;
 	}
 }

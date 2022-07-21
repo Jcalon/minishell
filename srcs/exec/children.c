@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   children.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 14:33:03 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:55:30 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ static void	exec_child(t_data *pipex)
 {
 	if (!pipex->cmd)
 		ft_error(pipex, errmsg("Unexpected error", "", ""));
-	if (is_builtin(pipex->cmd[0]) == true)
-		exec_builtin(pipex->cmd);
+	// if (is_builtin(pipex->cmd[0]) == true)
+	// 	exec_builtin(pipex->cmd);
 	if (access(pipex->cmd[0], F_OK | X_OK) == 0)
 		pipex->cmdpath = ft_strdup(pipex->cmd[0]);
 	else

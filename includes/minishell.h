@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 18:30:19 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:14:46 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ typedef struct s_pipe
 typedef struct s_separate
 {
 	char				*str;
+	char				**cmds;
 	t_pipe				*pipe;
 	struct s_separate	*next;
-	char				**in;
-	char				**out;
+	char				*in;
+	char				*out;
 	int					fdin;
 	int					fdout;
 	int					heredoc;
@@ -70,26 +71,26 @@ char	*ft_prompt(void);
 void	handler(int sig_num);
 void	handle_heredoc(int	sig_num);
 
-void	ft_add_history(char *buffer);
-void	ft_load_history(void);
+// void	ft_add_history(char *buffer);
+// void	ft_load_history(void);
 
 void	exec(t_separate *list);
 void	exec_pipe(t_separate *list);
 bool	is_builtin(char *cmd);
 char	*get_absolute_path(char **cmd);
-void	exec_builtin(char **builtin);
+void	exec_builtin(t_separate *list);
 
 void	parsing(char *cmd_line, t_separate *list);
 int		syntax_error(char *str, char c);
 size_t	in_quote(char *str, size_t i);
 
-int		builtin_echo(char **options);
-int		builtin_cd(char	**path);
-int		builtin_pwd(char **cmd);
-int		builtin_export(char **cmd);
-int		builtin_unset(char **cmd);
-int		builtin_env(bool export);
-int		builtin_exit(char **str);
+int		builtin_echo(t_separate *list);
+int		builtin_cd(t_separate *list);
+int		builtin_pwd(t_separate *list);
+int		builtin_export(t_separate *list);
+int		builtin_unset(t_separate *list);
+int		builtin_env(bool export, t_separate *list);
+int		builtin_exit(t_separate *list);
 int		check_double_env(char *str, size_t len);
 size_t	ft_strlen_equal(const char *s);
 
@@ -109,15 +110,15 @@ void	get_env(char **envp);
 char	**get_path();
 char	*ft_getenv(char *str);
 char	*ft_get_var_env(char *str, size_t len);
-void	do_var_env(char **cmds);
+void	do_var_env(t_separate *list);
 char	**ft_split_minishell(char const *s, char *c);
 
-void	clear_quote(char **cmd);
+void	clear_quote(t_separate *list);
 
-int		get_fd_redir(char **cmds, t_separate *list, t_data *pipex);
-int		get_fdout(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
-int		get_fdout_append(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
-int		get_heredoc(char **cmds, size_t ind, size_t i, t_separate *list, t_data *pipex);
+int		get_fd_redir(t_separate *list, t_data *pipex);
+int		get_fdout(size_t i, t_separate *list, t_data *pipex);
+int		get_fdout_append(size_t i, t_separate *list, t_data *pipex);
+int		get_heredoc(size_t i, t_separate *list, t_data *pipex);
 int		ft_istoken(int c);
 
 #endif

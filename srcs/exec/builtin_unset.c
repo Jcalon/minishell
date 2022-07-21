@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/15 11:30:02 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:47:00 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ size_t	num_to_unset(char	**cmd)
 	return (count);
 }
 
-int	builtin_unset(char **cmd)
+int	builtin_unset(t_separate *list)
 {
 	size_t	i;
 	size_t	j;
@@ -76,15 +76,15 @@ int	builtin_unset(char **cmd)
 	if (g_global.env[0] == NULL)
 	{
 		j = 1;
-		while (cmd[j])
+		while (list->cmds[j])
 		{
-			if (!ft_isalpha(cmd[j][0]))
-				err = errmsg("unset: ", cmd[j], ": not a valid identifier");	
+			if (!ft_isalpha(list->cmds[j][0]))
+				err = errmsg("unset: ", list->cmds[j], ": not a valid identifier");	
 			j++;
 		}
 		return (0);
 	}
-	size = ft_array_size(g_global.env) - num_to_unset(cmd) + 1;
+	size = ft_array_size(g_global.env) - num_to_unset(list->cmds) + 1;
 	new_env = malloc(sizeof(char *) * size);
 	i = 0;
 	k = 0;
@@ -92,10 +92,10 @@ int	builtin_unset(char **cmd)
 	{
 		j = 1;
 		dup = true;
-		while (cmd[j])
+		while (list->cmds[j])
 		{	
-			if (ft_strnstr(g_global.env[i], cmd[j], ft_strlen(cmd[j]))
-				&& (ft_strlen_equal(g_global.env[i]) == ft_strlen(cmd[j])))
+			if (ft_strnstr(g_global.env[i], list->cmds[j], ft_strlen(list->cmds[j]))
+				&& (ft_strlen_equal(g_global.env[i]) == ft_strlen(list->cmds[j])))
 				dup = false;
 			j++;
 		}

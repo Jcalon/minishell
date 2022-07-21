@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 20:20:03 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:45:30 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*concat_new(char *cmd)
 	return (new);
 }
 
-int	builtin_export(char	**cmd)
+int	builtin_export(t_separate *list)
 {
 	size_t	i;
 	size_t	j;
@@ -96,15 +96,15 @@ int	builtin_export(char	**cmd)
 
 	err = 0;
 	update = true;
-	if (!cmd[1])
-		builtin_env(true);
+	if (!list->cmds[1])
+		builtin_env(true, list);
 	else
 	{
 		i = 0;
 		if (g_global.env[0] == NULL)
-			size = num_to_export(cmd) + 1;
+			size = num_to_export(list->cmds) + 1;
 		else
-			size = num_to_export(cmd) + ft_array_size(g_global.env) + 1;
+			size = num_to_export(list->cmds) + ft_array_size(g_global.env) + 1;
 		new_env = malloc(sizeof(char *) * size);
 		while (g_global.env[i])
 		{
@@ -112,17 +112,17 @@ int	builtin_export(char	**cmd)
 			i++;
 		}
 		j = 1;
-		while (cmd[j])
+		while (list->cmds[j])
 		{
-			if (!ft_isalpha(cmd[j][0]))
-				err = errmsg("export: ", cmd[j], ": not a valid identifier");	
-			else if (!check_double_env(cmd[j], ft_strlen_equal(cmd[j])))
+			if (!ft_isalpha(list->cmds[j][0]))
+				err = errmsg("export: ", list->cmds[j], ": not a valid identifier");	
+			else if (!check_double_env(list->cmds[j], ft_strlen_equal(list->cmds[j])))
 			{
-				if (!ft_strnstr(cmd[j], "+", ft_strlen_equal(cmd[j]) + 1))
-					new_env[i++] = ft_strdup(cmd[j]);
+				if (!ft_strnstr(list->cmds[j], "+", ft_strlen_equal(list->cmds[j]) + 1))
+					new_env[i++] = ft_strdup(list->cmds[j]);
 				else
 				{
-					new_env[i++] = concat_new(cmd[j]);
+					new_env[i++] = concat_new(list->cmds[j]);
 					update = false;
 				}
 			}
@@ -133,7 +133,7 @@ int	builtin_export(char	**cmd)
 		g_global.env = new_env;
 	}
 	if (update == true)
-		update_double(cmd);
+		update_double(list->cmds);
 	g_global.return_code = err;
 	return (0);
 }

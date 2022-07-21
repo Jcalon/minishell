@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:48:00 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/14 19:36:11 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/07/21 09:35:06 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_env(bool export)
+int	builtin_env(bool export, t_separate *list)
 {
 	size_t	i;
 
@@ -22,7 +22,15 @@ int	builtin_env(bool export)
 		while (g_global.env[i])
 		{
 			if (ft_strchr(g_global.env[i], '='))
-				ft_putendl_fd(g_global.env[i], 1);
+			{
+				if (list->out)
+				{
+					ft_putendl_fd(g_global.env[i], list->fdout);
+					close(list->fdout);
+				}
+				else
+					ft_putendl_fd(g_global.env[i], 1);
+			}
 			i++;
 		}	
 	}
@@ -30,8 +38,17 @@ int	builtin_env(bool export)
 	{
 		while (g_global.env[i])
 		{
-			ft_putstr_fd("declare -x ", 1);
-			ft_putendl_fd(g_global.env[i], 1);
+			if (list->out)
+			{
+				ft_putstr_fd("declare -x ", list->fdout);
+				ft_putendl_fd(g_global.env[i], list->fdout);
+				close(list->fdout);
+			}
+			else
+			{
+				ft_putstr_fd("declare -x ", 1);
+				ft_putendl_fd(g_global.env[i], 1);
+			}
 			i++;
 		}
 	}
