@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 19:59:40 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/03 20:11:36 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 	else if (pipex->pids[i] == 0)
 	{
 		pipex->fdin = 0;
-		pipex->fdout = 1;
+		pipex->fdout = 1;echo $USER$$$
 		if (!get_fd_redir(list, pipex))
 			exit(EXIT_FAILURE);
 		if (list->str[0] == '\0')
