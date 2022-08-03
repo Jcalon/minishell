@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 08:49:19 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 17:08:03 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,28 @@ static char	*cut_quote(char	*cmd)
 	return(dequoted);
 }
 
-void	clear_quote(t_separate *list)
+void	clear_quote(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 
 	i = 0;
-	while (list->cmds[i])
+	if (pipex)
 	{
-		if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
-			list->cmds[i] = cut_quote(list->cmds[i]);
-		i++;
+		while (pipex->cmd[i])
+		{
+			if (ft_strchr(pipex->cmd[i], '\'') || ft_strchr(pipex->cmd[i], '\"'))
+				pipex->cmd[i] = cut_quote(pipex->cmd[i]);
+			i++;
+		}
+	}
+	else
+	{
+		while (list->cmds[i])
+		{
+			if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
+				list->cmds[i] = cut_quote(list->cmds[i]);
+			i++;
+		}
 	}
 	if (list->in)
 	{

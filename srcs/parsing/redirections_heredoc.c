@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:11:48 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 19:40:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,22 @@ int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
 	size_t	save;
 	size_t	whitespace;
 	char	*newline;
+	char	*cmd;
 
+	if (pipex)
+		cmd = pipex->actual->str;
+	else 
+		cmd = list->str;
 	len = 1;
 	save = i;
 	i += 1;
 	whitespace = 0;
-	while (ft_iswhitespace(list->str[++i]))
+	while (ft_iswhitespace(cmd[++i]))
 		whitespace++;
-	while (!ft_iswhitespace(list->str[i]) && !ft_istoken(list->str[i]))
+	while (!ft_iswhitespace(cmd[i]) && !ft_istoken(cmd[i]))
 	{
-		j = (in_quote(list->str, i));
-		if (j == ft_strlen(list->str))
+		j = (in_quote(cmd, i));
+		if (j == ft_strlen(cmd))
 		{
 			len += (j - i);
 			i = j;
@@ -55,17 +60,25 @@ int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
 		free(list->in);
 	}
 	list->in = malloc(sizeof(char) * len);
-	ft_strlcpy(list->in, list->str + save + whitespace + 2, len);
-	newline = malloc(sizeof(char) * (ft_strlen(list->str) - len - whitespace + 1));
+	ft_strlcpy(list->in, cmd + save + whitespace + 2, len);
+	newline = malloc(sizeof(char) * (ft_strlen(cmd) - len - whitespace + 1));
 	k = 0;
 	while (k < save)
 	{
-		newline[k] = list->str[k];
+		newline[k] = cmd[k];
 		k++;
 	}
-	ft_strcpy(list->str + save + whitespace + len + 1, newline + k);
-	free (list->str);
-	list->str = newline;
+	ft_strcpy(cmd + save + whitespace + len + 1, newline + k);
+	if (pipex)
+	{
+		free(pipex->actual->str);
+		pipex->actual->str = newline;
+	}
+	else
+	{
+		free(list->str);
+		list->str = newline;
+	}
 	list->fdin = open(".heredoc.tmp", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (list->fdin == -1)
 	{

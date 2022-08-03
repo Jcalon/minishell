@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:59:04 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 17:50:40 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,94 +72,99 @@ void	exec_cmd(t_separate *list, bool builtin)
 			close(list->fdout);
 		}
 		if (execve(list->cmds[0], list->cmds, NULL) == -1)
-			perror("minishell");
+		{
+			cmderr(list->cmds[0], ": command not found", NULL);
+			exit(126);
+		}
 	}
 	else if (builtin == true)
 		exec_builtin(list);
 	// exit(EXIT_FAILURE);
 }
 
-char	*get_absolute_path(char **cmd)
+void	get_absolute_path(char **cmd)
 {
-	char	*cmd_absolute;
 	char	*tmp;
+	char	*cmdpath;
 	char	**paths;
 	size_t	i;
 
 	if (access(cmd[0], F_OK | X_OK) == 0)
-		return (cmd[0]);
+		return ;
 	i = 0;
 	paths = get_path();
 	if (paths == NULL)
-		return (NULL);
+		return ;
 	while (paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
-		cmd_absolute = ft_strjoin(tmp, cmd[0]);
+		cmdpath = ft_strjoin(tmp, cmd[0]);
 		free(tmp);
-		if (access(cmd_absolute, X_OK) == 0)
-			return (cmd_absolute);
-		free(cmd_absolute);
+		if (access(cmdpath, X_OK) == 0)
+		{
+			free(cmd[0]);
+			cmd[0] = cmdpath;
+			return ;
+		}
+		free(cmdpath);
 		i++;
 	}
-	return (NULL);
+	free(cmd[0]);
+	cmd[0] = NULL;
 }
 
 void	exec_no_pipe(t_separate *list)
 {
-	char	*cmdpath;
 	int		status;
+	char	*save;
 
 	status = 0;
-	signal(SIGQUIT, handler);
+	do_var_env(list);
+	if (!get_fd_redir(list, NULL))
+		return ;
+	if (list->str[0] == '\0')
+		return ;
+	list->cmds = ft_split_minishell(list->str, " \n\t");
+	if (ft_strcmp(list->cmds[0], "echo"))
+		clear_quote(list, NULL);
+	if (list->cmds[0] == NULL)
+		g_global.return_code = cmderr("command not found", ": null", NULL);
 	g_global.child_pid = fork();
 	if (g_global.child_pid == -1)
 		perror("fork");
 	else if (g_global.child_pid > 0)
 	{
+		signal(SIGQUIT, handler);
 		waitpid(g_global.child_pid, &status, 0);
+		if (WIFEXITED(status))
+			g_global.return_code = WEXITSTATUS(status);
 		kill(g_global.child_pid, SIGTERM);
-		do_var_env(list);
-		if (!get_fd_redir(list, NULL))
-			return ;
-		if (list->str[0] == '\0')
-			return ;
-		list->cmds = ft_split_minishell(list->str, " \n\t");
-		if (ft_strcmp(list->cmds[0], "echo"))
-			clear_quote(list);
-		if (list->cmds[0] == NULL)
-			g_global.return_code = cmderr("command not found", ": null", NULL);
-		else if (is_builtin(list->cmds[0]) == true)
+		if (is_builtin(list->cmds[0]) == true)
 			exec_cmd(list, true);
 	}
 	else
 	{
-		do_var_env(list);
-		if (!get_fd_redir(list, NULL))
-			exit(EXIT_FAILURE);
-		if (list->str[0] == '\0')
-			exit(EXIT_FAILURE);
-		list->cmds = ft_split_minishell(list->str, " \n\t");
-		if (ft_strcmp(list->cmds[0], "echo"))
-			clear_quote(list);
-		if (list->cmds[0] == NULL)
-			g_global.return_code = cmderr("command not found", ": null", NULL);
-		else if (is_builtin(list->cmds[0]) == false)
+		if (is_builtin(list->cmds[0]) == false)
 		{
-			cmdpath = get_absolute_path(list->cmds);
-			if (cmdpath == NULL)
+			save = strdup(list->cmds[0]);
+			get_absolute_path(list->cmds);
+			if (list->cmds[0] == NULL && save[0] != '/')
 			{
-				g_global.return_code = cmderr("command not found", ": ", list->cmds[0]);
-				exit(EXIT_FAILURE);	
+				g_global.return_code = cmderr("command not found", ": ", save);
+				free(save);
+				exit(127);	
+			}
+			else if (list->cmds[0] == NULL && save[0] == '/')
+			{
+				g_global.return_code = cmderr(save, ": Not a directory", NULL);
+				free(save);
+				exit(126);
 			}
 			else
-			{
-				free(list->cmds[0]);
-				list->cmds[0] = cmdpath;
 				exec_cmd(list, false);
-			}
+			free(save);
 		}
-		exit(EXIT_SUCCESS);
+		exit(g_global.return_code);
 	}
 }
 

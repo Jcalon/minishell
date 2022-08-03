@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:53:46 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 18:29:34 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/03 16:11:42 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	handle_process(int sig_num)
 	{
 		if (sig_num == SIGQUIT)
 		{
-			ft_putstr_fd(" Quit (core dumped)\n", 2);
+			ft_putstr_fd(" Quit (core dumped)\n", 1);
 			g_global.return_code = 131;
 		}
 		else if (sig_num == SIGINT)
@@ -42,7 +42,7 @@ static void	handle_process(int sig_num)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		g_global.return_code = 1;
+		g_global.return_code = 130;
 	}
 }
 
@@ -58,6 +58,4 @@ void	handler(int sig_num)
 		rl_redisplay();
 		g_global.return_code = 130;
 	}
-	else if (sig_num == SIGQUIT)
-		signal(SIGQUIT, handler);
 }

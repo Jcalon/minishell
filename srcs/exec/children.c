@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   children.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:55:30 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 19:18:12 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,15 @@ static void	exec_child(t_data *pipex)
 		ft_error(pipex, errmsg("Unexpected error", "", ""));
 	// if (is_builtin(pipex->cmd[0]) == true)
 	// 	exec_builtin(pipex->cmd);
-	if (access(pipex->cmd[0], F_OK | X_OK) == 0)
-		pipex->cmdpath = ft_strdup(pipex->cmd[0]);
-	else
-		pipex->cmdpath = get_absolute_path(pipex->cmd);
-	if (pipex->cmdpath == NULL)
+	get_absolute_path(pipex->cmd);
+	if (pipex->cmd[0] == NULL)
 	{
 		if (access(pipex->cmd[0], F_OK) == 0
 			&& (access(pipex->cmd[0], X_OK) != 0))
 			ft_error(pipex, errmsg(strerror(errno), ": ", pipex->cmd[0]));
 		ft_error(pipex, cmderr("command not found", ": ", pipex->cmd[0]));
 	}
-	if (execve(pipex->cmdpath, pipex->cmd, NULL) == -1)
+	if (execve(pipex->cmd[0], pipex->cmd, NULL) == -1)
 		ft_error(pipex, errmsg(pipex->cmd[0], ": ", strerror(errno)));
 	// niel(pipex->cmd);
 	// free(pipex->cmdpath);

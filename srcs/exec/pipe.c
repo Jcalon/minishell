@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:54:39 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 19:59:40 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static t_data	data_init(t_separate *sep)
 	pipex.fdin = 0;
 	pipex.fdout = 1;
 	pipex.bouts = ft_calloc(2 * (pipex.cmds - 1), sizeof(int));
+	pipex.actual = sep->pipe;
 	if (pipex.bouts == NULL)
 		ft_error(&pipex, errmsg("PIPE ERROR", "", ""));
 	pipex.pids = ft_calloc(pipex.cmds, sizeof(pid_t));
@@ -52,20 +53,21 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 		close(list->fdout);
 	list->fdin = 0;
 	list->fdout = 1;
+	do_var_env(list);
 	pipex->pids[i] = fork();
 	if (pipex->pids[i] == -1)
 		ft_error(pipex, errmsg("Fork", ": ", strerror(errno)));
-	if (pipex->pids[i] == 0)
+	else if (pipex->pids[i] == 0)
 	{
-		// pipex->fdin = 0;
-		// pipex->fdout = 1;
-		// do_var_env(&list->pipe->str);
-		// if (!get_fd_redir(list, pipex))
-		// 	exit(1) ;
-
-		// pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
-		// if (ft_strcmp(pipex->cmd[0], "echo"))
-		// 	clear_quote(pipex->cmd);
+		pipex->fdin = 0;
+		pipex->fdout = 1;
+		if (!get_fd_redir(list, pipex))
+			exit(EXIT_FAILURE);
+		if (list->str[0] == '\0')
+			exit(EXIT_FAILURE);
+		pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
+		if (ft_strcmp(pipex->cmd[0], "echo"))
+			clear_quote(list, pipex);
 		children(pipex, i);
 		ft_free_array(pipex->cmd);
 	}
@@ -89,6 +91,7 @@ static int	ft_pipex(t_data *pipex, t_separate *list)
 		init_children(pipex, list, i);
 		i++;
 		list->pipe = list->pipe->next;
+		pipex->actual = list->pipe;
 	}
 	exit_status = parent(pipex, i);
 	return (exit_status);

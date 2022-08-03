@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:14:46 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 19:22:16 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,15 @@ typedef struct s_separate
 
 typedef struct s_data
 {
-	int		*bouts;
-	char	*cmdpath;
-	pid_t	*pids;
-	int		fdin;
-	int		fdout;
-	char	**cmd;
-	int		cmds;
-	int		heredoc;
+	int				*bouts;
+	char			*cmdpath;
+	pid_t			*pids;
+	int				fdin;
+	int				fdout;
+	char			**cmd;
+	int				cmds;
+	int				heredoc;
+	struct s_pipe	*actual;
 }				t_data;
 
 char	*ft_prompt(void);
@@ -77,7 +78,7 @@ void	handle_heredoc(int	sig_num);
 void	exec(t_separate *list);
 void	exec_pipe(t_separate *list);
 bool	is_builtin(char *cmd);
-char	*get_absolute_path(char **cmd);
+void	get_absolute_path(char **cmd);
 void	exec_builtin(t_separate *list);
 
 void	parsing(char *cmd_line, t_separate *list);
@@ -113,7 +114,7 @@ char	*ft_get_var_env(char *str, size_t len);
 void	do_var_env(t_separate *list);
 char	**ft_split_minishell(char const *s, char *c);
 
-void	clear_quote(t_separate *list);
+void	clear_quote(t_separate *list, t_data *pipex);
 
 int		get_fd_redir(t_separate *list, t_data *pipex);
 int		get_fdout(size_t i, t_separate *list, t_data *pipex);

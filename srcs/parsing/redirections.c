@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:10:04 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/03 20:02:21 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,26 @@ static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 	size_t	save;
 	size_t	whitespace;
 	char	*newline;
+	char	*cmd;
 
+	if (pipex)
+		cmd = pipex->actual->str;
+	else 
+		cmd = list->str;
 	len = 1;
 	save = i;
 	whitespace = 0;
-	while (ft_iswhitespace(list->str[++i]))
+	while (ft_iswhitespace(cmd[++i]))
 		whitespace++;
-	if (list->str[i] == '$')
+	if (cmd[i] == '$')
 	{
-		g_global.return_code = errmsg(list->str + i, ": ", "ambiguous redirect");
+		g_global.return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
-	while (!ft_iswhitespace(list->str[i]) && !ft_istoken(list->str[i]))
+	while (!ft_iswhitespace(cmd[i]) && !ft_istoken(cmd[i]))
 	{
-		j = (in_quote(list->str, i));
-		if (j == ft_strlen(list->str))
+		j = (in_quote(cmd, i));
+		if (j == ft_strlen(cmd))
 		{
 			len += (j - i);
 			i = j;
@@ -66,7 +71,7 @@ static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 	}
 	list->heredoc = 0;
 	list->in = malloc(sizeof(char) * len);
-	ft_strlcpy(list->in, list->str + save + whitespace + 1, len);
+	ft_strlcpy(list->in, cmd + save + whitespace + 1, len);
 	list->fdin = open(list->in, O_RDONLY);
 	if (list->fdin == -1)
 	{
@@ -75,16 +80,24 @@ static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 	}
 	if (pipex && list->fdin != 0)
 		pipex->fdin = list->fdin;
-	newline = malloc(sizeof(char) * (ft_strlen(list->str) - len - whitespace + 1));
+	newline = malloc(sizeof(char) * (ft_strlen(cmd) - len - whitespace + 1));
 	k = 0;
 	while (k < save)
 	{
-		newline[k] = list->str[k];
+		newline[k] = cmd[k];
 		k++;
 	}
-	ft_strcpy(list->str + save + whitespace + len, newline + k);
-	free(list->str);
-	list->str = newline;
+	ft_strcpy(cmd + save + whitespace + len, newline + k);
+	if (pipex)
+	{
+		free(pipex->actual->str);
+		pipex->actual->str = newline;
+	}
+	else
+	{
+		free(list->str);
+		list->str = newline;
+	}
 	return (1);
 }
 
@@ -92,37 +105,42 @@ static int	check_fd(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 	size_t	j;
+	char	*cmd;
 
 	i = 0;
-	while (list->str[i])
+	if (pipex)
+		cmd = pipex->actual->str;
+	else
+		cmd = list->str;
+	while (cmd[i])
 	{
-		j = (in_quote(list->str, i));
-		if (j == ft_strlen(list->str))
+		j = (in_quote(cmd, i));
+		if (j == ft_strlen(cmd))
 		{
 			i = j;
 			break;
 		}
 		else if (i < j)
 			i = j;
-		if (list->str[i] == '<' && list->str[i + 1] == '<')
+		if (cmd[i] == '<' && cmd[i + 1] == '<')
 		{
 			if (get_heredoc(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
-		if (list->str[i] == '<')
+		else if (cmd[i] == '<')
 		{
 			if (get_fdin(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
-		else if (list->str[i] == '>' && list->str[i + 1] == '>')
+		else if (cmd[i] == '>' && list->str[i + 1] == '>')
 		{
 			if (get_fdout_append(i, list, pipex) == -1)
 				return (-1);
 			return (1);
 		}
-		else if (list->str[i] == '>')
+		else if (cmd[i] == '>')
 		{
 			if (get_fdout(i, list, pipex) == -1)
 				return (-1);
@@ -138,16 +156,13 @@ int	get_fd_redir(t_separate *list, t_data *pipex)
 {
 	int		check_val;
 
-	if (ft_strchr(list->str, '<') || ft_strchr(list->str, '>'))
+	while (1)
 	{
-		while (1)
-		{
-			check_val = check_fd(list, pipex);
-			if (check_val == -1)
-				return (0);
-			else if (check_val == 0)
-				break ;
-		}
+		check_val = check_fd(list, pipex);
+		if (check_val == -1)
+			return (0);
+		else if (check_val == 0)
+			break ;
 	}
 	return (1);
 }
