@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 19:22:16 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:27:41 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,6 @@ char	*ft_prompt(void);
 void	handler(int sig_num);
 void	handle_heredoc(int	sig_num);
 
-// void	ft_add_history(char *buffer);
-// void	ft_load_history(void);
-
 void	exec(t_separate *list);
 void	exec_pipe(t_separate *list);
 bool	is_builtin(char *cmd);
@@ -121,5 +118,6 @@ int		get_fdout(size_t i, t_separate *list, t_data *pipex);
 int		get_fdout_append(size_t i, t_separate *list, t_data *pipex);
 int		get_heredoc(size_t i, t_separate *list, t_data *pipex);
 int		ft_istoken(int c);
+void	free_stuff(t_separate *list);
 
 #endif

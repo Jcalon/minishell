@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 08:32:48 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:26:36 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_pipe	*make_pipe(t_separate *sep)
 		tmp = tmp->next;
 		i++;
 	}
-	free_array(cmds);
+	ft_free_array(cmds);
 	return (pipe);
 }
 
@@ -103,5 +103,5 @@ void	parsing(char *cmd_line, t_separate *list)
 		tmp = tmp->next;
 		i++;
 	}
-	free_array(sep);
+	ft_free_array(sep);
 }

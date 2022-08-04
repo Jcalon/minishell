@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+         #
+#    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/07/20 23:09:12 by crazyd           ###   ########.fr        #
+#    Updated: 2022/08/04 21:27:18 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS 	=	srcs/main.c	\
 			srcs/exec/builtin_unset.c \
 			srcs/exec/exec.c \
 			srcs/utils.c \
+			srcs/free_stuff.c \
 			srcs/signal.c \
 			srcs/exec/pipe.c	\
 			srcs/exec/children.c \

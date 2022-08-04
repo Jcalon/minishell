@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 13:57:32 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 16:34:05 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:26:19 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,4 @@ void	ft_exit(void)
 	// 		g_global.return_code = ft_atoi(av[1]);
 	// }
 	exit(g_global.return_code);
-}
-
-
-void	free_array(char	**array)
-{
-	size_t	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
 }

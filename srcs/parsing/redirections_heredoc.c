@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 13:23:27 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:29:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,26 +91,29 @@ int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
 		pipex->fdin = list->fdin;
 		pipex->heredoc = list->heredoc;	
 	}
-	line = "";
+ 	void    *ctl;
+
+    ctl = rl_getc_function;
+    rl_getc_function = getc;
 	while (1)
 	{
-		signal(SIGINT, handle_heredoc);
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(STDIN_FILENO);
-		if (line == NULL)
-			break ;
 		if (g_global.return_code == 130)
 			break ;
-		if (ft_strlen(list->in) + 1 == ft_strlen(line)
-			&& !ft_strcmp(line, list->in))
+		ft_putstr_fd("> ", STDIN_FILENO);
+		line = readline(STDIN_FILENO);
+		if (line == NULL)
+			break ;
+		if (ft_strlen(list->in) == ft_strlen(line)
+			&& !ft_strncmp(line, list->in, ft_strlen(list->in)))
 		{
 			free(line);
 			break ;
 		}
 		else
-			ft_putstr_fd(line, list->fdin);
+			ft_putendl_fd(line, list->fdin);
 		free(line);
 	}
+    rl_getc_function = ctl;
 	close(list->fdin);
 	return (1);
 }

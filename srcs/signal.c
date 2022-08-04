@@ -6,23 +6,11 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:53:46 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 13:25:41 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:25:48 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	handle_heredoc(int	sig_num)
-{
-	if (sig_num == SIGINT)
-	{
-		g_global.return_code = 130;
-		ft_putchar_fd('\n', 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
 
 static void	handle_process(int sig_num)
 {

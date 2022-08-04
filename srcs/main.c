@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 13:28:55 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:25:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,5 @@ int	main(int argc, char *argv[], char *envp[])
 		free(buffer);
 		free(prompt);
 	}
-	free (buffer);
 	return (0);
 }
