@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 12:48:43 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:40:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 		pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
 		if (ft_strcmp(pipex->cmd[0], "echo"))
 			clear_quote(list, pipex);
-		children(pipex, i);
+		children(pipex, i, list);
 		ft_free_array(pipex->cmd);
 	}
 }
