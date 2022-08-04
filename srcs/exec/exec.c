@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 17:50:40 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 13:27:09 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	exec_cmd(t_separate *list, bool builtin)
 	}
 	else if (builtin == true)
 		exec_builtin(list);
-	// exit(EXIT_FAILURE);
 }
 
 void	get_absolute_path(char **cmd)
@@ -120,6 +119,7 @@ void	exec_no_pipe(t_separate *list)
 
 	status = 0;
 	do_var_env(list);
+	g_global.return_code = 0;
 	if (!get_fd_redir(list, NULL))
 		return ;
 	if (list->str[0] == '\0')

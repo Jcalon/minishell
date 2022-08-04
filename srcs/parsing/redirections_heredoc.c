@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 19:40:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 13:23:27 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,17 @@ int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
 		pipex->heredoc = list->heredoc;	
 	}
 	line = "";
-	// signal(SIGINT, handle_heredoc);
 	while (1)
 	{
+		signal(SIGINT, handle_heredoc);
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(STDIN_FILENO);
 		if (line == NULL)
 			break ;
+		if (g_global.return_code == 130)
+			break ;
 		if (ft_strlen(list->in) + 1 == ft_strlen(line)
-			&& !ft_strncmp(line, list->in, ft_strlen(list->in + 1)))
+			&& !ft_strcmp(line, list->in))
 		{
 			free(line);
 			break ;
@@ -110,7 +112,5 @@ int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
 		free(line);
 	}
 	close(list->fdin);
-	// if (g_global.return_code == 130)
-	// 		return (-1);
 	return (1);
 }

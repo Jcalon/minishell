@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 20:11:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 12:48:43 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 		close(list->fdout);
 	list->fdin = 0;
 	list->fdout = 1;
+	list->heredoc = 0;
 	do_var_env(list);
 	pipex->pids[i] = fork();
 	if (pipex->pids[i] == -1)
@@ -60,7 +61,7 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 	else if (pipex->pids[i] == 0)
 	{
 		pipex->fdin = 0;
-		pipex->fdout = 1;echo $USER$$$
+		pipex->fdout = 1;
 		if (!get_fd_redir(list, pipex))
 			exit(EXIT_FAILURE);
 		if (list->str[0] == '\0')
@@ -92,6 +93,8 @@ static int	ft_pipex(t_data *pipex, t_separate *list)
 		i++;
 		list->pipe = list->pipe->next;
 		pipex->actual = list->pipe;
+		if (list->heredoc == 1)
+			unlink(".heredoc.tmp");
 	}
 	exit_status = parent(pipex, i);
 	return (exit_status);

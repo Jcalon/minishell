@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 16:11:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 13:28:55 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,10 @@ int	main(int argc, char *argv[], char *envp[])
 	g_global.return_code = 0;
 	g_global.child_pid = 0;
 	get_env(envp);
-	signal(SIGINT, handler);
-	signal(SIGQUIT, SIG_IGN);
-	//ft_load_history();
 	while (1)
 	{
+		signal(SIGINT, handler);
+		signal(SIGQUIT, SIG_IGN);
 		prompt = ft_prompt();
 		buffer = readline(prompt);
 		if (!buffer)

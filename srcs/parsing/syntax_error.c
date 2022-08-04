@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/20 18:01:23 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 13:07:35 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,9 @@ static int	syntax_error_redir(char *str, char c)
 			if (j == 3)
 				return (error_msg(str, i + 1, c));
 		}
-		j = i - 1;
 		while (str[i] && ft_iswhitespace(str[i]))
 			i++;
-		if (str[i] && (str[i] == '<' || str[i] == '>') && str[j] == c && i - 1 > j)
+		if (str[i] && (str[i] == '<' || str[i] == '>') && str[j] == c && i > j)
 			return (error_msg(str, i, c));
 		if (!str[i])
 			break ;
