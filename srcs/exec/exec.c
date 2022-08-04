@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 13:27:09 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:37:23 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,31 @@ bool	is_builtin(char *cmd)
 	return (false);
 }
 
-void	exec_builtin(t_separate *list)
+void	exec_builtin(t_separate *list, t_data *pipex)
 {
-	if (!ft_strcmp(list->cmds[0], "echo"))
-		builtin_echo(list);
-	else if (!ft_strcmp(list->cmds[0], "cd"))
-		builtin_cd(list);
-	else if (!ft_strcmp(list->cmds[0], "pwd"))
-		builtin_pwd(list);
-	else if (!ft_strcmp(list->cmds[0], "export"))
-		builtin_export(list);
-	else if (!ft_strcmp(list->cmds[0], "unset"))
-		builtin_unset(list);
-	else if (!ft_strcmp(list->cmds[0], "env"))
-		if (ft_array_size(list->cmds) == 1)
+	char	**cmds;
+
+	if (pipex)
+		cmds = pipex->cmd;
+	else
+		cmds = list->cmds;
+	if (!ft_strcmp(cmds[0], "echo"))
+		builtin_echo(list, pipex);
+	else if (!ft_strcmp(cmds[0], "cd"))
+		builtin_cd(list, pipex);
+	else if (!ft_strcmp(cmds[0], "pwd"))
+		builtin_pwd(list, pipex);
+	else if (!ft_strcmp(cmds[0], "export"))
+		builtin_export(list, pipex);
+	else if (!ft_strcmp(cmds[0], "unset"))
+		builtin_unset(list, pipex);
+	else if (!ft_strcmp(cmds[0], "env"))
+		if (ft_array_size(cmds) == 1)
 			builtin_env(false, list);
 		else
 			g_global.return_code = errmsg("env: ", "too many args", NULL);
-	else if (!ft_strcmp(list->cmds[0], "exit"))
-		builtin_exit(list);
+	else if (!ft_strcmp(cmds[0], "exit"))
+		builtin_exit(list, pipex);
 }
 
 void	exec_cmd(t_separate *list, bool builtin)
@@ -78,7 +84,7 @@ void	exec_cmd(t_separate *list, bool builtin)
 		}
 	}
 	else if (builtin == true)
-		exec_builtin(list);
+		exec_builtin(list, NULL);
 }
 
 void	get_absolute_path(char **cmd)
@@ -144,26 +150,28 @@ void	exec_no_pipe(t_separate *list)
 	}
 	else
 	{
+		signal(SIGQUIT, handler);
 		if (is_builtin(list->cmds[0]) == false)
 		{
 			save = strdup(list->cmds[0]);
 			get_absolute_path(list->cmds);
-			if (list->cmds[0] == NULL && save[0] != '/')
+			if (list->cmds[0] == NULL)
 			{
 				g_global.return_code = cmderr("command not found", ": ", save);
 				free(save);
 				exit(127);	
 			}
-			else if (list->cmds[0] == NULL && save[0] == '/')
-			{
-				g_global.return_code = cmderr(save, ": Not a directory", NULL);
-				free(save);
-				exit(126);
-			}
+			// else if (list->cmds[0] == NULL && save[0] == '/')
+			// {
+			// 	g_global.return_code = cmderr(save, ": Not a directory", NULL);
+			// 	free(save);
+			// 	exit(126);
+			// }
 			else
 				exec_cmd(list, false);
 			free(save);
 		}
+		free_stuff(list);
 		exit(g_global.return_code);
 	}
 }

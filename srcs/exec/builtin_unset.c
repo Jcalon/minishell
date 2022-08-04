@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:47:00 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:31:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ size_t	num_to_unset(char	**cmd)
 	return (count);
 }
 
-int	builtin_unset(t_separate *list)
+int	builtin_unset(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 	size_t	j;
@@ -71,20 +71,25 @@ int	builtin_unset(t_separate *list)
 	int		err;
 	char	**new_env;
 	bool	dup;
+	char	**cmds;
 
+	if (pipex)
+		cmds = pipex->cmd;
+	else
+		cmds = list->cmds;
 	err = 0;
 	if (g_global.env[0] == NULL)
 	{
 		j = 1;
-		while (list->cmds[j])
+		while (cmds[j])
 		{
-			if (!ft_isalpha(list->cmds[j][0]))
-				err = errmsg("unset: ", list->cmds[j], ": not a valid identifier");	
+			if (!ft_isalpha(cmds[j][0]))
+				err = errmsg("unset: ", cmds[j], ": not a valid identifier");	
 			j++;
 		}
 		return (0);
 	}
-	size = ft_array_size(g_global.env) - num_to_unset(list->cmds) + 1;
+	size = ft_array_size(g_global.env) - num_to_unset(cmds) + 1;
 	new_env = malloc(sizeof(char *) * size);
 	i = 0;
 	k = 0;
@@ -92,10 +97,10 @@ int	builtin_unset(t_separate *list)
 	{
 		j = 1;
 		dup = true;
-		while (list->cmds[j])
+		while (cmds[j])
 		{	
-			if (ft_strnstr(g_global.env[i], list->cmds[j], ft_strlen(list->cmds[j]))
-				&& (ft_strlen_equal(g_global.env[i]) == ft_strlen(list->cmds[j])))
+			if (ft_strnstr(g_global.env[i], cmds[j], ft_strlen(cmds[j]))
+				&& (ft_strlen_equal(g_global.env[i]) == ft_strlen(cmds[j])))
 				dup = false;
 			j++;
 		}

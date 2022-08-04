@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:43:08 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:30:32 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,44 +32,49 @@ size_t	check_n(char **cmd)
 	return (i);
 }
 
-int	builtin_echo(t_separate *list)
+int	builtin_echo(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 	size_t	j;
 	size_t	k;
 	char	c;
 	bool	n;
+	char	**cmds;
 
+	if (pipex)
+		cmds = pipex->cmd;
+	else
+		cmds = list->cmds;
 	c = 0;
 	n = false;
-	i = check_n(list->cmds);
+	i = check_n(cmds);
 	if (i > 1)
 		n = true;
-	while (list->cmds[i])
+	while (cmds[i])
 	{
 		j = 0;
-		while (list->cmds[i][j])
+		while (cmds[i][j])
 		{
-			if (list->cmds[i][j] == c)
+			if (cmds[i][j] == c)
 			{
 				c = 0;
 				j++;
 			}
-			if (c == 0 && (list->cmds[i][j] == '\'' || list->cmds[i][j] == '\"'))
+			if (c == 0 && (cmds[i][j] == '\'' || cmds[i][j] == '\"'))
 			{
-				c = list->cmds[i][j];
+				c = cmds[i][j];
 				j++;
-				while (list->cmds[i][j] && list->cmds[i][j] == c)
+				while (cmds[i][j] && cmds[i][j] == c)
 				{
 					c = 0;
-					if ((list->cmds[i][j + 1] == '\'' || list->cmds[i][j + 1] == '\"'))
-						c = list->cmds[i][j + 1];
+					if ((cmds[i][j + 1] == '\'' || cmds[i][j + 1] == '\"'))
+						c = cmds[i][j + 1];
 					j++;
 				}
 			}
-			if (list->cmds[i][j] && list->cmds[i][j] == '$' && c != '\'')
+			if (cmds[i][j] && cmds[i][j] == '$' && c != '\'')
 			{
-				if (list->cmds[i][j + 1] && list->cmds[i][j + 1] == '?')
+				if (cmds[i][j + 1] && cmds[i][j + 1] == '?')
 				{
 					if (list->out)
 						ft_putnbr_fd(g_global.return_code, list->fdout);
@@ -77,41 +82,41 @@ int	builtin_echo(t_separate *list)
 						ft_putnbr_fd(g_global.return_code, 1);
 					j += 2;
 				}
-				else if (list->cmds[i][j + 1] && ft_isalpha(list->cmds[i][j + 1]))
+				else if (cmds[i][j + 1] && ft_isalpha(cmds[i][j + 1]))
 				{
 					k = 0;
 					j++;
-					while (ft_isalnum(list->cmds[i][j + k]))
+					while (ft_isalnum(cmds[i][j + k]))
 						k++;
 					if (list->out)
-						ft_putstr_fd(ft_get_var_env(list->cmds[i] + j, k), list->fdout);
+						ft_putstr_fd(ft_get_var_env(cmds[i] + j, k), list->fdout);
 					else
-						ft_putstr_fd(ft_get_var_env(list->cmds[i] + j, k), 1);
+						ft_putstr_fd(ft_get_var_env(cmds[i] + j, k), 1);
 					j += k - 1;
 				}
-				else if (list->cmds[i][j + 1] != '\'' && list->cmds[i][j + 1] != '\"')
+				else
 				{
-					if (list->out)
+					if (list->out && !ft_isdigit(cmds[i][j + 1]))
 						write(list->fdout, "$", 1);
-					else
+					else if (!ft_isdigit(cmds[i][j + 1]))
 						write(1, "$", 1);
 					j++;
-					while (list->cmds[i][j] && (list->cmds[i][j] == '$' || ft_isdigit(list->cmds[i][j])))
+					while (cmds[i][j] && (cmds[i][j] == '$' || ft_isdigit(cmds[i][j])))
 						j++;
 					j--;
 				}
 			}
-			else if (list->cmds[i][j] && list->cmds[i][j] != c)
+			else if (cmds[i][j] && cmds[i][j] != c)
 			{
 				if (list->out)
-					write(list->fdout, &list->cmds[i][j], 1);
+					write(list->fdout, &cmds[i][j], 1);
 				else
-					write(1, &list->cmds[i][j], 1);
+					write(1, &cmds[i][j], 1);
 			}
-			if (list->cmds[i][j])
+			if (cmds[i][j])
 				j++;
 		}
-		if (list->cmds[i + 1] != NULL)
+		if (cmds[i + 1] != NULL)
 		{
 			if (list->out)
 				write(list->fdout, " ", 1);

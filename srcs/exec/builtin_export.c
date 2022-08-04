@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 09:45:30 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:30:54 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*concat_new(char *cmd)
 	return (new);
 }
 
-int	builtin_export(t_separate *list)
+int	builtin_export(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 	size_t	j;
@@ -93,18 +93,23 @@ int	builtin_export(t_separate *list)
 	int		err;
 	bool	update;
 	char	**new_env;
+	char	**cmds;
 
+	if (pipex)
+		cmds = pipex->cmd;
+	else 
+		cmds = list->cmds;
 	err = 0;
 	update = true;
-	if (!list->cmds[1])
+	if (!cmds[1])
 		builtin_env(true, list);
 	else
 	{
 		i = 0;
 		if (g_global.env[0] == NULL)
-			size = num_to_export(list->cmds) + 1;
+			size = num_to_export(cmds) + 1;
 		else
-			size = num_to_export(list->cmds) + ft_array_size(g_global.env) + 1;
+			size = num_to_export(cmds) + ft_array_size(g_global.env) + 1;
 		new_env = malloc(sizeof(char *) * size);
 		while (g_global.env[i])
 		{
@@ -112,17 +117,17 @@ int	builtin_export(t_separate *list)
 			i++;
 		}
 		j = 1;
-		while (list->cmds[j])
+		while (cmds[j])
 		{
-			if (!ft_isalpha(list->cmds[j][0]))
-				err = errmsg("export: ", list->cmds[j], ": not a valid identifier");	
-			else if (!check_double_env(list->cmds[j], ft_strlen_equal(list->cmds[j])))
+			if (!ft_isalpha(cmds[j][0]))
+				err = errmsg("export: ", cmds[j], ": not a valid identifier");	
+			else if (!check_double_env(cmds[j], ft_strlen_equal(cmds[j])))
 			{
-				if (!ft_strnstr(list->cmds[j], "+", ft_strlen_equal(list->cmds[j]) + 1))
-					new_env[i++] = ft_strdup(list->cmds[j]);
+				if (!ft_strnstr(cmds[j], "+", ft_strlen_equal(cmds[j]) + 1))
+					new_env[i++] = ft_strdup(cmds[j]);
 				else
 				{
-					new_env[i++] = concat_new(list->cmds[j]);
+					new_env[i++] = concat_new(cmds[j]);
 					update = false;
 				}
 			}
@@ -133,7 +138,7 @@ int	builtin_export(t_separate *list)
 		g_global.env = new_env;
 	}
 	if (update == true)
-		update_double(list->cmds);
+		update_double(cmds);
 	g_global.return_code = err;
 	return (0);
 }

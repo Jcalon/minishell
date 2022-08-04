@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:27:41 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:38:15 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,19 @@ void	exec(t_separate *list);
 void	exec_pipe(t_separate *list);
 bool	is_builtin(char *cmd);
 void	get_absolute_path(char **cmd);
-void	exec_builtin(t_separate *list);
+void	exec_builtin(t_separate *list, t_data *pipex);
 
 void	parsing(char *cmd_line, t_separate *list);
 int		syntax_error(char *str, char c);
 size_t	in_quote(char *str, size_t i);
 
-int		builtin_echo(t_separate *list);
-int		builtin_cd(t_separate *list);
-int		builtin_pwd(t_separate *list);
-int		builtin_export(t_separate *list);
-int		builtin_unset(t_separate *list);
+int		builtin_echo(t_separate *list, t_data *pipex);
+int		builtin_cd(t_separate *list, t_data *pipex);
+int		builtin_pwd(t_separate *list, t_data *pipex);
+int		builtin_export(t_separate *list, t_data *pipex);
+int		builtin_unset(t_separate *list, t_data *pipex);
 int		builtin_env(bool export, t_separate *list);
-int		builtin_exit(t_separate *list);
+int		builtin_exit(t_separate *list, t_data *pipex);
 int		check_double_env(char *str, size_t len);
 size_t	ft_strlen_equal(const char *s);
 
@@ -101,7 +101,7 @@ int		errmsg(char *str1, char *str2, char *str3);
 int		cmderr(char *str1, char *str2, char *str3);
 void	ft_error(t_data *pipex, int err);
 void	close_files(t_data *pipex);
-void	children(t_data *pipex, int i);
+void	children(t_data *pipex, int i, t_separate *list);
 int		parent(t_data *pipex, int i);
 
 void	get_env(char **envp);
