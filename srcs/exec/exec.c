@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:37:23 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:49:16 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	exec_cmd(t_separate *list, bool builtin)
 				g_global.return_code = 1;
 			close(list->fdout);
 		}
-		if (execve(list->cmds[0], list->cmds, NULL) == -1)
+		if (execve(list->cmds[0], list->cmds, g_global.env) == -1)
 		{
 			cmderr(list->cmds[0], ": command not found", NULL);
 			exit(126);

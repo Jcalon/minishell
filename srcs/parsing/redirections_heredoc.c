@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:29:02 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:56:14 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,9 @@ int	get_heredoc(size_t i, t_separate *list, t_data *pipex)
     rl_getc_function = getc;
 	while (1)
 	{
+		line = readline("> ");
 		if (g_global.return_code == 130)
 			break ;
-		ft_putstr_fd("> ", STDIN_FILENO);
-		line = readline(STDIN_FILENO);
 		if (line == NULL)
 			break ;
 		if (ft_strlen(list->in) == ft_strlen(line)

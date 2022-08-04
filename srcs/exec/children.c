@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:38:03 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/04 21:49:03 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	exec_child(t_data *pipex, t_separate *list)
 			ft_error(pipex, errmsg(strerror(errno), ": ", save));
 		ft_error(pipex, cmderr("command not found", ": ", save));
 	}
-	if (execve(pipex->cmd[0], pipex->cmd, NULL) == -1)
+	if (execve(pipex->cmd[0], pipex->cmd, g_global.env) == -1)
 		ft_error(pipex, errmsg(pipex->cmd[0], ": ", strerror(errno)));
 	// niel(pipex->cmd);
 	// free(pipex->cmdpath);
