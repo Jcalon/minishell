@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/08/04 21:27:18 by jcalon           ###   ########.fr        #
+#    Updated: 2022/08/05 16:49:13 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ NAME	= minishell
 SRCS 	=	srcs/main.c	\
 			srcs/parsing/parsing.c \
 			srcs/parsing/syntax_error.c \
+			srcs/parsing/syntax_error2.c \
 			srcs/exec/builtin.c \
 			srcs/exec/builtin_echo.c \
 			srcs/exec/builtin_env.c \
@@ -30,6 +31,7 @@ SRCS 	=	srcs/main.c	\
 			srcs/error.c \
 			srcs/exec/env.c \
 			srcs/parsing/var_env.c \
+			srcs/parsing/var_env_utils.c \
 			srcs/parsing/ft_split_minishell.c \
 			srcs/parsing/clear_quote.c \
 			srcs/parsing/redirections.c \

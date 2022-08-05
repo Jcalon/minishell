@@ -6,11 +6,27 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 13:57:32 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:18:40 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:43:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+size_t	in_quote(char *str, size_t i)
+{
+	char	c;
+
+	while (str[i] && (str[i] == '\'' || str[i] == '"'))
+	{
+		c = str[i];
+		i++;
+		while (str[i] && str[i] != c)
+				i++;
+		i++;
+		break ;
+	}
+	return (i);
+}
 
 static int	ft_error_token(char *msg, char c, int i, char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 14:53:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:41:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	count_quote(char *str)
 		{
 			count += 2;
 			i = k;
-			break;
+			break ;
 		}
 		else if (i == k)
 			i++;
@@ -58,7 +58,33 @@ static char	*cut_quote(char	*cmd)
 	}
 	dequoted[j] = '\0';
 	free(cmd);
-	return(dequoted);
+	return (dequoted);
+}
+
+static void	clear_pipex(t_data *pipex)
+{
+	size_t	i;
+
+	i = 0;
+	while (pipex->cmd[i])
+	{
+		if (ft_strchr(pipex->cmd[i], '\'') || ft_strchr(pipex->cmd[i], '\"'))
+			pipex->cmd[i] = cut_quote(pipex->cmd[i]);
+		i++;
+	}	
+}
+
+static void	clear_standard(t_separate *list)
+{
+	size_t	i;
+
+	i = 0;
+	while (list->cmds[i])
+	{
+		if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
+			list->cmds[i] = cut_quote(list->cmds[i]);
+		i++;
+	}
 }
 
 void	clear_quote(t_separate *list, t_data *pipex)
@@ -67,23 +93,9 @@ void	clear_quote(t_separate *list, t_data *pipex)
 
 	i = 0;
 	if (pipex)
-	{
-		while (pipex->cmd[i])
-		{
-			if (ft_strchr(pipex->cmd[i], '\'') || ft_strchr(pipex->cmd[i], '\"'))
-				pipex->cmd[i] = cut_quote(pipex->cmd[i]);
-			i++;
-		}
-	}
+		clear_pipex(pipex);
 	else
-	{
-		while (list->cmds[i])
-		{
-			if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
-				list->cmds[i] = cut_quote(list->cmds[i]);
-			i++;
-		}
-	}
+		clear_standard(list);
 	if (list->in)
 	{
 		if (ft_strchr(list->in, '\'') || ft_strchr(list->in, '\"'))

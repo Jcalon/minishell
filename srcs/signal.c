@@ -6,11 +6,14 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:53:46 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:09:43 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:29:37 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Gestion des signaux dans un process,
+il faut que SIGQUIT marche comme pour cat par ex */
 
 void	handle_process(int sig_num)
 {
@@ -25,6 +28,8 @@ void	handle_process(int sig_num)
 		g_return_code = 130;
 	}
 }
+
+/* Gestion de SIGINT donc CTRL-C dans le processus parent */
 
 void	handler(int sig_num)
 {

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 14:17:43 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:35:31 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,18 +52,16 @@ static size_t	find_pipe(char *str, char c)
 	i = 0;
 	while (str[i])
 	{
-		if ((i = (in_quote(str, i))) == ft_strlen(str))
-			break ;
-		if (str[i] && str[i] == '\\')
-			i++;
-		if (!str[i])
-			break ;
-		if (str[i] && str[i] == c && str[i - 1] != '\\')
+		i = in_quote(str, i);
+		if (str[i] && str[i] == c)
 			return (i);
 		i++;
 	}
 	return (0);
 }
+
+/* On initialise et on check si y a des pipes
+dans ce cas on cree une liste delimitee par | dans le maillon */
 
 static t_separate	*add_list(char	*sep)
 {
@@ -88,6 +86,8 @@ static t_separate	*add_list(char	*sep)
 		new->pipe = NULL;
 	return (new);
 }
+
+/* On va ajouter un maillon a la liste pour chaque ; */
 
 void	parsing(char *cmd_line, t_separate *list)
 {

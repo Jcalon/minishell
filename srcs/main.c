@@ -6,13 +6,16 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:17:52 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:27:57 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_return_code;
+
+/* Prompt est recup par readline,
+il se met a jour avec le bon Path a chaque newline*/
 
 char	*ft_prompt(void)
 {
@@ -40,11 +43,16 @@ static void	lets_go(t_separate *list, char *buffer)
 	exec(list);
 }
 
+/* SIGQUIT = CTRL-\ SIG_IGN pour l ignorer et SIGINT = CTRL-C */
+
 static void	ft_signal(void)
 {
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
 }
+
+/* Dans le main on recup env et on fait une boucle infinie avec readline, 
+a chaque entree on check la syntax et si c est bon lets go on parse et exec */
 
 int	main(int argc, char *argv[], char *envp[])
 {
