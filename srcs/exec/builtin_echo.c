@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 11:31:22 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:10:12 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ int	builtin_echo(t_separate *list, t_data *pipex)
 				if (cmds[i][j + 1] && cmds[i][j + 1] == '?')
 				{
 					if (list->out)
-						ft_putnbr_fd(g_global.return_code, list->fdout);
+						ft_putnbr_fd(g_return_code, list->fdout);
 					else
-						ft_putnbr_fd(g_global.return_code, 1);
+						ft_putnbr_fd(g_return_code, 1);
 					j += 2;
 				}
 				else if (cmds[i][j + 1] && ft_isalpha(cmds[i][j + 1]))
@@ -89,9 +89,9 @@ int	builtin_echo(t_separate *list, t_data *pipex)
 					while (ft_isalnum(cmds[i][j + k]))
 						k++;
 					if (list->out)
-						ft_putstr_fd(ft_get_var_env(cmds[i] + j, k), list->fdout);
+						ft_putstr_fd(ft_get_var_env(list, cmds[i] + j, k), list->fdout);
 					else
-						ft_putstr_fd(ft_get_var_env(cmds[i] + j, k), 1);
+						ft_putstr_fd(ft_get_var_env(list, cmds[i] + j, k), 1);
 					j += k - 1;
 				}
 				else
@@ -135,6 +135,6 @@ int	builtin_echo(t_separate *list, t_data *pipex)
 	}
 	if (list->out)
 		close(list->fdout);
-	g_global.return_code = 0;
+	g_return_code = 0;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 12:37:35 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:10:57 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	exec_builtin(t_separate *list, t_data *pipex)
 		if (ft_array_size(cmds) == 1)
 			builtin_env(false, list);
 		else
-			g_global.return_code = errmsg("env: ", "too many args", NULL);
+			g_return_code = errmsg("env: ", "too many args", NULL);
 	else if (!ft_strcmp(cmds[0], "exit"))
 		builtin_exit(list, pipex);
 }
@@ -63,21 +63,21 @@ void	exec_cmd(t_separate *list, bool builtin)
 		{
 			list->fdin = open(".heredoc.tmp", O_RDONLY, 0644);
 			if (list->fdin == -1)
-				g_global.return_code = errmsg(list->in, ": ", strerror(errno));
+				g_return_code = errmsg(list->in, ": ", strerror(errno));
 		}
 		if (list->fdin != -1)
 		{
 			if (dup2(list->fdin, STDIN_FILENO) == -1)
-				g_global.return_code = 1;	
+				g_return_code = 1;	
 			close(list->fdin);
 		}
 		if (list->fdout != -1)
 		{
 			if (dup2(list->fdout, STDOUT_FILENO) == -1)
-				g_global.return_code = 1;
+				g_return_code = 1;
 			close(list->fdout);
 		}
-		if (execve(list->cmds[0], list->cmds, g_global.env) == -1)
+		if (execve(list->cmds[0], list->cmds, list->begin->env) == -1)
 		{
 			cmderr(list->cmds[0], ": command not found", NULL);
 			exit(126);
@@ -87,7 +87,7 @@ void	exec_cmd(t_separate *list, bool builtin)
 		exec_builtin(list, NULL);
 }
 
-void	get_absolute_path(char **cmd)
+void	get_absolute_path(t_separate *list, char **cmd)
 {
 	char	*tmp;
 	char	*cmdpath;
@@ -97,7 +97,7 @@ void	get_absolute_path(char **cmd)
 	if (access(cmd[0], F_OK | X_OK) == 0)
 		return ;
 	i = 0;
-	paths = get_path();
+	paths = get_path(list);
 	if (paths == NULL)
 		return ;
 	while (paths[i])
@@ -123,6 +123,7 @@ void	exec_no_pipe(t_separate *list)
 	int		status;
 	char	*save;
 	char	*str;
+	pid_t	pid;
 
 	status = 0;
 	if (!get_fd_redir(list, NULL))
@@ -130,7 +131,7 @@ void	exec_no_pipe(t_separate *list)
 	str = ft_strdup(list->str);
 	do_var_env(list);
 	if (list->str[0] == '\0')
-		return ;
+		return (free(str));
 	list->cmds = ft_split_minishell(list->str, " \n\t");
 	if (ft_strcmp(list->cmds[0], "echo"))
 		clear_quote(list, NULL);
@@ -139,18 +140,20 @@ void	exec_no_pipe(t_separate *list)
 		ft_free_array(list->cmds);
 		list->cmds = ft_split_minishell(str, " \n\t");
 	}
+	free(str);
 	if (list->cmds[0] == NULL)
-		g_global.return_code = cmderr("command not found", ": null", NULL);
-	g_global.child_pid = fork();
-	if (g_global.child_pid == -1)
+		g_return_code = cmderr("command not found", ": null", NULL);
+	pid = fork();
+	if (pid == -1)
 		perror("fork");
-	else if (g_global.child_pid > 0)
+	else if (pid > 0)
 	{
-		signal(SIGQUIT, handler);
-		waitpid(g_global.child_pid, &status, 0);
+		signal(SIGINT, handle_process);
+		signal(SIGQUIT, handle_process);
+		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-			g_global.return_code = WEXITSTATUS(status);
-		kill(g_global.child_pid, SIGTERM);
+			g_return_code = WEXITSTATUS(status);
+		kill(pid, SIGTERM);
 		if (is_builtin(list->cmds[0]) == true)
 			exec_cmd(list, true);
 	}
@@ -160,10 +163,10 @@ void	exec_no_pipe(t_separate *list)
 		if (is_builtin(list->cmds[0]) == false)
 		{
 			save = strdup(list->cmds[0]);
-			get_absolute_path(list->cmds);
+			get_absolute_path(list, list->cmds);
 			if (list->cmds[0] == NULL)
 			{
-				g_global.return_code = cmderr("command not found", ": ", save);
+				g_return_code = cmderr("command not found", ": ", save);
 				free(save);
 				exit(127);	
 			}
@@ -172,13 +175,16 @@ void	exec_no_pipe(t_separate *list)
 			free(save);
 		}
 		free_stuff(list);
-		exit(g_global.return_code);
+		exit(g_return_code);
 	}
 }
 
 void	exec(t_separate *list)
 {
+	t_separate	*begin;
+
 	list = list->next;
+	begin = list;
 	while (list)
 	{
 		if (list->pipe == NULL)
@@ -189,4 +195,5 @@ void	exec(t_separate *list)
 				unlink(".heredoc.tmp");
 		list = list->next;
 	}
+	free_stuff(begin);
 }

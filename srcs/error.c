@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/19 12:57:15 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:19:21 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,12 @@ int	cmderr(char *str1, char *str2, char *str3)
 		ft_putstr_fd("\n", 2);
 	else
 		ft_putendl_fd(str3, 2);
-	g_global.return_code = 127;
+	g_return_code = 127;
 	return (127);
 }
 
 void	ft_error(t_data *pipex, int erno)
 {
-	// ft_clean(pipex);
 	(void)pipex;
 	exit(erno);
 }
@@ -57,10 +56,6 @@ void	close_files(t_data *pipex)
 	int	j;
 
 	j = 0;
-	// if (pipex->fdin != -1 && pipex->fdin != 0)
-	// 	close(pipex->fdin);
-	// if (pipex->fdout != -1 && pipex->fdout != 1)
-	// 	close(pipex->fdout);
 	while (j < (pipex->cmds - 1) * 2)
 	{
 		if (pipex->bouts[j] != -1)

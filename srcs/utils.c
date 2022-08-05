@@ -6,13 +6,13 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 13:57:32 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:26:19 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:18:40 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		ft_error_token(char *msg, char c, int i, char *str)
+static int	ft_error_token(char *msg, char c, int i, char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(msg, 2);
@@ -34,7 +34,7 @@ static int		ft_error_token(char *msg, char c, int i, char *str)
 	return (-1);
 }
 
-int		error_msg(char *str, int i, char c)
+int	error_msg(char *str, int i, char c)
 {
 	ft_error_token("syntax error near unexpected token `", c, i, str);
 	return (2);
@@ -42,21 +42,7 @@ int		error_msg(char *str, int i, char c)
 
 void	ft_exit(void)
 {
-	g_global.return_code = 1;
+	g_return_code = 1;
 	printf("exit\n");
-	// if (count_array(av) > 1)
-	// {
-	// 	if (!ft_strisdigit(av[1]))
-	// 	{
-	// 		ft_error2("exit", av[1], "numeric argument required", 255);
-	// 		return ;
-	// 	}
-	// 	else if (count_array(av) != 2)
-	// 	{
-	// 		ft_error2("exit", av[1], "too many arguments", 1);
-	// 	}
-	// 	else
-	// 		g_global.return_code = ft_atoi(av[1]);
-	// }
-	exit(g_global.return_code);
+	exit(g_return_code);
 }

@@ -1,38 +1,16 @@
 A FAIRE :
 
-SIGNAUX DANS HEREDOC bof
 
-Prompt : OK
-
-Historique : Ok
-
-Récuperer le PATH : OK
-
-Une variable globale : OK
-
-Gérer ' : Ok
-
-Gérer " : Ok
-
-Implémenter les redirections : OK
-
-Implémenter les pipes : OK
-
-Gérer les variables $ : OK
-
-Gérer $? : OK
-
-Gérer les signaux : OK
-
-Code erreur : KO -> Faire un gros check global et les chasser a la fin
+Code erreur : Reaire un gros check global et les chasser a la fin
 
 
-BUILTINS : OK
-
-
-LEAKS
-MAXI KO
+Tester les leaks avec toutes les commandes et check les mallocs non protégés
+(Il n'y a que des still reachables du à readline de ce que je vois)
 
 
 NORMINETTE
-GIGA KO
+Main etc -> OK
+
+Parsing -> KO
+
+Exec -> KO

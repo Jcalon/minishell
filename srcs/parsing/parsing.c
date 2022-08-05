@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:26:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 14:17:43 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ static t_separate	*add_list(char	*sep)
 	if (!new)
 		return (NULL);
 	new->next = NULL;
+	new->env = NULL;
 	new->str = ft_strdup(sep);
 	new->cmds = NULL;
 	new->pipe = NULL;
@@ -101,6 +102,7 @@ void	parsing(char *cmd_line, t_separate *list)
 	{
 		tmp->next = add_list(sep[i]);
 		tmp = tmp->next;
+		tmp->begin = list;
 		i++;
 	}
 	ft_free_array(sep);

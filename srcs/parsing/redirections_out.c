@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 14:05:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 19:39:37 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:11:38 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	get_fdout(size_t i, t_separate *list, t_data *pipex)
 		whitespace++;
 	if (cmd[i] == '$')
 	{
-		g_global.return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
+		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
 	while (!ft_iswhitespace(cmd[i]) && !ft_istoken(cmd[i]))
@@ -67,7 +67,7 @@ int	get_fdout(size_t i, t_separate *list, t_data *pipex)
 	list->fdout = open(list->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (list->fdout == -1)
 	{
-		g_global.return_code = errmsg(list->out, ": ", strerror(errno));
+		g_return_code = errmsg(list->out, ": ", strerror(errno));
 		return (-1);
 	}
 	if (pipex && list->fdout != 1)
@@ -115,7 +115,7 @@ int	get_fdout_append(size_t i, t_separate *list, t_data *pipex)
 		whitespace++;
 	if (cmd[i] == '$')
 	{
-		g_global.return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
+		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
 	while (!ft_iswhitespace(cmd[i]) && !ft_istoken(cmd[i]))
@@ -149,8 +149,7 @@ int	get_fdout_append(size_t i, t_separate *list, t_data *pipex)
 	list->fdout = open(list->out, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (list->fdout == -1)
 	{
-		if (g_global.child_pid)
-			g_global.return_code = errmsg(list->out, ": ", strerror(errno));
+		g_return_code = errmsg(list->out, ": ", strerror(errno));
 		return (-1);
 	}
 	if (pipex && list->fdout != 1)

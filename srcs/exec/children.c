@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:49:03 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:10:41 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ static void	exec_child(t_data *pipex, t_separate *list)
 	if (is_builtin(pipex->cmd[0]) == true)
 	{
 		exec_builtin(list, pipex);
-		exit(g_global.return_code);
+		exit(g_return_code);
 	}
 	save = strdup(pipex->cmd[0]);
-	get_absolute_path(pipex->cmd);
+	get_absolute_path(list, pipex->cmd);
 	if (pipex->cmd[0] == NULL)
 	{
 		if (access(pipex->cmd[0], F_OK) == 0
@@ -54,7 +54,7 @@ static void	exec_child(t_data *pipex, t_separate *list)
 			ft_error(pipex, errmsg(strerror(errno), ": ", save));
 		ft_error(pipex, cmderr("command not found", ": ", save));
 	}
-	if (execve(pipex->cmd[0], pipex->cmd, g_global.env) == -1)
+	if (execve(pipex->cmd[0], pipex->cmd, list->begin->env) == -1)
 		ft_error(pipex, errmsg(pipex->cmd[0], ": ", strerror(errno)));
 	// niel(pipex->cmd);
 	// free(pipex->cmdpath);
@@ -66,7 +66,7 @@ void	children(t_data *pipex, int i, t_separate *list)
 	{
 		pipex->fdin = open(".heredoc.tmp", O_RDONLY, 0644);
 		if (pipex->fdin == -1)
-			g_global.return_code = errmsg("Heredoc", ": ", strerror(errno));
+			g_return_code = errmsg("Heredoc", ": ", strerror(errno));
 	}
 	if (i == 0)
 	{

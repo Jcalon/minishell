@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 10:45:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:10:36 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@ int	builtin_cd(t_separate *list, t_data *pipex)
 		cmds = list->cmds;
 	if (ft_array_size(cmds) > 2)
 	{
-		g_global.return_code = errmsg("cd: ", "too many args", NULL);
+		g_return_code = errmsg("cd: ", "too many args", NULL);
 		return (1);
 	}
 	if (cmds[1][0] == '-' && cmds[1][1] == '\0')
 	{
-		if (chdir(ft_getenv("OLDPWD") + 7) == -1)
-			g_global.return_code = errmsg("cd: ", "OLDPWD", ": no such file or directory");
+		if (chdir(ft_getenv(list, "OLDPWD") + 7) == -1)
+			g_return_code = errmsg("cd: ", "OLDPWD", ": no such file or directory");
 		else
-			g_global.return_code = 0;
+			g_return_code = 0;
 	}
 	else
 	{
 		if (chdir(cmds[1]) == -1)
-			g_global.return_code = errmsg("cd: ", cmds[1], ": no such file or directory");
+			g_return_code = errmsg("cd: ", cmds[1], ": no such file or directory");
 		else
-			g_global.return_code = 0;
+			g_return_code = 0;
 	}
 	return (0);
 }
@@ -53,7 +53,7 @@ int	builtin_pwd(t_separate *list, t_data *pipex)
 		cmds = list->cmds;
 	if (ft_array_size(cmds) != 1)
 	{
-		g_global.return_code = 2;
+		g_return_code = 2;
 		errmsg("pwd: ", "too many args", NULL);
 	}
 	else if (getcwd(cwd, sizeof(cwd)) != NULL)
@@ -65,10 +65,10 @@ int	builtin_pwd(t_separate *list, t_data *pipex)
 		}
 		else
 			ft_putendl_fd(cwd, 1);
-		g_global.return_code = 0;
+		g_return_code = 0;
 	}
 	else
-		g_global.return_code = errmsg("pwd: ", "unexpected error", NULL);
+		g_return_code = errmsg("pwd: ", "unexpected error", NULL);
 	return (0);
 }
 
@@ -98,7 +98,7 @@ int	builtin_exit(t_separate *list, t_data *pipex)
 			ft_putendl_fd("exit", 1);
 			errmsg("exit: ", cmds[1], ": numeric argument required");
 			free_stuff(list);
-			ft_free_array(g_global.env);
+			rl_clear_history();
 			exit(2);
 		}
 		else if (ft_array_size(cmds) == 2)
@@ -106,18 +106,18 @@ int	builtin_exit(t_separate *list, t_data *pipex)
 			ft_putendl_fd("exit", 1);
 			exit_value = ft_atoi(cmds[1]);
 			free_stuff(list);
-			ft_free_array(g_global.env);
+			rl_clear_history();
 			exit(exit_value);
 		}
 		else
 		{
 			ft_putendl_fd("exit", 1);
-			g_global.return_code = errmsg("exit: ", "too many args", NULL);
+			g_return_code = errmsg("exit: ", "too many args", NULL);
 		}
 	}
 	ft_putendl_fd("exit", 1);
 	free_stuff(list);
-	ft_free_array(g_global.env);
+	rl_clear_history();
 	exit(0);
 	return (0);
 }

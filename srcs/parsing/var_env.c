@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 12:03:06 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:11:19 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*replace_by_code_var_env(char *cmd)
 	char	*tmp;
 	char	*env;
 
-	env = ft_itoa(g_global.return_code);
+	env = ft_itoa(g_return_code);
 	size_var = ft_strlen(env) - 1;
 	new_size = size_var + ft_strlen(cmd);
 	tmp = malloc(sizeof(char) * new_size);
@@ -45,7 +45,7 @@ static char	*replace_by_code_var_env(char *cmd)
 	return (tmp);
 }
 
-static char	*replace_var_env(char *cmd, size_t i, size_t j)
+static char	*replace_var_env(t_separate *list, char *cmd, size_t i, size_t j)
 {
 	size_t	size_var;
 	size_t	new_size;
@@ -55,7 +55,7 @@ static char	*replace_var_env(char *cmd, size_t i, size_t j)
 	char	*tmp;
 	char	*env;
 
-	env = ft_strdup(ft_get_var_env((cmd + j), (i - j)));
+	env = ft_strdup(ft_get_var_env(list, (cmd + j), (i - j)));
 	size_var = ft_strlen(env) - 1;
 	new_size = size_var + ft_strlen(cmd) - (i - j) + 3;
 	tmp = malloc(sizeof(char) * new_size);
@@ -128,16 +128,16 @@ static int	check_var_env(t_separate *list, size_t check)
 			j = ++i;
 			while (list->str[i] && ft_isalnum(list->str[i]))
 				i++;
-			if (ft_get_var_env((list->str + j), (i - j)))
+			if (ft_get_var_env(list, (list->str + j), (i - j)))
 			{
-				k = ft_strlen(ft_get_var_env((list->str + j), (i - j)));
-				list->str = replace_var_env(list->str, i, j);
+				k = ft_strlen(ft_get_var_env(list, (list->str + j), (i - j)));
+				list->str = replace_var_env(list, list->str, i, j);
 				return (j + k - 1);
 			}
 			else if (list->str[i] && list->str[i] == '?')
 			{
 				list->str = replace_by_code_var_env(list->str);
-				return(j + counterr(g_global.return_code) - 1);
+				return(j + counterr(g_return_code) - 1);
 			}
 		}
 		i++;

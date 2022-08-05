@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 12:40:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:11:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 		pipex->fdin = 0;
 		pipex->fdout = 1;
 		if (!get_fd_redir(list, pipex))
-			exit(g_global.return_code);
+			exit(g_return_code);
 		str = ft_strdup(list->pipe->str);
 		do_var_env(list);
 		if (list->str[0] == '\0')
@@ -113,6 +113,5 @@ void	exec_pipe(t_separate *list)
 	t_data	pipex;
 
 	pipex = data_init(list);
-	g_global.return_code = ft_pipex(&pipex, list);
-	
+	g_return_code = ft_pipex(&pipex, list);
 }

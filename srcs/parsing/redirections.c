@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 20:02:21 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:11:28 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 		whitespace++;
 	if (cmd[i] == '$')
 	{
-		g_global.return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
+		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
 	while (!ft_iswhitespace(cmd[i]) && !ft_istoken(cmd[i]))
@@ -75,7 +75,7 @@ static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 	list->fdin = open(list->in, O_RDONLY);
 	if (list->fdin == -1)
 	{
-		g_global.return_code = errmsg(list->in, ": ", strerror(errno));
+		g_return_code = errmsg(list->in, ": ", strerror(errno));
 		return (-1);
 	}
 	if (pipex && list->fdin != 0)
@@ -109,9 +109,9 @@ static int	check_fd(t_separate *list, t_data *pipex)
 
 	i = 0;
 	if (pipex)
-		cmd = pipex->actual->str;
+		cmd = ft_strdup(pipex->actual->str);
 	else
-		cmd = list->str;
+		cmd = ft_strdup(list->str);
 	while (cmd[i])
 	{
 		j = (in_quote(cmd, i));
@@ -125,30 +125,31 @@ static int	check_fd(t_separate *list, t_data *pipex)
 		if (cmd[i] == '<' && cmd[i + 1] == '<')
 		{
 			if (get_heredoc(i, list, pipex) == -1)
-				return (-1);
-			return (1);
+				return (free(cmd), -1);
+			return (free(cmd), 1);
 		}
 		else if (cmd[i] == '<')
 		{
 			if (get_fdin(i, list, pipex) == -1)
-				return (-1);
-			return (1);
+				return (free(cmd), -1);
+			return (free(cmd), 1);
 		}
 		else if (cmd[i] == '>' && list->str[i + 1] == '>')
 		{
 			if (get_fdout_append(i, list, pipex) == -1)
-				return (-1);
-			return (1);
+				return (free(cmd), -1);
+			return (free(cmd), 1);
 		}
 		else if (cmd[i] == '>')
 		{
 			if (get_fdout(i, list, pipex) == -1)
-				return (-1);
-			return (1);
+				return (free(cmd), -1);
+			return (free(cmd), 1);
 		}
 		if (i == j)
 			i++;
 	}
+	free(cmd);
 	return (0);
 }
 

@@ -6,13 +6,13 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:25:04 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 15:17:52 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_global	g_global;
+int	g_return_code;
 
 char	*ft_prompt(void)
 {
@@ -34,6 +34,18 @@ char	*ft_prompt(void)
 	return (tmp);
 }
 
+static void	lets_go(t_separate *list, char *buffer)
+{
+	parsing(buffer, list);
+	exec(list);
+}
+
+static void	ft_signal(void)
+{
+	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*buffer;
@@ -42,26 +54,23 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
-	g_global.return_code = 0;
-	g_global.child_pid = 0;
-	get_env(envp);
+	g_return_code = 0;
+	get_env(&list, envp);
 	while (1)
 	{
-		signal(SIGINT, handler);
-		signal(SIGQUIT, SIG_IGN);
+		ft_signal();
 		prompt = ft_prompt();
 		buffer = readline(prompt);
 		if (!buffer)
 			ft_exit();
 		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
 			add_history(buffer);
-		if (!syntax_error(buffer, '|') && !syntax_error(buffer, ';') && buffer[0] != '\n')
-		{
-			parsing(buffer, &list);
-			exec(&list);
-		}
+		if (!syntax_error(buffer, '|') && !syntax_error(buffer, ';')
+			&& buffer[0] != '\n')
+			lets_go(&list, buffer);
 		free(buffer);
 		free(prompt);
 	}
+	rl_clear_history();
 	return (0);
 }
