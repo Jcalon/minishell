@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 10:57:01 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 12:03:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,22 @@ int	counterr(int err)
 	return (count);
 }
 
+static size_t	in_single_quote(char *str, size_t i)
+{
+	char	c;
+
+	while (str[i] && (str[i] == '\''))
+	{
+		c = str[i];
+		i++;
+		while (str[i] && str[i] != c)
+				i++;
+		i++;
+		break ;
+	}
+	return (i);
+}
+
 static int	check_var_env(t_separate *list, size_t check)
 {
 	size_t	i;
@@ -102,7 +118,7 @@ static int	check_var_env(t_separate *list, size_t check)
 	i = check;
 	while (list->str[i])
 	{
-		j = (in_quote(list->str, i));
+		j = (in_single_quote(list->str, i));
 		if (j == ft_strlen(list->str))
 			break;
 		else if (i < j)
@@ -134,13 +150,10 @@ void	do_var_env(t_separate *list)
 	size_t	checkpoint;
 
 	checkpoint = 0;
-	if (ft_strchr(list->str, '$'))
+	while (1)
 	{
-		while (1)
-		{
-			checkpoint = check_var_env(list, checkpoint);
-			if (!checkpoint)
-				break;
-		}
+		checkpoint = check_var_env(list, checkpoint);
+		if (!checkpoint)
+			break;
 	}
 }

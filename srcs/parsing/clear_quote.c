@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/03 17:08:03 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 11:48:52 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,25 +44,19 @@ static char	*cut_quote(char	*cmd)
 {
 	size_t	i;
 	size_t	j;
-	size_t	k;
 	char	*dequoted;
 
 	dequoted = malloc(sizeof(char) * (ft_strlen(cmd) - count_quote(cmd) + 1));
 	i = 0;
-	k = 0;
+	j = 0;
 	while (cmd[i] != '\0')
 	{
-		j = in_quote(cmd, i);
-		if (j > i)
-		{
+		if (cmd[i] == '\'' || cmd[i] == '\"')
 			i++;
-			while (i < (j - 1) && cmd[i] != '\0')
-				dequoted[k++] = cmd[i++];
-		}
-		else	
-			dequoted[k++] = cmd[i++];
+		else
+			dequoted[j++] = cmd[i++];
 	}
-	dequoted[k] = '\0';
+	dequoted[j] = '\0';
 	free(cmd);
 	return(dequoted);
 }

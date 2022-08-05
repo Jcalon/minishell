@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:40:06 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 12:40:38 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ static t_data	data_init(t_separate *sep)
 
 static void	init_children(t_data *pipex, t_separate *list, int i)
 {
+	char	*str;
+
 	if (list->fdin > 0)
 		close(list->fdin);
 	if (list->fdout > 1)
@@ -54,7 +56,6 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 	list->fdin = 0;
 	list->fdout = 1;
 	list->heredoc = 0;
-	do_var_env(list);
 	pipex->pids[i] = fork();
 	if (pipex->pids[i] == -1)
 		ft_error(pipex, errmsg("Fork", ": ", strerror(errno)));
@@ -63,12 +64,19 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 		pipex->fdin = 0;
 		pipex->fdout = 1;
 		if (!get_fd_redir(list, pipex))
-			exit(EXIT_FAILURE);
+			exit(g_global.return_code);
+		str = ft_strdup(list->pipe->str);
+		do_var_env(list);
 		if (list->str[0] == '\0')
 			exit(EXIT_FAILURE);
 		pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
 		if (ft_strcmp(pipex->cmd[0], "echo"))
 			clear_quote(list, pipex);
+		else
+		{
+			ft_free_array(list->cmds);
+			list->cmds = ft_split_minishell(str, " \n\t");
+		}
 		children(pipex, i, list);
 		ft_free_array(pipex->cmd);
 	}

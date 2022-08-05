@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:30:32 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 11:31:22 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ int	builtin_echo(t_separate *list, t_data *pipex)
 				}
 				else
 				{
-					if (list->out && !ft_isdigit(cmds[i][j + 1]))
+					if (list->out && !ft_isdigit(cmds[i][j + 1]) && cmds[i][j + 1] != '\"' && cmds[i][j + 1] != '\'')
 						write(list->fdout, "$", 1);
-					else if (!ft_isdigit(cmds[i][j + 1]))
+					else if (!ft_isdigit(cmds[i][j + 1]) && cmds[i][j + 1] != '\"' && cmds[i][j + 1] != '\'')
 						write(1, "$", 1);
 					j++;
 					while (cmds[i][j] && (cmds[i][j] == '$' || ft_isdigit(cmds[i][j])))

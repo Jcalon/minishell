@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 22:41:09 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 11:45:14 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,8 @@ size_t	in_quote(char *str, size_t i)
 		i++;
 		while (str[i] && str[i] != c)
 				i++;
-		if (!str[i])
-			break ;
-		else
-			i++;
+		i++;
+		break ;
 	}
 	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:49:16 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 12:37:35 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,17 +122,23 @@ void	exec_no_pipe(t_separate *list)
 {
 	int		status;
 	char	*save;
+	char	*str;
 
 	status = 0;
-	do_var_env(list);
-	g_global.return_code = 0;
 	if (!get_fd_redir(list, NULL))
 		return ;
+	str = ft_strdup(list->str);
+	do_var_env(list);
 	if (list->str[0] == '\0')
 		return ;
 	list->cmds = ft_split_minishell(list->str, " \n\t");
 	if (ft_strcmp(list->cmds[0], "echo"))
 		clear_quote(list, NULL);
+	else
+	{
+		ft_free_array(list->cmds);
+		list->cmds = ft_split_minishell(str, " \n\t");
+	}
 	if (list->cmds[0] == NULL)
 		g_global.return_code = cmderr("command not found", ": null", NULL);
 	g_global.child_pid = fork();
@@ -161,12 +167,6 @@ void	exec_no_pipe(t_separate *list)
 				free(save);
 				exit(127);	
 			}
-			// else if (list->cmds[0] == NULL && save[0] == '/')
-			// {
-			// 	g_global.return_code = cmderr(save, ": Not a directory", NULL);
-			// 	free(save);
-			// 	exit(126);
-			// }
 			else
 				exec_cmd(list, false);
 			free(save);
