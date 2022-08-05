@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/04 21:31:04 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/05 11:17:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ size_t	num_to_unset(char	**cmd)
 	count = 0;
 	while (cmd[i])
 	{
+		if (!ft_isalpha(cmd[i][0]))
+		{
+			g_global.return_code = errmsg("unset: ", cmd[i], ": not a valid identifier");
+			return (0);
+		}
 		if (ft_isalpha(cmd[i][0])
 				&& check_double_env(cmd[i], ft_strlen_equal(cmd[i])))
 		{
@@ -68,7 +73,6 @@ int	builtin_unset(t_separate *list, t_data *pipex)
 	size_t	j;
 	size_t	k;
 	size_t	size;
-	int		err;
 	char	**new_env;
 	bool	dup;
 	char	**cmds;
@@ -77,14 +81,13 @@ int	builtin_unset(t_separate *list, t_data *pipex)
 		cmds = pipex->cmd;
 	else
 		cmds = list->cmds;
-	err = 0;
 	if (g_global.env[0] == NULL)
 	{
 		j = 1;
 		while (cmds[j])
 		{
 			if (!ft_isalpha(cmds[j][0]))
-				err = errmsg("unset: ", cmds[j], ": not a valid identifier");	
+				g_global.return_code = errmsg("unset: ", cmds[j], ": not a valid identifier");	
 			j++;
 		}
 		return (0);
@@ -111,6 +114,5 @@ int	builtin_unset(t_separate *list, t_data *pipex)
 	new_env[k] = NULL;
 	ft_free_array(g_global.env);
 	g_global.env = new_env;
-	g_global.return_code = err;
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/21 08:43:28 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/08/05 10:57:01 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*replace_var_env(char *cmd, size_t i, size_t j)
 
 	env = ft_strdup(ft_get_var_env((cmd + j), (i - j)));
 	size_var = ft_strlen(env) - 1;
-	new_size = size_var + ft_strlen(cmd) - (i - j) + 1;
+	new_size = size_var + ft_strlen(cmd) - (i - j) + 3;
 	tmp = malloc(sizeof(char) * new_size);
 	l = 0;
 	k = 0;
@@ -67,8 +67,10 @@ static char	*replace_var_env(char *cmd, size_t i, size_t j)
 		while (cmd[l] && cmd[l] != '$')
 			tmp[k++] = cmd[l++];
 		l = i;
+		tmp[k++] = '\"';
 		while (env[m])
 			tmp[k++] = env[m++];
+		tmp[k++] = '\"';
 		while (cmd[l])
 			tmp[k++] = cmd[l++];
 	}
