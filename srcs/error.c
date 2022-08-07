@@ -6,19 +6,11 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:19:21 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 17:28:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*errinfo(char *str1, char *str2)
-{
-	ft_putstr_fd(str1, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putendl_fd(str2, 2);
-	return (NULL);
-}
 
 int	errmsg(char *str1, char *str2, char *str3)
 {

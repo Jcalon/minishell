@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 15:45:21 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 18:02:24 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	ft_unset(t_separate *list, char **cmds, char **new_env)
 			new_env[index[2]++] = ft_strdup(list->begin->env[index[0]]);
 		index[0]++;
 	}
-	new_env[index[2]] = NULL;
+	new_env[--index[2]] = NULL;
 	ft_free_array(list->begin->env);
 	list->begin->env = new_env;
 }

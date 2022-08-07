@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 17:14:20 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 17:37:47 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,29 +58,6 @@ static void	update_double(t_separate *list, char **cmd, bool update)
 	}
 }
 
-static int	malloc_new_env(t_separate *list, char **cmds, char **new)
-{
-	size_t	size;
-	size_t	i;
-	char	**new_env;
-
-	i = 0;
-	if (list->begin->env[0] == NULL)
-		size = num_to_export(list, cmds) + 1;
-	else
-		size = num_to_export(list, cmds) \
-		+ ft_array_size(list->begin->env) + 1;
-	new_env = malloc(sizeof(char *) * size);
-	ft_free_array(new);
-	new = new_env;
-	while (list->begin->env[i])
-	{
-		new[i] = ft_strdup(list->begin->env[i]);
-		i++;
-	}
-	return (i);
-}
-
 static void	make_new_env(t_separate *list, char **cmd, char **new, size_t i)
 {
 	size_t	j;
@@ -110,14 +87,31 @@ static void	make_new_env(t_separate *list, char **cmd, char **new, size_t i)
 	update_double(list, cmd, update);
 }
 
-void	builtin_export(t_separate *list, t_data *pipex)
+static void	malloc_new_env(t_separate *list, char **cmds)
 {
+	size_t	size;
 	size_t	i;
 	char	**new_env;
-	char	**cmds;
 
 	i = 0;
-	new_env = ft_calloc(1, sizeof(char *));
+	if (list->begin->env[0] == NULL)
+		size = num_to_export(list, cmds) + 1;
+	else
+		size = num_to_export(list, cmds) \
+		+ ft_array_size(list->begin->env) + 1;
+	new_env = malloc(sizeof(char *) * size);
+	while (list->begin->env[i])
+	{
+		new_env[i] = ft_strdup(list->begin->env[i]);
+		i++;
+	}
+	make_new_env(list, cmds, new_env, i);
+}
+
+void	builtin_export(t_separate *list, t_data *pipex)
+{
+	char	**cmds;
+
 	if (pipex)
 		cmds = pipex->cmd;
 	else
@@ -126,8 +120,5 @@ void	builtin_export(t_separate *list, t_data *pipex)
 	if (!cmds[1])
 		builtin_env(true, list);
 	else
-	{
-		i = malloc_new_env(list, cmds, new_env);
-		make_new_env(list, cmds, new_env, i);
-	}
+		malloc_new_env(list, cmds);
 }
