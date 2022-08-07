@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 16:37:28 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 16:44:42 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:10:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 static size_t	more_syntax_error_quote(size_t i, char *str)
 {
+	char	c;
+	bool	closed;
+
+	closed = true;
 	if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 	{
 		c = str[i];
@@ -29,25 +33,25 @@ static size_t	more_syntax_error_quote(size_t i, char *str)
 				closed = true;
 		}
 	}
+	if (closed == false)
+	{
+		errmsg("syntax error: ", "quote doesn't guard", NULL);
+		return (ft_strlen(str));
+	}
 	return (i);
 }
 
 int	syntax_error_quote(char *str)
 {
 	size_t	i;
-	char	c;
-	bool	closed;
 
 	i = 0;
-	closed = true;
 	while (str[i])
 	{
 		i = more_syntax_error_quote(i, str);
 		if (str[i])
 			i++;
 	}
-	if (closed == false)
-		return (errmsg("syntax error: ", "quote doesn't guard", NULL));
 	return (0);
 }
 

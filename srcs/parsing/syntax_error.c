@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 16:45:53 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 10:54:53 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	syntax_error_last(char *str, size_t i, char c)
 	return (0);
 }
 
-static size_t	utils_syntax_error(size_t i, char *str)
+static size_t	utils_syntax_error(size_t i, char *str, char c)
 {
 	while (str[i])
 	{
@@ -75,6 +75,6 @@ int	syntax_error(char *str, char c)
 		i++;
 	if (str[i] == c)
 		return (error_msg(str, i, c));
-	i = utils_syntax_error(i, str);
+	i = utils_syntax_error(i, str, c);
 	return (syntax_error_last(str, i, c));
 }

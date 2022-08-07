@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:41:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:04:12 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,6 @@ static void	clear_standard(t_separate *list)
 
 void	clear_quote(t_separate *list, t_data *pipex)
 {
-	size_t	i;
-
-	i = 0;
 	if (pipex)
 		clear_pipex(pipex);
 	else

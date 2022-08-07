@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 13:57:32 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:43:02 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 13:21:31 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ size_t	in_quote(char *str, size_t i)
 		break ;
 	}
 	return (i);
+}
+
+int	is_c(char s, char *c)
+{
+	size_t	i;
+
+	i = 0;
+	while (c[i] != '\0')
+	{
+		if (c[i] == s)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 static int	ft_error_token(char *msg, char c, int i, char *str)

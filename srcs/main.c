@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:27:57 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:28:45 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int	g_return_code;
 
-/* Prompt est recup par readline,
-il se met a jour avec le bon Path a chaque newline*/
+/* Prompt est recup par readline */
 
 char	*ft_prompt(void)
 {
@@ -69,6 +68,7 @@ int	main(int argc, char *argv[], char *envp[])
 		ft_signal();
 		prompt = ft_prompt();
 		buffer = readline(prompt);
+		free(prompt);
 		if (!buffer)
 			ft_exit();
 		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
@@ -77,7 +77,6 @@ int	main(int argc, char *argv[], char *envp[])
 			&& buffer[0] != '\n')
 			lets_go(&list, buffer);
 		free(buffer);
-		free(prompt);
 	}
 	rl_clear_history();
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 16:52:04 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 13:21:48 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ typedef struct s_data
 
 char	*ft_prompt(void);
 
+void	get_env(t_separate *list, char **envp);
+char	**get_path(t_separate *list);
+char	*ft_getenv(t_separate *list, char *str);
+char	*ft_get_var_env(t_separate *list, char *str, size_t len);
+void	do_var_env(t_separate *list);
+
 void	handler(int sig_num);
 void	handle_process(int sig_num);
 
@@ -71,13 +77,26 @@ int		syntax_error(char *str, char c);
 int		syntax_error_quote(char *str);
 int		syntax_error_redir(char *str, char c);
 void	parsing(char *cmd_line, t_separate *list);
-void	clear_quote(t_separate *list, t_data *pipex);
 
+int		get_fd_redir(t_separate *list, t_data *pipex);
+int		get_fdin(size_t i, t_separate *list, t_data *pipex);
+int		get_fdout(size_t i, t_separate *list, t_data *pipex);
+int		get_fdout_append(size_t i, t_separate *list, t_data *pipex);
+int		get_heredoc(size_t i, t_separate *list, t_data *pipex);
+int		ft_istoken(int c);
+size_t	get_fd_name_len(char *cmd, size_t *size, size_t i);
+void	remove_redir(t_separate *list, t_data *pipex, size_t *size, char *cmd);
+
+int		check_var_env(t_separate *list, size_t check);
+char	*replace_by_code_var_env(char *cmd);
 size_t	in_single_quote(char *str, size_t i);
 int		counterr(int err);
-char	*replace_by_code_var_env(char *cmd);
+
+void	clear_quote(t_separate *list, t_data *pipex);
 
 size_t	in_quote(char *str, size_t i);
+int		is_c(char s, char *c);
+char	**ft_split_minishell(char const *s, char *c);
 
 void	exec(t_separate *list);
 void	exec_pipe(t_separate *list);
@@ -108,19 +127,8 @@ void	close_files(t_data *pipex);
 void	children(t_data *pipex, int i, t_separate *list);
 int		parent(t_data *pipex, int i);
 
-void	get_env(t_separate *list, char **envp);
-char	**get_path(t_separate *list);
-char	*ft_getenv(t_separate *list, char *str);
-char	*ft_get_var_env(t_separate *list, char *str, size_t len);
-void	do_var_env(t_separate *list);
-char	**ft_split_minishell(char const *s, char *c);
 
 
-int		get_fd_redir(t_separate *list, t_data *pipex);
-int		get_fdout(size_t i, t_separate *list, t_data *pipex);
-int		get_fdout_append(size_t i, t_separate *list, t_data *pipex);
-int		get_heredoc(size_t i, t_separate *list, t_data *pipex);
-int		ft_istoken(int c);
 void	free_stuff(t_separate *list);
 
 

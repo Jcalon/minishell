@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:35:31 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:28:12 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ static t_separate	*add_list(char	*sep)
 	new = malloc(sizeof(t_separate));
 	if (!new)
 		return (NULL);
-	new->next = NULL;
 	new->env = NULL;
+	new->next = NULL;
 	new->str = ft_strdup(sep);
 	new->cmds = NULL;
 	new->pipe = NULL;

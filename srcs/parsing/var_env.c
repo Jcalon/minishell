@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 17:04:10 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:03:51 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ static char	*replace_var_env(t_separate *list, char *cmd, size_t i, size_t j)
 	size_var = ft_strlen(env) - 1;
 	new_size = size_var + ft_strlen(cmd) - (i - j) + 3;
 	tmp = malloc(sizeof(char) * new_size);
-	dup_far_env(cmd, tmp, env, i);
+	dup_var_env(cmd, tmp, env, i);
 	free(cmd);
 	free(env);
 	return (tmp);
 }
 
-static size_t	str_swap_var_env(t_separate *list, size_t i, size_t j, size_t k)
+static size_t	str_swap_var_env(t_separate *list, size_t i, size_t j)
 {
+	size_t	k;
+
 	k = ft_strlen(ft_get_var_env(list, (list->str + j), (i - j)));
 	list->str = replace_var_env(list, list->str, i, j);
 	return (j + k - 1);
@@ -66,11 +68,10 @@ static size_t	str_swap_err_num(t_separate *list, size_t j)
 	return (j + counterr(g_return_code) - 1);
 }
 
-static int	check_var_env(t_separate *list, size_t check)
+int	check_var_env(t_separate *list, size_t check)
 {
 	size_t	i;
 	size_t	j;
-	size_t	k;
 
 	i = check;
 	while (list->str[i])
@@ -86,7 +87,7 @@ static int	check_var_env(t_separate *list, size_t check)
 			while (list->str[i] && ft_isalnum(list->str[i]))
 				i++;
 			if (ft_get_var_env(list, (list->str + j), (i - j)))
-				return (str_swap_var_env(list, i, j, k));
+				return (str_swap_var_env(list, i, j));
 			else if (list->str[i] && list->str[i] == '?')
 				return (str_swap_err_num(list, j));
 		}

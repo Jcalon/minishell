@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/08/05 16:49:13 by jcalon           ###   ########.fr        #
+#    Updated: 2022/08/07 11:40:01 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRCS 	=	srcs/main.c	\
 			srcs/parsing/ft_split_minishell.c \
 			srcs/parsing/clear_quote.c \
 			srcs/parsing/redirections.c \
+			srcs/parsing/redirections_in.c \
 			srcs/parsing/redirections_out.c \
 			srcs/parsing/redirections_heredoc.c
 

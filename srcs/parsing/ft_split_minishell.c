@@ -6,25 +6,11 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:22:29 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/16 17:58:23 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 13:21:16 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	is_c(char s, char *c)
-{
-	size_t	i;
-
-	i = 0;
-	while (c[i] != '\0')
-	{
-		if (c[i] == s)
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 static int	countword(char const *str, char *c)
 {
@@ -42,12 +28,8 @@ static int	countword(char const *str, char *c)
 			count++;
 		while (str[i] && !is_c(str[i], c))
 		{
-			if ((j = (in_quote((char *)str, i))) == ft_strlen(str))
-			{
-				i = j;
-				break ;
-			}
-			else if (i < j)
+			j = in_quote((char *)str, i);
+			if (i < j)
 				i = j;
 			else
 				i++;
@@ -66,12 +48,8 @@ static int	countletter(char const *s, char *c)
 	{
 		if (is_c(s[i], c))
 			break ;
-		if ((j = ((int)in_quote((char *)s, i))) == (int)ft_strlen(s))
-		{
-			i = j;
-			break ;
-		}
-		else if (i < j)
+		j = (int)in_quote((char *)s, i);
+		if (i < j)
 			i = j;
 		else
 			i++;

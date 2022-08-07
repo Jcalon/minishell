@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:10:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:29:15 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	builtin_exit(t_separate *list, t_data *pipex)
 		{
 			ft_putendl_fd("exit", 1);
 			errmsg("exit: ", cmds[1], ": numeric argument required");
+			ft_free_array(list->begin->env);
 			free_stuff(list);
 			rl_clear_history();
 			exit(2);
@@ -105,6 +106,7 @@ int	builtin_exit(t_separate *list, t_data *pipex)
 		{
 			ft_putendl_fd("exit", 1);
 			exit_value = ft_atoi(cmds[1]);
+			ft_free_array(list->begin->env);
 			free_stuff(list);
 			rl_clear_history();
 			exit(exit_value);
@@ -116,6 +118,7 @@ int	builtin_exit(t_separate *list, t_data *pipex)
 		}
 	}
 	ft_putendl_fd("exit", 1);
+	ft_free_array(list->begin->env);
 	free_stuff(list);
 	rl_clear_history();
 	exit(0);

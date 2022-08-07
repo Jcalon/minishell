@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:10:57 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 11:32:24 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ void	exec_no_pipe(t_separate *list)
 				exec_cmd(list, false);
 			free(save);
 		}
+		ft_free_array(list->begin->env);
 		free_stuff(list);
 		exit(g_return_code);
 	}

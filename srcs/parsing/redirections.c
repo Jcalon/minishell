@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:11:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 12:00:23 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,86 +19,33 @@ int	ft_istoken(int c)
 	return (1);
 }
 
-static int	get_fdin(size_t i, t_separate *list, t_data *pipex)
+static int	get_fd(t_separate *list, t_data *pipex, size_t i, char *cmd)
 {
-	size_t	len;
-	size_t	j;
-	size_t	k;
-	size_t	save;
-	size_t	whitespace;
-	char	*newline;
-	char	*cmd;
-
-	if (pipex)
-		cmd = pipex->actual->str;
-	else 
-		cmd = list->str;
-	len = 1;
-	save = i;
-	whitespace = 0;
-	while (ft_iswhitespace(cmd[++i]))
-		whitespace++;
-	if (cmd[i] == '$')
+	if (cmd[i] == '<' && cmd[i + 1] == '<')
 	{
-		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
-		return (-1);
+		if (get_heredoc(i, list, pipex) == -1)
+			return (free(cmd), -1);
+		return (free(cmd), 1);
 	}
-	while (!ft_iswhitespace(cmd[i]) && !ft_istoken(cmd[i]))
+	else if (cmd[i] == '<')
 	{
-		j = (in_quote(cmd, i));
-		if (j == ft_strlen(cmd))
-		{
-			len += (j - i);
-			i = j;
-			break;
-		}
-		else if (i < j)
-		{
-			len += (j - i);
-			i = j;
-		}
-		else
-		{
-			i++;
-			len++;
-		}
+		if (get_fdin(i, list, pipex) == -1)
+			return (free(cmd), -1);
+		return (free(cmd), 1);
 	}
-	if (list->in != NULL)
+	else if (cmd[i] == '>' && list->str[i + 1] == '>')
 	{
-		if (list->fdin != -1)
-			close(list->fdin);
-		free(list->in);
+		if (get_fdout_append(i, list, pipex) == -1)
+			return (free(cmd), -1);
+		return (free(cmd), 1);
 	}
-	list->heredoc = 0;
-	list->in = malloc(sizeof(char) * len);
-	ft_strlcpy(list->in, cmd + save + whitespace + 1, len);
-	list->fdin = open(list->in, O_RDONLY);
-	if (list->fdin == -1)
+	else if (cmd[i] == '>')
 	{
-		g_return_code = errmsg(list->in, ": ", strerror(errno));
-		return (-1);
+		if (get_fdout(i, list, pipex) == -1)
+			return (free(cmd), -1);
+		return (free(cmd), 1);
 	}
-	if (pipex && list->fdin != 0)
-		pipex->fdin = list->fdin;
-	newline = malloc(sizeof(char) * (ft_strlen(cmd) - len - whitespace + 1));
-	k = 0;
-	while (k < save)
-	{
-		newline[k] = cmd[k];
-		k++;
-	}
-	ft_strcpy(cmd + save + whitespace + len, newline + k);
-	if (pipex)
-	{
-		free(pipex->actual->str);
-		pipex->actual->str = newline;
-	}
-	else
-	{
-		free(list->str);
-		list->str = newline;
-	}
-	return (1);
+	return (0);
 }
 
 static int	check_fd(t_separate *list, t_data *pipex)
@@ -115,42 +62,14 @@ static int	check_fd(t_separate *list, t_data *pipex)
 	while (cmd[i])
 	{
 		j = (in_quote(cmd, i));
-		if (j == ft_strlen(cmd))
-		{
+		if (i < j)
 			i = j;
-			break;
-		}
-		else if (i < j)
-			i = j;
-		if (cmd[i] == '<' && cmd[i + 1] == '<')
-		{
-			if (get_heredoc(i, list, pipex) == -1)
-				return (free(cmd), -1);
-			return (free(cmd), 1);
-		}
-		else if (cmd[i] == '<')
-		{
-			if (get_fdin(i, list, pipex) == -1)
-				return (free(cmd), -1);
-			return (free(cmd), 1);
-		}
-		else if (cmd[i] == '>' && list->str[i + 1] == '>')
-		{
-			if (get_fdout_append(i, list, pipex) == -1)
-				return (free(cmd), -1);
-			return (free(cmd), 1);
-		}
-		else if (cmd[i] == '>')
-		{
-			if (get_fdout(i, list, pipex) == -1)
-				return (free(cmd), -1);
-			return (free(cmd), 1);
-		}
+		if (cmd[i] == '<' || cmd[i] == '>')
+			return (get_fd(list, pipex, i, cmd));
 		if (i == j)
 			i++;
 	}
-	free(cmd);
-	return (0);
+	return (free(cmd), 0);
 }
 
 int	get_fd_redir(t_separate *list, t_data *pipex)
@@ -167,12 +86,3 @@ int	get_fd_redir(t_separate *list, t_data *pipex)
 	}
 	return (1);
 }
-
-
-// FONCTION POUR TRUNC LES REDIRS
-
-// les trunc de cmdline et les mettre dans sep->fdin et sep->fdout
-
-// mettre les redir dans in et check heredoc
-
-// mettre redir dans out 
