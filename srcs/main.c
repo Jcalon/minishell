@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 17:16:56 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 19:23:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	main(int argc, char *argv[], char *envp[])
 		buffer = readline(prompt);
 		free(prompt);
 		if (!buffer)
-			ft_exit();
+			ft_exit(&list);
 		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
 			add_history(buffer);
 		if (!syntax_error(buffer, '|') && !syntax_error(buffer, ';')

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 17:27:57 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 19:23:33 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	builtin_exit(t_separate *list, t_data *pipex);
 
 void	free_array(char	**array);
 int		error_msg(char *str, int i, char c);
-void	ft_exit(void);
+void	ft_exit(t_separate *list);
 int		errmsg(char *str1, char *str2, char *str3);
 int		cmderr(char *str1, char *str2, char *str3);
 void	ft_error(t_data *pipex, int err);

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 16:56:57 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 20:03:49 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static void	exec_forked(t_separate *list)
 		if (list->cmds[0] == NULL)
 		{
 			g_return_code = cmderr("command not found", ": ", save);
+			ft_free_array(list->begin->env);
+			free_stuff(list->begin->next);
 			free(save);
 			exit(127);
 		}
@@ -48,20 +50,23 @@ static void	exec_forked(t_separate *list)
 		free(save);
 	}
 	ft_free_array(list->begin->env);
-	free_stuff(list);
+	free_stuff(list->begin->next);
 	exit(g_return_code);
 }
 
-static void	parse_token(t_separate *list)
+static int	parse_token(t_separate *list)
 {
 	char	*str;
 
 	if (!get_fd_redir(list, NULL))
-		return ;
+		return (0);
 	str = ft_strdup(list->str);
 	do_var_env(list);
 	if (list->str[0] == '\0')
-		return (free(str));
+	{
+		free(str);
+		return (0);
+	}
 	list->cmds = ft_split_minishell(list->str, " \n\t");
 	if (ft_strcmp(list->cmds[0], "echo"))
 		clear_quote(list, NULL);
@@ -73,6 +78,7 @@ static void	parse_token(t_separate *list)
 	free(str);
 	if (list->cmds[0] == NULL)
 		g_return_code = cmderr("command not found", ": null", NULL);
+	return (1);
 }
 
 static void	exec_no_pipe(t_separate *list)
@@ -81,23 +87,27 @@ static void	exec_no_pipe(t_separate *list)
 	pid_t	pid;
 
 	status = 0;
-	parse_token(list);
-	pid = fork();
-	if (pid == -1)
-		perror("fork");
-	else if (pid > 0)
-	{
-		signal(SIGINT, handle_process);
-		signal(SIGQUIT, handle_process);
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			g_return_code = WEXITSTATUS(status);
-		kill(pid, SIGTERM);
-		if (is_builtin(list->cmds[0]) == true)
-			exec_cmd(list, true);
-	}
+	if (!parse_token(list))
+		return ;
+	if (is_builtin(list->cmds[0]) == true)
+		exec_cmd(list, true);
 	else
-		exec_forked(list);
+	{
+		pid = fork();
+		if (pid == -1)
+			perror("fork");
+		else if (pid > 0)
+		{
+			signal(SIGINT, handle_process);
+			signal(SIGQUIT, handle_process);
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				g_return_code = WEXITSTATUS(status);
+			kill(pid, SIGTERM);
+		}
+		else
+			exec_forked(list);
+	}
 }
 
 void	exec(t_separate *list)

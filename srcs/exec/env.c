@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 14:05:35 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 19:56:42 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	**get_path(t_separate *list)
 	{
 		path = ft_strdup(ft_getenv(list, "PATH"));
 		paths = ft_split(path, ":");
+		free(path);
 	}
 	else
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 13:24:24 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 19:07:42 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static void	get_heredoc_lines(t_separate *list)
 
 	ctl = rl_getc_function;
 	rl_getc_function = getc;
+	g_return_code = 0;
 	while (1)
 	{
 		line = readline("> ");

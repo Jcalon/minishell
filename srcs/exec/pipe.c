@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 15:27:24 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 18:54:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,12 @@ static int	ft_pipex(t_data *pipex, t_separate *list)
 void	exec_pipe(t_separate *list)
 {
 	t_data	pipex;
+	t_pipe *tmp;
 
+	tmp = list->pipe;
 	pipex = data_init(list);
 	g_return_code = ft_pipex(&pipex, list);
+	list->pipe = tmp;
+	free(pipex.bouts);
+	free(pipex.pids);
 }

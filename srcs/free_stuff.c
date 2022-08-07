@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 14:04:52 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 17:16:26 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 20:05:00 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ int	error_msg(char *str, int i, char c)
 	return (2);
 }
 
-void	ft_exit(void)
+void	ft_exit(t_separate *list)
 {
-	g_return_code = 1;
+	ft_free_array(list->env);
 	printf("exit\n");
 	exit(g_return_code);
 }

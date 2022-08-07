@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 17:37:47 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 19:30:48 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static void	do_update(t_separate *list, char **cmd, size_t i, size_t j)
 		cmd[i], ft_strlen_equal(cmd[i]))
 		&& ft_strlen_equal(list->begin->env[j]) \
 		== ft_strlen_equal(cmd[i])
+		&& cmd[i][ft_strlen_equal(cmd[i])] == '+'
 		&& cmd[i][ft_strlen_equal(cmd[i]) + 1] == '='
-		&& cmd[i][ft_strlen_equal(cmd[i]) + 2] != '\0'
-		&& cmd[i][ft_strlen_equal(cmd[i])] == '+')
+		&& cmd[i][ft_strlen_equal(cmd[i]) + 2] != '\0')
 	{
 		ft_join_more(&list->begin->env[j], \
 		(cmd[i] + ft_strlen_equal(cmd[i]) + 2));
