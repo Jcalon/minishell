@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 18:02:24 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 18:38:34 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	check_double_env(t_separate *list, char *str, size_t len)
 	i = 0;
 	while (list->begin->env[i])
 	{
-		if (ft_strnstr(list->begin->env[i], str, len)
+		if (ft_strchrstr(list->begin->env[i], str, len)
 			&& (ft_strlen_equal(list->begin->env[i]) == ft_strlen_equal(str)))
 			return (1);
 		i++;
@@ -68,41 +68,40 @@ size_t	num_to_unset(t_separate *list, char	**cmd)
 	return (count);
 }
 
-static void	ft_unset(t_separate *list, char **cmds, char **new_env)
+void	ft_unset(t_separate *list, char **cmds, size_t size)
 {
-	size_t	index[3];
+	int		i;
+	size_t	j;
+	size_t	k;
+	char	**new_env;
 	bool	dup;
 
-	index[0] = 0;
-	index[2] = 0;
-	while (list->begin->env[index[0]])
+	new_env = malloc(sizeof(char *) * size);
+	i = -1;
+	k = 0;
+	while (list->begin->env[++i])
 	{
-		index[1] = 1;
+		j = 0;
 		dup = true;
-		while (cmds[index[1]])
+		while (cmds[++j])
 		{	
-			if (ft_strnstr(list->begin->env[index[index[1]]], \
-				cmds[index[1]], ft_strlen(cmds[index[1]]))
-				&& (ft_strlen_equal(list->begin->env[index[0]]) \
-				== ft_strlen(cmds[index[1]])))
+			if (ft_strnstr(list->begin->env[i], cmds[j], ft_strlen(cmds[j]))
+				&& (ft_strlen_equal(list->begin->env[i]) == ft_strlen(cmds[j])))
 				dup = false;
-			index[1]++;
 		}
 		if (dup == true)
-			new_env[index[2]++] = ft_strdup(list->begin->env[index[0]]);
-		index[0]++;
+			new_env[k++] = ft_strdup(list->begin->env[i]);
 	}
-	new_env[--index[2]] = NULL;
+	new_env[k] = NULL;
 	ft_free_array(list->begin->env);
 	list->begin->env = new_env;
 }
 
 void	builtin_unset(t_separate *list, t_data *pipex)
 {
-	char	**cmds;
-	char	**new_env;
+	size_t	j;
 	size_t	size;
-	size_t	i;
+	char	**cmds;
 
 	if (pipex)
 		cmds = pipex->cmd;
@@ -110,17 +109,16 @@ void	builtin_unset(t_separate *list, t_data *pipex)
 		cmds = list->cmds;
 	if (list->begin->env[0] == NULL)
 	{
-		i = 1;
-		while (cmds[i])
+		j = 1;
+		while (cmds[j])
 		{
-			if (!ft_isalpha(cmds[i][0]))
+			if (!ft_isalpha(cmds[j][0]))
 				g_return_code = errmsg("unset: ", \
-				cmds[i], ": not a valid identifier");
-			i++;
+				cmds[j], ": not a valid identifier");
+			j++;
 		}
 		return ;
 	}
 	size = ft_array_size(list->begin->env) - num_to_unset(list, cmds) + 1;
-	new_env = malloc(sizeof(char *) * size);
-	ft_unset(list, cmds, new_env);
+	ft_unset(list, cmds, size);
 }
