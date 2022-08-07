@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 10:07:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/07/16 16:56:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 14:29:56 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ size_t	ft_array_size(char **array);
 void	ft_free_array(char **array);
 
 int		ft_isalpha(int c);
-int		ft_isdigit(int c);
+int		ft_isd(int c);
 int		ft_isalnum(int c);
 int		ft_isascii(int c);
 int		ft_isprint(int c);

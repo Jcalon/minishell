@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 14:28:15 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 14:05:35 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char	*ft_get_var_env(t_separate *list, char *str, size_t len)
 	size_t	i;
 
 	i = 0;
-	
 	while (list->begin->env[i])
 	{
 		if (ft_strnstr(list->begin->env[i], str, len))
@@ -53,7 +52,8 @@ char	*ft_getenv(t_separate *list, char *str)
 	size_t	i;
 
 	i = 0;
-	while (list->begin->env[i] && ft_strncmp(list->begin->env[i], str, ft_strlen(str)))
+	while (list->begin->env[i]
+		&& ft_strncmp(list->begin->env[i], str, ft_strlen(str)))
 		i++;
 	if (!list->begin->env[i])
 		return (NULL);

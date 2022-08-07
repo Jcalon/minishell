@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 13:21:48 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 17:16:48 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,37 +99,36 @@ int		is_c(char s, char *c);
 char	**ft_split_minishell(char const *s, char *c);
 
 void	exec(t_separate *list);
-void	exec_pipe(t_separate *list);
 bool	is_builtin(char *cmd);
 void	get_absolute_path(t_separate *list, char **cmd);
+void	exec_cmd(t_separate *list, bool builtin);
 void	exec_builtin(t_separate *list, t_data *pipex);
+void	exec_pipe(t_separate *list);
+int		parent(t_data *pipex, int i);
+void	children(t_data *pipex, int i, t_separate *list);
 
-
-int		builtin_echo(t_separate *list, t_data *pipex);
-int		builtin_cd(t_separate *list, t_data *pipex);
-int		builtin_pwd(t_separate *list, t_data *pipex);
-int		builtin_export(t_separate *list, t_data *pipex);
-int		builtin_unset(t_separate *list, t_data *pipex);
-int		builtin_env(bool export, t_separate *list);
-int		builtin_exit(t_separate *list, t_data *pipex);
+void	builtin_echo(t_separate *list, t_data *pipex);
+int		test_fdout(t_separate *list);
+void	builtin_cd(t_separate *list, t_data *pipex);
+void	builtin_pwd(t_separate *list, t_data *pipex);
+void	builtin_export(t_separate *list, t_data *pipex);
+char	*concat_new(char *cmd);
+size_t	num_to_export(t_separate *list, char **cmd);
 int		check_double_env(t_separate *list, char *str, size_t len);
 size_t	ft_strlen_equal(const char *s);
+void	builtin_unset(t_separate *list, t_data *pipex);
+void	builtin_env(bool export, t_separate *list);
+void	builtin_exit(t_separate *list, t_data *pipex);
 
 void	free_array(char	**array);
 int		error_msg(char *str, int i, char c);
 void	ft_exit(void);
-
 char	*errinfo(char *str1, char *str2);
 int		errmsg(char *str1, char *str2, char *str3);
 int		cmderr(char *str1, char *str2, char *str3);
 void	ft_error(t_data *pipex, int err);
 void	close_files(t_data *pipex);
-void	children(t_data *pipex, int i, t_separate *list);
-int		parent(t_data *pipex, int i);
-
-
-
+size_t	ft_lstsize(t_pipe *pipe);
 void	free_stuff(t_separate *list);
-
 
 #endif

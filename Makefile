@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/08/07 11:40:01 by jcalon           ###   ########.fr        #
+#    Updated: 2022/08/07 17:18:48 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,14 @@ SRCS 	=	srcs/main.c	\
 			srcs/exec/builtin_echo.c \
 			srcs/exec/builtin_env.c \
 			srcs/exec/builtin_export.c \
+			srcs/exec/builtin_export_utils.c \
 			srcs/exec/builtin_unset.c \
 			srcs/exec/exec.c \
 			srcs/utils.c \
 			srcs/free_stuff.c \
 			srcs/signal.c \
 			srcs/exec/pipe.c	\
+			srcs/exec/start_exec.c	\
 			srcs/exec/children.c \
 			srcs/error.c \
 			srcs/exec/env.c \

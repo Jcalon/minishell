@@ -1,16 +1,7 @@
 A FAIRE :
 
-Code erreur : Reaire un gros check global et les chasser a la fin
+Code erreur : recheck
 
+Protéger les mallocs et creer un exit
 
-Prot2ger les mallocs;
-
-Check leaks;
-
-
-NORMINETTE
-Main etc -> OK
-
-Parsing -> OK
-
-Exec -> KO
+Recheck toute la liste notion et tous les leaks

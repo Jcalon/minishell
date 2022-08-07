@@ -6,26 +6,11 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 11:27:15 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/05 15:11:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/07 15:27:24 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-size_t	ft_lstsize(t_pipe *pipe)
-{
-	t_pipe	*list;
-	size_t	i;
-
-	list = pipe;
-	i = 0;
-	while (list)
-	{
-		i++;
-		list = list->next;
-	}
-	return (i);
-}
 
 static t_data	data_init(t_separate *sep)
 {
@@ -45,10 +30,32 @@ static t_data	data_init(t_separate *sep)
 	return (pipex);
 }
 
-static void	init_children(t_data *pipex, t_separate *list, int i)
+static void	do_children(t_data *pipex, t_separate *list, size_t i)
 {
 	char	*str;
 
+	pipex->fdin = 0;
+	pipex->fdout = 1;
+	if (!get_fd_redir(list, pipex))
+		exit(g_return_code);
+	str = ft_strdup(list->pipe->str);
+	do_var_env(list);
+	if (list->str[0] == '\0')
+		exit(EXIT_FAILURE);
+	pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
+	if (ft_strcmp(pipex->cmd[0], "echo"))
+		clear_quote(list, pipex);
+	else
+	{
+		ft_free_array(list->cmds);
+		list->cmds = ft_split_minishell(str, " \n\t");
+	}
+	children(pipex, i, list);
+	ft_free_array(pipex->cmd);
+}
+
+static void	init_children(t_data *pipex, t_separate *list, int i)
+{
 	if (list->fdin > 0)
 		close(list->fdin);
 	if (list->fdout > 1)
@@ -60,26 +67,7 @@ static void	init_children(t_data *pipex, t_separate *list, int i)
 	if (pipex->pids[i] == -1)
 		ft_error(pipex, errmsg("Fork", ": ", strerror(errno)));
 	else if (pipex->pids[i] == 0)
-	{
-		pipex->fdin = 0;
-		pipex->fdout = 1;
-		if (!get_fd_redir(list, pipex))
-			exit(g_return_code);
-		str = ft_strdup(list->pipe->str);
-		do_var_env(list);
-		if (list->str[0] == '\0')
-			exit(EXIT_FAILURE);
-		pipex->cmd = ft_split_minishell(list->pipe->str, " \n\t");
-		if (ft_strcmp(pipex->cmd[0], "echo"))
-			clear_quote(list, pipex);
-		else
-		{
-			ft_free_array(list->cmds);
-			list->cmds = ft_split_minishell(str, " \n\t");
-		}
-		children(pipex, i, list);
-		ft_free_array(pipex->cmd);
-	}
+		do_children(pipex, list, i);
 }
 
 static int	ft_pipex(t_data *pipex, t_separate *list)
