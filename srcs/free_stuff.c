@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 14:04:52 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 20:05:00 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 15:03:58 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ static void	free_content(t_separate *list)
 		free(list->in);
 	if (list->out)
 		free(list->out);
+	if (list->fdin != -1)
+		close(list->fdin);
+	if (list->fdout != -1)
+		close(list->fdout);
 }
 
 void	free_stuff(t_separate *list)
@@ -81,5 +85,8 @@ void	ft_exit(t_separate *list)
 {
 	ft_free_array(list->env);
 	printf("exit\n");
+	close(STDERR_FILENO);
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
 	exit(g_return_code);
 }

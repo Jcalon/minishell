@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 12:00:23 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 13:48:12 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ static int	check_fd(t_separate *list, t_data *pipex)
 			i = j;
 		if (cmd[i] == '<' || cmd[i] == '>')
 			return (get_fd(list, pipex, i, cmd));
-		if (i == j)
-			i++;
+		i++;
 	}
 	return (free(cmd), 0);
 }

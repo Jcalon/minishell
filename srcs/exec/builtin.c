@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 15:23:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 15:00:41 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,17 @@ void	builtin_pwd(t_separate *list, t_data *pipex)
 	else if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		ft_putendl_fd(cwd, test_fdout(list));
-		if (list->out)
-			close(list->fdout);
 		g_return_code = 0;
 	}
 	else
 		g_return_code = errmsg("pwd: ", "unexpected error", NULL);
+}
+
+void	close_std(void)
+{
+	close(STDERR_FILENO);
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
 }
 
 static void	exit_with_args(t_separate *list, char **cmds, size_t i)
@@ -75,7 +80,7 @@ static void	exit_with_args(t_separate *list, char **cmds, size_t i)
 		errmsg("exit: ", cmds[1], ": numeric argument required");
 		ft_free_array(list->begin->env);
 		free_stuff(list);
-		rl_clear_history();
+		close_std();
 		exit(2);
 	}
 	else if (ft_array_size(cmds) == 2)
@@ -84,7 +89,7 @@ static void	exit_with_args(t_separate *list, char **cmds, size_t i)
 		exit_value = ft_atoi(cmds[1]);
 		ft_free_array(list->begin->env);
 		free_stuff(list);
-		rl_clear_history();
+		close_std();
 		exit(exit_value);
 	}
 	else
@@ -119,6 +124,6 @@ void	builtin_exit(t_separate *list, t_data *pipex)
 	ft_putendl_fd("exit", 1);
 	ft_free_array(list->begin->env);
 	free_stuff(list);
-	rl_clear_history();
+	close_std();
 	exit(0);
 }

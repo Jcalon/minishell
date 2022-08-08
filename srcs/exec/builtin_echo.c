@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 19:20:24 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 14:58:42 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,11 @@ static size_t	print_echo(t_separate *list, char **cmds, size_t i, size_t j)
 	}
 	if (cmds[i][j] && cmds[i][j] == '$' && c != '\'')
 		j = print_var_env(list, cmds, i, j);
-	else if (cmds[i][j] && cmds[i][j] != c)
-		write(test_fdout(list), &cmds[i][j], 1);
+	else
+	{
+		while (cmds[i][j] && cmds[i][j] != c)
+			write(test_fdout(list), &cmds[i][j++], 1);
+	}
 	return (j);
 }
 
@@ -121,7 +124,5 @@ void	builtin_echo(t_separate *list, t_data *pipex)
 	ft_echo(list, cmds, i);
 	if (n == false)
 		write(test_fdout(list), "\n", 1);
-	if (list->out)
-		close(list->fdout);
 	g_return_code = 0;
 }

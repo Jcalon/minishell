@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 17:28:02 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 16:02:57 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,24 @@ int	cmderr(char *str1, char *str2, char *str3)
 	return (127);
 }
 
-void	ft_error(t_data *pipex, int erno)
+void	ft_quit(t_separate *list)
 {
-	(void)pipex;
+	ft_free_array(list->begin->env);
+	free_stuff(list->begin->next);
+	close_std();
+	exit(g_return_code);
+}
+
+void	ft_error(t_separate *list, t_data *pipex, int erno)
+{
+	close_files(pipex);
+	free(pipex->bouts);
+	free(pipex->pids);
+	if (pipex->cmd)
+		ft_free_array(pipex->cmd);
+	ft_free_array(list->begin->env);
+	free_stuff(list->begin->next);
+	close_std();
 	exit(erno);
 }
 

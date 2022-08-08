@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 11:39:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 13:04:45 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 13:46:03 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ size_t	get_fd_name_len(char *cmd, size_t *size, size_t i)
 		if (i < j)
 		{
 			size[0] += (j - i);
-			i = j;
+			i = j + 1;
 		}
 		else
 		{

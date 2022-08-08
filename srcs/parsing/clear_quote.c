@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 11:04:12 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 13:56:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,13 @@ static int	count_quote(char *str)
 	i = 0;
 	while (str[i])
 	{
-		k = (in_quote((char *)str, i));
-		if (k == ft_strlen(str))
-		{
-			count += 2;
-			i = k;
-			break ;
-		}
-		else if (i == k)
+		k = in_quote((char *)str, i);
+		if (i == k)
 			i++;
 		else if (i < k)
 		{
 			count += 2;
-			i = k;
+			i = k + 1;
 		}
 	}
 	return (count);
@@ -70,6 +64,8 @@ static void	clear_pipex(t_data *pipex)
 	{
 		if (ft_strchr(pipex->cmd[i], '\'') || ft_strchr(pipex->cmd[i], '\"'))
 			pipex->cmd[i] = cut_quote(pipex->cmd[i]);
+		if (!ft_strcmp(pipex->cmd[0], "echo"))
+			break ;
 		i++;
 	}	
 }
@@ -83,6 +79,8 @@ static void	clear_standard(t_separate *list)
 	{
 		if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
 			list->cmds[i] = cut_quote(list->cmds[i]);
+		if (!ft_strcmp(list->cmds[0], "echo"))
+			break ;
 		i++;
 	}
 }

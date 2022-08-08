@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:48:00 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 15:46:01 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 15:28:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,7 @@ void	builtin_env(bool export, t_separate *list)
 		while (list->begin->env[i])
 		{
 			if (ft_strchr(list->begin->env[i], '='))
-			{
-				if (list->out)
-				{
-					ft_putendl_fd(list->begin->env[i], list->fdout);
-					close(list->fdout);
-				}
-				else
-					ft_putendl_fd(list->begin->env[i], 1);
-			}
+				ft_putendl_fd(list->begin->env[i], test_fdout(list));
 			i++;
 		}	
 	}

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 10:54:53 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 12:56:53 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static size_t	utils_syntax_error(size_t i, char *str, char c)
 {
 	while (str[i])
 	{
-		i = (in_quote(str, i));
+		i = in_quote(str, i);
 		if (str[i] && str[i] == c)
 		{
 			while (str[++i] && (str[i] == ' ' || str[i] == '>'
