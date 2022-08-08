@@ -1,7 +1,5 @@
 A FAIRE :
 
-Code erreur : recheck
+Recheck un petit check global
 
-Protéger les mallocs et creer un exit
-
-Recheck toute la liste notion et tous les leaks
+Update ft_quit pour erreur malloc et free data_pipe

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:50:07 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 15:50:39 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 19:40:36 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	exec_builtin(t_separate *list, t_data *pipex)
 	else if (!ft_strcmp(cmds[0], "cd"))
 		builtin_cd(list, pipex);
 	else if (!ft_strcmp(cmds[0], "pwd"))
-		builtin_pwd(list, pipex);
+		builtin_pwd(list);
 	else if (!ft_strcmp(cmds[0], "export"))
 		builtin_export(list, pipex);
 	else if (!ft_strcmp(cmds[0], "unset"))

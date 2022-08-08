@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 11:28:12 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 18:03:09 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static t_pipe	*add_pipe(char	*cmds)
 	if (!new)
 		return (NULL);
 	new->next = NULL;
+	new->begin = NULL;
 	new->str = ft_strdup(cmds);
 	return (new);
 }
@@ -39,6 +40,7 @@ static t_pipe	*make_pipe(t_separate *sep)
 	{
 		tmp->next = add_pipe(cmds[i]);
 		tmp = tmp->next;
+		tmp->begin = pipe;
 		i++;
 	}
 	ft_free_array(cmds);

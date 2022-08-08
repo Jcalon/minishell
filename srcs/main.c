@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 19:23:17 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 20:17:54 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,16 @@ char	*ft_prompt(void)
 
 	tmp = ft_strdup("\033[32;1mminishell@\033[0m\e[1;34m");
 	str = getcwd(NULL, 0);
-	len = ft_strlen(str);
+	len = 0;
 	count_slash = 0;
-	while (--len && count_slash < 3)
-		if (str[len] == '/')
-			count_slash++;
-	ft_join_more(&tmp, str + len + 2);
+	len = ft_strlen(str);
+	if (len > 3)
+	{
+		while (--len && count_slash < 3)
+			if (str[len] == '/')
+				count_slash++;
+		ft_join_more(&tmp, str + len + 2);
+	}
 	ft_join_more(&tmp, "$>\e[0m ");
 	free(str);
 	return (tmp);

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 14:58:42 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 20:47:51 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ static size_t	print_var_env(t_separate *list, char **cmds, size_t i, size_t j)
 		while (ft_isalnum(cmds[i][j + k]))
 			k++;
 		ft_putstr_fd(ft_get_var_env(list, cmds[i] + j, k), test_fdout(list));
-		j += k - 1;
+		j += k;
 	}
 	else
 	{
 		if (!ft_isd(cmds[i][j + 1]) && (cmds[i][j + 1] == '\"'
-			|| cmds[i][j + 1] == '\'' || cmds[i][j + 1] == '\0'))
+			&& cmds[i][j + 2] == '\0'))
 			j += write(test_fdout(list), "$", 1);
 		while (cmds[i][j] && (cmds[i][j + 1] == '$' || ft_isd(cmds[i][j + 1])))
 			j++;
@@ -72,17 +72,17 @@ static size_t	print_echo(t_separate *list, char **cmds, size_t i, size_t j)
 		j++;
 		while (cmds[i][j] && cmds[i][j] == c)
 		{
-			c = 0;
+			c = '\0';
 			if ((cmds[i][j + 1] == '\'' || cmds[i][j + 1] == '\"'))
 				c = cmds[i][j + 1];
 			j++;
 		}
 	}
-	if (cmds[i][j] && cmds[i][j] == '$' && c != '\'')
-		j = print_var_env(list, cmds, i, j);
-	else
+	while (cmds[i][j] && cmds[i][j] != c && c != '\0')
 	{
-		while (cmds[i][j] && cmds[i][j] != c)
+		if (cmds[i][j] && cmds[i][j] == '$' && c != '\'')
+			j = print_var_env(list, cmds, i, j);
+		else
 			write(test_fdout(list), &cmds[i][j++], 1);
 	}
 	return (j);
@@ -91,14 +91,22 @@ static size_t	print_echo(t_separate *list, char **cmds, size_t i, size_t j)
 static void	ft_echo(t_separate *list, char **cmds, size_t i)
 {
 	size_t	j;
+	size_t	k;
 
 	while (cmds[i])
 	{
 		j = 0;
+		k = 0;
 		while (cmds[i][j])
 		{
-			j = print_echo(list, cmds, i, j);
-			if (cmds[i][j])
+			k = print_echo(list, cmds, i, j);
+			if (k > j)
+				j = k;
+			else if (cmds[i][j] && cmds[i][j] != '$')
+				j += write(test_fdout(list), &cmds[i][j], 1);
+			else if (ft_isalnum(cmds[i][j + 1]) || cmds[i][j + 1] == '\0')
+				j += write(test_fdout(list), &cmds[i][j], 1);
+			else
 				j++;
 		}
 		if (cmds[i + 1] != NULL)

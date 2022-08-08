@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 15:47:48 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 18:32:42 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,15 @@ static void	exec_forked(t_separate *list)
 
 static int	parse_token(t_separate *list)
 {
-	char	*str;
-
 	if (!get_fd_redir(list, NULL))
 		return (0);
-	str = ft_strdup(list->str);
 	do_var_env(list);
 	if (list->str[0] == '\0')
-		return (free(str), 0);
+		return (0);
 	list->cmds = ft_split_minishell(list->str, " \n\t");
-	if (ft_strcmp(list->cmds[0], "echo"))
-		clear_quote(list, NULL);
-	else
-	{
-		ft_free_array(list->cmds);
-		list->cmds = ft_split_minishell(str, " \n\t");
-	}
-	free(str);
+	if (!list->cmds)
+		return (0);
+	clear_quote(list, NULL);
 	if (list->cmds[0] == NULL)
 	{
 		g_return_code = cmderr("command not found", ": null", NULL);

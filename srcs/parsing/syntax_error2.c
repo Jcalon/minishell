@@ -6,13 +6,13 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 16:37:28 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 13:48:37 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 17:41:33 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	more_syntax_error_quote(size_t i, char *str)
+static int	more_syntax_error_quote(int i, char *str)
 {
 	char	c;
 	bool	closed;
@@ -36,19 +36,21 @@ static size_t	more_syntax_error_quote(size_t i, char *str)
 	if (closed == false)
 	{
 		errmsg("syntax error: ", "quote doesn't guard", NULL);
-		return (ft_strlen(str));
+		return (-1);
 	}
 	return (i);
 }
 
 int	syntax_error_quote(char *str)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (str[i])
 	{
 		i = more_syntax_error_quote(i, str);
+		if (i == -1)
+			return (1);
 		if (str[i])
 			i++;
 	}
@@ -71,7 +73,7 @@ int	syntax_error_redir(char *str, char c)
 				j++;
 			i++;
 			if (j == 3)
-				return (error_msg(str, i + 1, c));
+				return (error_msg(str, i, c));
 		}
 		while (str[i] && ft_iswhitespace(str[i]))
 			i++;

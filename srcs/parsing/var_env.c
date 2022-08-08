@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 13:25:20 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 20:51:42 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@ static void	dup_var_env(char *cmd, char *tmp, char *env, size_t i)
 		while (cmd[l] && cmd[l] != '$')
 			tmp[k++] = cmd[l++];
 		l = i;
-		tmp[k++] = '\"';
 		while (env[m])
 			tmp[k++] = env[m++];
-		tmp[k++] = '\"';
 		while (cmd[l])
 			tmp[k++] = cmd[l++];
 	}
@@ -45,7 +43,7 @@ static char	*replace_var_env(t_separate *list, char *cmd, size_t i, size_t j)
 
 	env = ft_strdup(ft_get_var_env(list, (cmd + j), (i - j)));
 	size_var = ft_strlen(env) - 1;
-	new_size = size_var + ft_strlen(cmd) - (i - j) + 3;
+	new_size = size_var + ft_strlen(cmd) - (i - j) + 1;
 	tmp = malloc(sizeof(char) * new_size);
 	dup_var_env(cmd, tmp, env, i);
 	free(cmd);
@@ -91,7 +89,8 @@ int	check_var_env(t_separate *list, size_t check)
 			else if (list->str[i] && list->str[i] == '?')
 				return (str_swap_err_num(list, j));
 		}
-		i++;
+		if (list->str[i])
+			i++;
 	}
 	return (0);
 }

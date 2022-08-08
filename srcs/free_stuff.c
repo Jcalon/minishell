@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 14:04:52 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 15:03:58 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 18:05:15 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	free_stuff(t_separate *list)
 		tmp = list->next;
 		if (list->pipe != NULL)
 		{
+			if (list->pipe->begin)
+				list->pipe = list->pipe->begin;
 			while (list->pipe)
 			{
 				tmp2 = list->pipe->next;
@@ -59,7 +61,7 @@ static int	ft_error_token(char *msg, char c, int i, char *str)
 	ft_putstr_fd(msg, 2);
 	if (c == 'n')
 		ft_putstr_fd("newline\'\n", 2);
-	else if (str[i + 1] == c || (i > 0 && str[i - 1] == c))
+	else if (i > 0 && str[i - 1] == c)
 	{
 		ft_putchar_fd(c, 2);
 		ft_putchar_fd(c, 2);

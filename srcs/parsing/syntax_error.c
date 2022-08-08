@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 12:56:53 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 17:30:19 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ static size_t	utils_syntax_error(size_t i, char *str, char c)
 			if (!str[i])
 				break ;
 		}
-		i++;
+		if (str[i])
+			i++;
 	}
 	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 15:00:41 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/08 19:43:01 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	builtin_cd(t_separate *list, t_data *pipex)
 		cmds = list->cmds;
 	if (ft_array_size(cmds) > 2)
 		g_return_code = errmsg("cd: ", "too many args", NULL);
-	if (cmds[1][0] == '-' && cmds[1][1] == '\0')
+	else if (cmds[1][0] == '-' && cmds[1][1] == '\0')
 	{
 		if (chdir(ft_getenv(list, "OLDPWD") + 7) == -1)
 			g_return_code = errmsg("cd: ", \
@@ -40,21 +40,11 @@ void	builtin_cd(t_separate *list, t_data *pipex)
 	}
 }
 
-void	builtin_pwd(t_separate *list, t_data *pipex)
+void	builtin_pwd(t_separate *list)
 {
 	char	cwd[PATH_MAX];
-	char	**cmds;
 
-	if (pipex)
-		cmds = pipex->cmd;
-	else
-		cmds = list->cmds;
-	if (ft_array_size(cmds) != 1)
-	{
-		g_return_code = 2;
-		errmsg("pwd: ", "too many args", NULL);
-	}
-	else if (getcwd(cwd, sizeof(cwd)) != NULL)
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		ft_putendl_fd(cwd, test_fdout(list));
 		g_return_code = 0;
@@ -63,14 +53,14 @@ void	builtin_pwd(t_separate *list, t_data *pipex)
 		g_return_code = errmsg("pwd: ", "unexpected error", NULL);
 }
 
-void	close_std(void)
+static int	exit_too_many_arg(void)
 {
-	close(STDERR_FILENO);
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
+	ft_putendl_fd("exit", 1);
+	g_return_code = errmsg("exit: ", "too many args", NULL);
+	return (1);
 }
 
-static void	exit_with_args(t_separate *list, char **cmds, size_t i)
+static int	exit_with_args(t_separate *list, char **cmds, size_t i)
 {
 	int		exit_value;
 
@@ -93,10 +83,8 @@ static void	exit_with_args(t_separate *list, char **cmds, size_t i)
 		exit(exit_value);
 	}
 	else
-	{
-		ft_putendl_fd("exit", 1);
-		g_return_code = errmsg("exit: ", "too many args", NULL);
-	}
+		return (exit_too_many_arg());
+	return (0);
 }
 
 void	builtin_exit(t_separate *list, t_data *pipex)
@@ -119,11 +107,10 @@ void	builtin_exit(t_separate *list, t_data *pipex)
 				break ;
 			i++;
 		}
-		exit_with_args(list, cmds, i);
+		if (exit_with_args(list, cmds, i))
+			return ;
 	}
 	ft_putendl_fd("exit", 1);
-	ft_free_array(list->begin->env);
-	free_stuff(list);
-	close_std();
-	exit(0);
+	g_return_code = 0;
+	ft_quit(list);
 }
