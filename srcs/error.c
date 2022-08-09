@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 16:02:57 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:24:30 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,20 @@ void	ft_quit(t_separate *list)
 
 void	ft_error(t_separate *list, t_data *pipex, int erno)
 {
-	close_files(pipex);
-	free(pipex->bouts);
-	free(pipex->pids);
-	if (pipex->cmd)
-		ft_free_array(pipex->cmd);
-	ft_free_array(list->begin->env);
-	free_stuff(list->begin->next);
+	if (pipex)
+	{
+		close_files(pipex);
+		free(pipex->bouts);
+		free(pipex->pids);
+		if (pipex->cmd)
+			ft_free_array(pipex->cmd);
+	}
+	if (list->begin && list->begin->env)
+		ft_free_array(list->begin->env);
+	if (list->env)
+		ft_free_array(list->env);
+	if (list->begin)
+		free_stuff(list->begin->next);
 	close_std();
 	exit(erno);
 }

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 18:31:55 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 18:03:09 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 14:50:52 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static t_pipe	*make_pipe(t_separate *sep)
 	while (cmds[i])
 	{
 		tmp->next = add_pipe(cmds[i]);
+		if (!tmp->next || !tmp->next->str)
+			ft_error(sep, NULL, errmsg("Unexpected malloc error", "", ""));
 		tmp = tmp->next;
 		tmp->begin = pipe;
 		i++;
@@ -103,6 +105,8 @@ void	parsing(char *cmd_line, t_separate *list)
 	while (sep[i])
 	{
 		tmp->next = add_list(sep[i]);
+		if (!tmp->next || !tmp->next->str)
+			ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
 		tmp = tmp->next;
 		tmp->begin = list;
 		i++;

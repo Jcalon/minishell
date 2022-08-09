@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:50:07 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 19:40:36 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 14:46:05 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,11 @@ static int	make_absolute_path(char **paths, char **cmd)
 	while (paths[i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
+		if (!tmp)
+			return (1);
 		cmdpath = ft_strjoin(tmp, cmd[0]);
+		if (!cmdpath)
+			return (free(tmp), 1);
 		free(tmp);
 		if (access(cmdpath, X_OK) == 0)
 		{

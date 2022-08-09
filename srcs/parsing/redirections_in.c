@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 11:39:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 20:54:41 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 13:51:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	remove_redir(t_separate *list, t_data *pipex, size_t *size, char *cmd)
 
 	k = 0;
 	newline = malloc(sizeof(char) * (ft_strlen(cmd) - size[0] - size[2] + 1));
+	if (!newline)
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	while (k < size[1])
 	{
 		newline[k] = cmd[k];
@@ -59,7 +61,7 @@ size_t	get_fd_name_len(char *cmd, size_t *size, size_t i)
 	return (size[0]);
 }
 
-static int	open_fdin(t_separate *list, char *cmd, size_t *size)
+static int	open_fdin(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 {
 	if (list->in != NULL)
 	{
@@ -68,6 +70,8 @@ static int	open_fdin(t_separate *list, char *cmd, size_t *size)
 		free(list->in);
 	}
 	list->in = malloc(sizeof(char) * size[0]);
+	if (!list->in)
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	ft_strlcpy(list->in, cmd + size[1] + size[2] + 1, size[0]);
 	list->fdin = open(list->in, O_RDONLY);
 	if (list->fdin == -1)
@@ -97,7 +101,7 @@ int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 		return (-1);
 	}
 	size[0] = get_fd_name_len(cmd, size, i);
-	if (open_fdin(list, cmd, size) == -1)
+	if (open_fdin(list, pipex, cmd, size) == -1)
 		return (-1);
 	if (pipex && list->fdin != 0)
 		pipex->fdin = list->fdin;

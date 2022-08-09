@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 19:30:48 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 14:59:19 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static void	do_update(t_separate *list, char **cmd, size_t i, size_t j)
 	{
 		free(list->begin->env[j]);
 		list->begin->env[j] = ft_strdup(cmd[i]);
+		if (!list->begin->env[j])
+			ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
 	}
 }
 
@@ -81,13 +83,13 @@ static void	make_new_env(t_separate *list, char **cmd, char **new, size_t i)
 			}
 		}
 	}
-	new[i] = NULL;
+	ft_check_dup(list, NULL, i, new);
 	ft_free_array(list->begin->env);
 	list->begin->env = new;
 	update_double(list, cmd, update);
 }
 
-static void	malloc_new_env(t_separate *list, char **cmds)
+static void	malloc_new_env(t_separate *list, t_data *pipex, char **cmds)
 {
 	size_t	size;
 	size_t	i;
@@ -100,9 +102,13 @@ static void	malloc_new_env(t_separate *list, char **cmds)
 		size = num_to_export(list, cmds) \
 		+ ft_array_size(list->begin->env) + 1;
 	new_env = malloc(sizeof(char *) * size);
+	if (!new_env)
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	while (list->begin->env[i])
 	{
 		new_env[i] = ft_strdup(list->begin->env[i]);
+		if (!new_env[i])
+			ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 		i++;
 	}
 	make_new_env(list, cmds, new_env, i);
@@ -120,5 +126,5 @@ void	builtin_export(t_separate *list, t_data *pipex)
 	if (!cmds[1])
 		builtin_env(true, list);
 	else
-		malloc_new_env(list, cmds);
+		malloc_new_env(list, pipex, cmds);
 }

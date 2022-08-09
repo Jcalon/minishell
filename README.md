@@ -1,5 +1,9 @@
-A FAIRE :
+L’objectif de ce projet est de créer un shell minimaliste.
 
-Recheck un petit check global
+Leaks Ok
 
-Update ft_quit pour erreur malloc et free data_pipe
+Norm Ok
+
+Fd Ok
+
+Refaire un petit check global.

@@ -6,11 +6,14 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 17:30:19 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:55:32 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Avant toutes choses on check si y a des pbms de redir,
+ 	un pipe tout seul ou des quotes non fermées */
 
 static int	syntax_error_newline(char *str, size_t i)
 {

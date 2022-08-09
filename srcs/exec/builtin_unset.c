@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 18:38:34 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 14:56:30 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ size_t	num_to_unset(t_separate *list, char	**cmd)
 	return (count);
 }
 
-void	ft_unset(t_separate *list, char **cmds, size_t size)
+void	ft_unset(t_separate *list, t_data *pipex, char **cmds, size_t size)
 {
 	int		i;
 	size_t	j;
@@ -77,6 +77,8 @@ void	ft_unset(t_separate *list, char **cmds, size_t size)
 	bool	dup;
 
 	new_env = malloc(sizeof(char *) * size);
+	if (!new_env)
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	i = -1;
 	k = 0;
 	while (list->begin->env[++i])
@@ -92,9 +94,7 @@ void	ft_unset(t_separate *list, char **cmds, size_t size)
 		if (dup == true)
 			new_env[k++] = ft_strdup(list->begin->env[i]);
 	}
-	new_env[k] = NULL;
-	ft_free_array(list->begin->env);
-	list->begin->env = new_env;
+	ft_unset_swap_env(list, new_env, k);
 }
 
 void	builtin_unset(t_separate *list, t_data *pipex)
@@ -120,5 +120,5 @@ void	builtin_unset(t_separate *list, t_data *pipex)
 		return ;
 	}
 	size = ft_array_size(list->begin->env) - num_to_unset(list, cmds) + 1;
-	ft_unset(list, cmds, size);
+	ft_unset(list, pipex, cmds, size);
 }

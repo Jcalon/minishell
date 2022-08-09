@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 20:17:54 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:41:30 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ char	*ft_prompt(void)
 	size_t	count_slash;
 
 	tmp = ft_strdup("\033[32;1mminishell@\033[0m\e[1;34m");
+	if (!tmp)
+	{
+		close_std();
+		exit(errmsg("Unexpected malloc error", "", ""));
+	}
 	str = getcwd(NULL, 0);
 	len = 0;
 	count_slash = 0;

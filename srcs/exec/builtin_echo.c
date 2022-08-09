@@ -6,11 +6,16 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 20:47:51 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:46:32 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Afficher la(les) CHANE(s) en écho sur la sortie standard.
+	-n     ne pas effectuer le saut de ligne final
+	sachant que -n doit être avant les CHAINES
+	Si $ -> expand si n'est pas entre ' ' */
 
 static size_t	check_n(char **cmd)
 {

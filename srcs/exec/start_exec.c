@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 18:32:42 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 14:10:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	parse_token(t_separate *list)
 {
 	if (!get_fd_redir(list, NULL))
 		return (0);
-	do_var_env(list);
+	do_var_env(list, NULL);
 	if (list->str[0] == '\0')
 		return (0);
 	list->cmds = ft_split_minishell(list->str, " \n\t");

@@ -6,11 +6,16 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 15:17:18 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 13:48:12 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:52:17 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Tant qu'on trouve des redirs dans la ligne de cmds
+	on les trim et on les dup dans list->out ou in
+	on check les 4 cas < << >> > sachant que 
+	si plusieurs redir on lit ou écrit dans la derniere */
 
 int	ft_istoken(int c)
 {
@@ -56,9 +61,9 @@ static int	check_fd(t_separate *list, t_data *pipex)
 
 	i = 0;
 	if (pipex)
-		cmd = ft_strdup(pipex->actual->str);
+		cmd = pipex->actual->str;
 	else
-		cmd = ft_strdup(list->str);
+		cmd = list->str;
 	while (cmd[i])
 	{
 		j = (in_quote(cmd, i));
@@ -68,7 +73,7 @@ static int	check_fd(t_separate *list, t_data *pipex)
 			return (get_fd(list, pipex, i, cmd));
 		i++;
 	}
-	return (free(cmd), 0);
+	return (0);
 }
 
 int	get_fd_redir(t_separate *list, t_data *pipex)

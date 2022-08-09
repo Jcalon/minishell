@@ -6,11 +6,14 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:48:00 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 15:28:06 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:48:38 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Afficher l'environnement
+	Si export, afficher même les variables sans '=' */
 
 static void	builtin_env_export(t_separate *list)
 {

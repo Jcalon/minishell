@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 16:47:47 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 13:05:38 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 14:08:28 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ char	*replace_by_code_var_env(char *cmd)
 	size_var = ft_strlen(env) - 1;
 	new_size = size_var + ft_strlen(cmd);
 	tmp = malloc(sizeof(char) * new_size);
+	if (!tmp)
+	{
+		free(env);
+		free(cmd);
+		return (NULL);
+	}
 	dup_err_num(cmd, env, tmp);
 	free(cmd);
 	free(env);
@@ -79,14 +85,14 @@ size_t	in_single_quote(char *str, size_t i)
 	return (i);
 }
 
-void	do_var_env(t_separate *list)
+void	do_var_env(t_separate *list, t_data *pipex)
 {
 	size_t	checkpoint;
 
 	checkpoint = 0;
 	while (1)
 	{
-		checkpoint = check_var_env(list, checkpoint);
+		checkpoint = check_var_env(list, pipex, checkpoint);
 		if (!checkpoint)
 			break ;
 	}

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 14:04:52 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 18:05:15 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:06:55 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	free_stuff(t_separate *list)
 	t_separate	*tmp;
 	t_pipe		*tmp2;
 
+	if (!list)
+		return ;
 	while (list)
 	{
 		tmp = list->next;

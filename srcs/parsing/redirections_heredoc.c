@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/07 19:07:42 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:53:43 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static int	open_here(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 		free(list->in);
 	}
 	list->in = malloc(sizeof(char) * size[0]);
+	if (!list->in)
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	ft_strlcpy(list->in, cmd + size[2] + size[1] + 1, size[0]);
 	remove_redir(list, pipex, size, cmd);
 	list->fdin = open(".heredoc.tmp", O_CREAT | O_RDWR | O_TRUNC, 0644);
@@ -37,6 +39,8 @@ static int	open_here(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 	}
 	return (0);
 }
+
+/* On readline tant que 'heredoc' n'est pas tapé ou SIGINT(130) */
 
 static void	get_heredoc_lines(t_separate *list)
 {

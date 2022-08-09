@@ -6,11 +6,13 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 13:56:04 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:59:47 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* On vire les quotes de notre array de cmds */
 
 static int	count_quote(char *str)
 {
@@ -34,13 +36,15 @@ static int	count_quote(char *str)
 	return (count);
 }
 
-static char	*cut_quote(char	*cmd)
+static char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
 {
 	size_t	i;
 	size_t	j;
 	char	*dequoted;
 
 	dequoted = malloc(sizeof(char) * (ft_strlen(cmd) - count_quote(cmd) + 1));
+	if (!dequoted)
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	i = 0;
 	j = 0;
 	while (cmd[i] != '\0')
@@ -55,50 +59,54 @@ static char	*cut_quote(char	*cmd)
 	return (dequoted);
 }
 
-static void	clear_pipex(t_data *pipex)
-{
-	size_t	i;
-
-	i = 0;
-	while (pipex->cmd[i])
-	{
-		if (ft_strchr(pipex->cmd[i], '\'') || ft_strchr(pipex->cmd[i], '\"'))
-			pipex->cmd[i] = cut_quote(pipex->cmd[i]);
-		if (!ft_strcmp(pipex->cmd[0], "echo"))
-			break ;
-		i++;
-	}	
-}
-
-static void	clear_standard(t_separate *list)
+static void	clear_list_str(t_separate *list)
 {
 	size_t	i;
 
 	i = 0;
 	while (list->cmds[i])
 	{
-		if (ft_strchr(list->cmds[i], '\'') || ft_strchr(list->cmds[i], '\"'))
-			list->cmds[i] = cut_quote(list->cmds[i]);
+		if (ft_strchr(list->cmds[i], '\'')
+			|| ft_strchr(list->cmds[i], '\"'))
+			list->cmds[i] = cut_quote(list, NULL, list->cmds[i]);
 		if (!ft_strcmp(list->cmds[0], "echo"))
 			break ;
 		i++;
 	}
 }
 
+static void	clear_str(t_separate *list, t_data *pipex)
+{
+	size_t	i;
+
+	i = 0;
+	if (pipex)
+	{
+		while (pipex->cmd[i])
+		{
+			if (ft_strchr(pipex->cmd[i], '\'')
+				|| ft_strchr(pipex->cmd[i], '\"'))
+				pipex->cmd[i] = cut_quote(list, pipex, pipex->cmd[i]);
+			if (!ft_strcmp(pipex->cmd[0], "echo"))
+				break ;
+			i++;
+		}
+	}
+	else
+		clear_list_str(list);
+}
+
 void	clear_quote(t_separate *list, t_data *pipex)
 {
-	if (pipex)
-		clear_pipex(pipex);
-	else
-		clear_standard(list);
+	clear_str(list, pipex);
 	if (list->in)
 	{
 		if (ft_strchr(list->in, '\'') || ft_strchr(list->in, '\"'))
-			list->in = cut_quote(list->in);
+			list->in = cut_quote(list, pipex, list->in);
 	}
 	if (list->out)
 	{
 		if (ft_strchr(list->out, '\'') || ft_strchr(list->out, '\"'))
-			list->out = cut_quote(list->out);
+			list->out = cut_quote(list, pipex, list->out);
 	}
 }

@@ -6,11 +6,13 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:22:29 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 13:52:00 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/08/09 15:59:10 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* Un split mais qui fait just attention aux quotes */
 
 static int	countword(char const *str, char *c)
 {

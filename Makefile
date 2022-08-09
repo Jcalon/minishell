@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/08/07 17:18:48 by jcalon           ###   ########.fr        #
+#    Updated: 2022/08/09 15:43:53 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ SRCS 	=	srcs/main.c	\
 
 OBJS 	= ${SRCS:.c=.o}
 
-CC 		= gcc
+CC 		= cc
 CFLAGS 	= -Wall -Wextra -Werror -g
 
 INCLUDES = -I libft -I includes
