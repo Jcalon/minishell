@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 12:44:39 by nmattera         ###   ########.fr       */
+/*   Updated: 2022/09/01 15:26:49 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*ft_prompt(void)
 		while (--len && count_slash < 3)
 			if (str[len] == '/')
 				count_slash++;
-		ft_join_more(&tmp, str + len + 2);
+		ft_join_more(&tmp, str + len + 1);
 	}
 	ft_join_more(&tmp, "$>\e[0m ");
 	free(str);
