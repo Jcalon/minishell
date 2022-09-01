@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 15:26:49 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 21:58:13 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,17 @@ static void	ft_signal(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+static int	test_empty(char *buffer)
+{
+	size_t	i;
+
+	i = 0;
+	while(buffer[i] && !ft_iswhitespace(buffer[i]))
+		i++;
+	if (i != ft_strlen(buffer))
+		return (0);
+	return (1);
+}
 /* Dans le main on recup env et on fait une boucle infinie avec readline, 
 a chaque entree on check la syntax et si c est bon lets go on parse et exec */
 
@@ -80,10 +91,10 @@ int	main(int argc, char *argv[], char *envp[])
 		free(prompt);
 		if (!buffer)
 			ft_exit(&list);
-		if (buffer[0] && (buffer[0] < 7 || buffer[0] > 13))
+		if (buffer[0] && test_empty(buffer))
 			add_history(buffer);
 		if (!syntax_error(buffer, '|') && !syntax_error(buffer, ';')
-			&& buffer[0] != '\n')
+			&& test_empty(buffer))
 			lets_go(&list, buffer);
 		free(buffer);
 	}

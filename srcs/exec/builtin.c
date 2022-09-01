@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/08 19:43:01 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 19:30:15 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ void	builtin_cd(t_separate *list, t_data *pipex)
 		cmds = list->cmds;
 	if (ft_array_size(cmds) > 2)
 		g_return_code = errmsg("cd: ", "too many args", NULL);
-	else if (cmds[1][0] == '-' && cmds[1][1] == '\0')
+	else if (ft_array_size(cmds) > 1)
 	{
-		if (chdir(ft_getenv(list, "OLDPWD") + 7) == -1)
+		if (chdir(cmds[1]) == -1)
 			g_return_code = errmsg("cd: ", \
-				"OLDPWD", ": no such file or directory");
+				cmds[1], ": no such file or directory");
 		else
 			g_return_code = 0;
 	}
 	else
 	{
-		if (chdir(cmds[1]) == -1)
+		if (chdir(ft_get_var_env(list, "ZDOTDIR", 7)) == -1)
 			g_return_code = errmsg("cd: ", \
 				cmds[1], ": no such file or directory");
 		else
