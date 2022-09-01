@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_stuff.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/04 14:04:52 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:06:55 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 15:07:46 by nmattera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static int	ft_error_token(char *msg, char c, int i, char *str)
 		ft_putchar_fd('\'', 2);
 		ft_putchar_fd('\n', 2);
 	}
+	g_return_code = 2;
 	return (-1);
 }
 
