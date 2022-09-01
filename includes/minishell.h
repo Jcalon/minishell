@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 13:55:53 by nmattera         ###   ########.fr       */
+/*   Updated: 2022/09/01 22:38:37 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	do_var_env(t_separate *list, t_data *pipex);
 char	*ft_test_pipe(t_separate *list, t_data *pipex);
 
 void	clear_quote(t_separate *list, t_data *pipex);
+char	*cut_quote(t_separate *list, t_data *pipex, char *cmd);
 
 /* Execution */
 

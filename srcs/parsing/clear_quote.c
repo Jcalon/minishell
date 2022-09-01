@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:59:47 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 22:38:14 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	count_quote(char *str)
 	return (count);
 }
 
-static char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
+char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
 {
 	size_t	i;
 	size_t	j;
@@ -75,7 +75,7 @@ static void	clear_list_str(t_separate *list)
 	}
 }
 
-static void	clear_str(t_separate *list, t_data *pipex)
+void	clear_quote(t_separate *list, t_data *pipex)
 {
 	size_t	i;
 
@@ -94,19 +94,4 @@ static void	clear_str(t_separate *list, t_data *pipex)
 	}
 	else
 		clear_list_str(list);
-}
-
-void	clear_quote(t_separate *list, t_data *pipex)
-{
-	clear_str(list, pipex);
-	if (list->in)
-	{
-		if (ft_strchr(list->in, '\'') || ft_strchr(list->in, '\"'))
-			list->in = cut_quote(list, pipex, list->in);
-	}
-	if (list->out)
-	{
-		if (ft_strchr(list->out, '\'') || ft_strchr(list->out, '\"'))
-			list->out = cut_quote(list, pipex, list->out);
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 21:58:13 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/01 22:15:43 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ static int	test_empty(char *buffer)
 	size_t	i;
 
 	i = 0;
-	while(buffer[i] && !ft_iswhitespace(buffer[i]))
+	while (buffer[i] && ft_iswhitespace(buffer[i]))
 		i++;
 	if (i != ft_strlen(buffer))
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }
 /* Dans le main on recup env et on fait une boucle infinie avec readline, 
 a chaque entree on check la syntax et si c est bon lets go on parse et exec */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_out.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 14:05:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 13:57:58 by nmattera         ###   ########.fr       */
+/*   Updated: 2022/09/01 22:37:04 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static int	open_fdout(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 	if (!list->out)
 		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	ft_strlcpy(list->out, cmd + size[1] + size[2] + 1, size[0]);
+	if (ft_strchr(list->out, '\'') || ft_strchr(list->out, '\"'))
+		list->out = cut_quote(list, pipex, list->out);
 	if (size[3] == 0)
 		list->fdout = open(list->out, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (size[3] == 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_in.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 11:39:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 13:51:04 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 22:36:16 by crazyd           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ size_t	get_fd_name_len(char *cmd, size_t *size, size_t i)
 		j = in_quote(cmd, i);
 		if (i < j)
 		{
-			size[0] += (j - i);
+			size[0] += (j - i + 1);
 			i = j + 1;
 		}
 		else
@@ -73,6 +73,8 @@ static int	open_fdin(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 	if (!list->in)
 		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	ft_strlcpy(list->in, cmd + size[1] + size[2] + 1, size[0]);
+	if (ft_strchr(list->in, '\'') || ft_strchr(list->in, '\"'))
+		list->in = cut_quote(list, pipex, list->in);
 	list->fdin = open(list->in, O_RDONLY);
 	if (list->fdin == -1)
 	{
