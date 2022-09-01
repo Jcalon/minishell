@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 16:47:47 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 14:08:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 13:29:10 by nmattera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ char	*replace_by_code_var_env(char *cmd)
 	char	*env;
 
 	env = ft_itoa(g_return_code);
+	if (!env)
+	{
+		free(cmd);
+		return (NULL);
+	}
 	size_var = ft_strlen(env) - 1;
 	new_size = size_var + ft_strlen(cmd);
 	tmp = malloc(sizeof(char) * new_size);

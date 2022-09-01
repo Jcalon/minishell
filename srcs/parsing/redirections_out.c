@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_out.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 14:05:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 13:55:28 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 13:57:58 by nmattera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,14 @@ int	get_fdout_append(size_t i, t_separate *list, t_data *pipex)
 		pipex->fdout = list->fdout;
 	remove_redir(list, pipex, size, cmd);
 	return (1);
+}
+
+/* Rien a voir avec out mais pour gagner de la place */
+
+char	*ft_test_pipe(t_separate *list, t_data *pipex)
+{
+	if (pipex)
+		return (pipex->actual->str);
+	else
+		return (list->str);
 }

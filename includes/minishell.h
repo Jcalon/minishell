@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 16:05:12 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 13:55:53 by nmattera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ char	*replace_by_code_var_env(char *cmd);
 size_t	in_single_quote(char *str, size_t i);
 int		counterr(int err);
 void	do_var_env(t_separate *list, t_data *pipex);
+char	*ft_test_pipe(t_separate *list, t_data *pipex);
 
 void	clear_quote(t_separate *list, t_data *pipex);
 

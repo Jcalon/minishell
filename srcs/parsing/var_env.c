@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:58:14 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/01 13:54:06 by nmattera         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,18 @@ static void	dup_var_env(char *cmd, char *tmp, char *env, size_t i)
 	tmp[k] = '\0';
 }
 
-static char	*replace_var_env(t_separate *list, char *cmd, size_t i, size_t j)
+static char	*r_var_env(t_separate *list, t_data *pipex, char *cmd, size_t i[2])
 {
 	size_t	size_var;
 	size_t	new_size;
 	char	*tmp;
 	char	*env;
 
-	env = ft_strdup(ft_get_var_env(list, (cmd + j), (i - j)));
+	env = ft_strdup(ft_get_var_env(list, (cmd + i[1]), (i[0] - i[1])));
 	if (!env)
-		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	size_var = ft_strlen(env) - 1;
-	new_size = size_var + ft_strlen(cmd) - (i - j) + 1;
+	new_size = size_var + ft_strlen(cmd) - (i[0] - i[1]) + 1;
 	tmp = malloc(sizeof(char) * new_size);
 	if (!tmp)
 	{
@@ -56,56 +56,74 @@ static char	*replace_var_env(t_separate *list, char *cmd, size_t i, size_t j)
 		free(cmd);
 		return (NULL);
 	}
-	dup_var_env(cmd, tmp, env, i);
+	dup_var_env(cmd, tmp, env, i[0]);
 	free(cmd);
 	free(env);
 	return (tmp);
 }
 
-static size_t	str_var_env(t_separate *list, t_data *pipex, size_t i, size_t j)
+static size_t	str_var_env(t_separate *list, t_data *pipex, size_t i[2])
 {
 	size_t	k;
+	char	*cmd;
 
-	k = ft_strlen(ft_get_var_env(list, (list->str + j), (i - j)));
-	list->str = replace_var_env(list, list->str, i, j);
-	if (!list->str)
+	if (pipex)
+		cmd = pipex->actual->str;
+	else
+		cmd = list->str;
+	k = ft_strlen(ft_get_var_env(list, (cmd + i[1]), (i[0] - i[1])));
+	cmd = r_var_env(list, pipex, cmd, i);
+	if (!cmd)
 		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
-	return (j + k - 1);
+	if (pipex)
+		pipex->actual->str = cmd;
+	else
+		list->str = cmd;
+	return (i[1] + k - 1);
 }
 
 static size_t	str_swap_err_num(t_separate *list, t_data *pipex, size_t j)
 {
-	list->str = replace_by_code_var_env(list->str);
-	if (!list->str)
+	char	*cmd;
+
+	if (pipex)
+		cmd = pipex->actual->str;
+	else
+		cmd = list->str;
+	cmd = replace_by_code_var_env(cmd);
+	if (!cmd)
 		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
+	if (pipex)
+		pipex->actual->str = cmd;
+	else
+		list->str = cmd;
 	return (j + counterr(g_return_code) - 1);
 }
 
 int	check_var_env(t_separate *list, t_data *pipex, size_t check)
 {
-	size_t	i;
-	size_t	j;
+	size_t	i[2];
+	char	*cmd;
 
-	i = check;
-	while (list->str[i])
+	cmd = ft_test_pipe(list, pipex);
+	i[0] = check;
+	while (cmd[i[0]])
 	{
-		j = (in_single_quote(list->str, i));
-		if (j == ft_strlen(list->str))
-			break ;
-		else if (i < j)
-			i = j;
-		if (list->str[i] == '$')
+		i[1] = (in_single_quote(cmd, i[0]));
+		if (i[0] < i[1])
+			i[0] = i[1];
+		if (cmd[i[0]] && cmd[i[0]] == '$')
 		{
-			j = ++i;
-			while (list->str[i] && ft_isalnum(list->str[i]))
-				i++;
-			if (ft_get_var_env(list, (list->str + j), (i - j)))
-				return (str_var_env(list, pipex, i, j));
-			else if (list->str[i] && list->str[i] == '?')
-				return (str_swap_err_num(list, pipex, j));
+			i[1] = ++i[0];
+			while (cmd[i[0]] && ft_isalnum(cmd[i[0]]))
+				i[0]++;
+			if (ft_get_var_env(list, (cmd + i[1]), (i[0] - i[1])))
+				return (str_var_env(list, pipex, i));
+			else if (cmd[i[0]] && cmd[i[0]] == '?')
+				return (str_swap_err_num(list, pipex, i[1]));
 		}
-		if (list->str[i])
-			i++;
+		if (cmd[i[0]])
+			i[0]++;
 	}
 	return (0);
 }
