@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:21:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:20:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**get_path(t_separate *list)
 		return (NULL);
 	if (ft_getenv(list, "PATH"))
 	{
-		path = ft_strdup(ft_getenv(list, "PATH"));
+		path = ft_strdup(ft_getenv(list, "PATH") + 5);
 		if (!path)
 			ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
 		paths = ft_split(path, ":");
@@ -63,6 +63,27 @@ char	*ft_getenv(t_separate *list, char *str)
 	return (list->begin->env[i]);
 }
 
+char	*ft_shlvl(t_separate *list, char *str)
+{
+	char	*shlvl;
+	char	*val_up;
+	int		value;
+
+	shlvl = ft_strdup("SHLVL=");
+	if (!shlvl)
+		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
+	value = ft_atoi(str + 6);
+	value++;
+	val_up = ft_itoa(value);
+	if (!val_up)
+		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
+	ft_join_more(&shlvl, val_up);
+	if (!shlvl)
+		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
+	free(val_up);
+	return (shlvl);
+}
+
 void	get_env(t_separate *list, char **envp)
 {
 	size_t	i;
@@ -77,7 +98,10 @@ void	get_env(t_separate *list, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		list->env[i] = ft_strdup(envp[i]);
+		if (ft_strnstr(envp[i], "SHLVL=", 6))
+			list->env[i] = ft_shlvl(list, envp[i]);
+		else
+			list->env[i] = ft_strdup(envp[i]);
 		if (!list->env[i])
 			ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
 		i++;

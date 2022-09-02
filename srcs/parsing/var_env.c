@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   var_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 15:24:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 13:54:06 by nmattera         ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:07 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /* Tant qu'il y a des $ qui ne sont pas dans des '' on expand avec env
-	si l'expand est invalid on le tej et si $? on remplace par g_return_code */
+	si l'expand est invalid on le tej et si $? on remplace par g_status */
 
 static void	dup_var_env(char *cmd, char *tmp, char *env, size_t i)
 {
@@ -97,7 +97,7 @@ static size_t	str_swap_err_num(t_separate *list, t_data *pipex, size_t j)
 		pipex->actual->str = cmd;
 	else
 		list->str = cmd;
-	return (j + counterr(g_return_code) - 1);
+	return (j + counterr(g_status) - 1);
 }
 
 int	check_var_env(t_separate *list, t_data *pipex, size_t check)

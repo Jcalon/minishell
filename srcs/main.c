@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 22:15:43 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:40:54 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_return_code;
+int	g_status;
 
 /* Prompt est recup par readline */
 
@@ -20,8 +20,7 @@ char	*ft_prompt(void)
 {
 	char	*tmp;
 	char	*str;
-	size_t	len;
-	size_t	count_slash;
+	size_t	len[2];
 
 	tmp = ft_strdup("\033[32;1mminishell@\033[0m\e[1;34m");
 	if (!tmp)
@@ -30,19 +29,20 @@ char	*ft_prompt(void)
 		exit(errmsg("Unexpected malloc error", "", ""));
 	}
 	str = getcwd(NULL, 0);
-	len = 0;
-	count_slash = 0;
-	len = ft_strlen(str);
-	if (len > 3)
+	if (str)
 	{
-		while (--len && count_slash < 3)
-			if (str[len] == '/')
-				count_slash++;
-		ft_join_more(&tmp, str + len + 1);
+		len[0] = ft_strlen(str);
+		len[1] = 0;
+		if (len[0] > 3)
+		{
+			while (--len[0] && len[1] < 3)
+				if (str[len[0]] == '/')
+					len[1]++;
+			ft_join_more(&tmp, str + len[0] + 1);
+		}
 	}
 	ft_join_more(&tmp, "$>\e[0m ");
-	free(str);
-	return (tmp);
+	return (free(str), tmp);
 }
 
 static void	lets_go(t_separate *list, char *buffer)
@@ -81,7 +81,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
-	g_return_code = 0;
+	g_status = 0;
 	get_env(&list, envp);
 	while (1)
 	{

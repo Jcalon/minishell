@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 13:51:03 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:46:32 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:40:55 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static size_t	print_var_env(t_separate *list, char **cmds, size_t i, size_t j)
 
 	if (cmds[i][j + 1] && cmds[i][j + 1] == '?')
 	{
-		ft_putnbr_fd(g_return_code, test_fdout(list));
+		ft_putnbr_fd(g_status, test_fdout(list));
 		j += 2;
 	}
 	else if (cmds[i][j + 1] && ft_isalpha(cmds[i][j + 1]))
@@ -137,5 +137,5 @@ void	builtin_echo(t_separate *list, t_data *pipex)
 	ft_echo(list, cmds, i);
 	if (n == false)
 		write(test_fdout(list), "\n", 1);
-	g_return_code = 0;
+	g_status = 0;
 }

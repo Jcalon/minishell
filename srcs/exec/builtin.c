@@ -3,14 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 19:30:15 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	new_is_old(t_separate *list, t_data *pipex, size_t i, size_t j)
+{
+	char	cwd[PATH_MAX];
+
+	free(list->begin->env[j]);
+	list->begin->env[j] = ft_strjoin("OLD", list->begin->env[i]);
+	if (!list->begin->env[j])
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
+	free(list->begin->env[i]);
+	list->begin->env[i] = ft_strjoin("PWD=", getcwd(cwd, sizeof(cwd)));
+	if (!list->begin->env[i])
+		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
+}
+
+static void	update_env(t_separate *list, t_data *pipex)
+{
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	g_status = 0;
+	while (list->begin->env[i])
+	{
+		if (!ft_strncmp(list->begin->env[i], "PWD=", 4))
+			break ;
+		i++;
+	}
+	j = 0;
+	while (list->begin->env[j])
+	{
+		if (!ft_strncmp(list->begin->env[j], "OLDPWD=", 6))
+			break ;
+		j++;
+	}
+	if (list->begin->env[i] && list->begin->env[j])
+		new_is_old(list, pipex, i, j);
+}
 
 void	builtin_cd(t_separate *list, t_data *pipex)
 {
@@ -21,23 +59,24 @@ void	builtin_cd(t_separate *list, t_data *pipex)
 	else
 		cmds = list->cmds;
 	if (ft_array_size(cmds) > 2)
-		g_return_code = errmsg("cd: ", "too many args", NULL);
+		g_status = errmsg("cd: ", "too many args", NULL);
 	else if (ft_array_size(cmds) > 1)
 	{
 		if (chdir(cmds[1]) == -1)
-			g_return_code = errmsg("cd: ", \
-				cmds[1], ": no such file or directory");
-		else
-			g_return_code = 0;
+		{
+			g_status = errmsg("cd: ", cmds[1], ": No such file or directory");
+			return ;
+		}
 	}
 	else
 	{
-		if (chdir(ft_get_var_env(list, "ZDOTDIR", 7)) == -1)
-			g_return_code = errmsg("cd: ", \
-				cmds[1], ": no such file or directory");
-		else
-			g_return_code = 0;
+		if (chdir("/") == -1)
+		{
+			g_status = errmsg("cd: ", cmds[1], ": No such file or directory");
+			return ;
+		}
 	}
+	update_env(list, pipex);
 }
 
 void	builtin_pwd(t_separate *list)
@@ -47,70 +86,8 @@ void	builtin_pwd(t_separate *list)
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		ft_putendl_fd(cwd, test_fdout(list));
-		g_return_code = 0;
+		g_status = 0;
 	}
 	else
-		g_return_code = errmsg("pwd: ", "unexpected error", NULL);
-}
-
-static int	exit_too_many_arg(void)
-{
-	ft_putendl_fd("exit", 1);
-	g_return_code = errmsg("exit: ", "too many args", NULL);
-	return (1);
-}
-
-static int	exit_with_args(t_separate *list, char **cmds, size_t i)
-{
-	int		exit_value;
-
-	if (i != ft_strlen(cmds[1]) || ft_strlen(cmds[1]) > 12)
-	{
-		ft_putendl_fd("exit", 1);
-		errmsg("exit: ", cmds[1], ": numeric argument required");
-		ft_free_array(list->begin->env);
-		free_stuff(list);
-		close_std();
-		exit(2);
-	}
-	else if (ft_array_size(cmds) == 2)
-	{
-		ft_putendl_fd("exit", 1);
-		exit_value = ft_atoi(cmds[1]);
-		ft_free_array(list->begin->env);
-		free_stuff(list);
-		close_std();
-		exit(exit_value);
-	}
-	else
-		return (exit_too_many_arg());
-	return (0);
-}
-
-void	builtin_exit(t_separate *list, t_data *pipex)
-{
-	size_t	i;
-	char	**cmds;
-
-	if (pipex)
-		cmds = pipex->cmd;
-	else
-		cmds = list->cmds;
-	i = 0;
-	if (cmds[1])
-	{
-		if (cmds[1][i] == '-')
-			i++;
-		while (cmds[1][i])
-		{
-			if (!ft_isd(cmds[1][i]))
-				break ;
-			i++;
-		}
-		if (exit_with_args(list, cmds, i))
-			return ;
-	}
-	ft_putendl_fd("exit", 1);
-	g_return_code = 0;
-	ft_quit(list);
+		g_status = errmsg("pwd: ", "unexpected error", NULL);
 }

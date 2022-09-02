@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 15:07:42 by nmattera         ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	syntax_error_last(char *str, size_t i, char c)
 	if (syntax_error_redir(str, '>') || syntax_error_redir(str, '<')
 		|| syntax_error_newline(str, i) || syntax_error_quote(str))
 	{
-		g_return_code = 2;
+		g_status = 2;
 		return (1);
 	}
 	return (0);

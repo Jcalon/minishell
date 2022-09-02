@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_out.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 14:05:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 22:37:04 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	open_fdout(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 		list->fdout = open(list->out, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (list->fdout == -1)
 	{
-		g_return_code = errmsg(list->out, ": ", strerror(errno));
+		g_status = errmsg(list->out, ": ", strerror(errno));
 		return (-1);
 	}
 	return (0);
@@ -54,7 +54,7 @@ int	get_fdout(size_t i, t_separate *list, t_data *pipex)
 		size[2]++;
 	if (cmd[i] == '$')
 	{
-		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
+		g_status = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
 	size[0] = get_fd_name_len(cmd, size, i);
@@ -83,7 +83,7 @@ int	get_fdout_append(size_t i, t_separate *list, t_data *pipex)
 		size[2]++;
 	if (cmd[i] == '$')
 	{
-		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
+		g_status = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
 	size[0] = get_fd_name_len(cmd, size, i);

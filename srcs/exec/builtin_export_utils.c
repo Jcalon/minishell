@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:26:20 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:02:06 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:40:57 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*concat_new(char *cmd)
 	new = malloc(sizeof(char) * ft_strlen(cmd));
 	if (!new)
 	{
-		g_return_code = errmsg("Unexpected malloc error", "", "");
+		g_status = errmsg("Unexpected malloc error", "", "");
 		return (NULL);
 	}
 	while (cmd[i])

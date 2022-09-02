@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:50:07 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 14:46:05 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:03 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	exec_builtin(t_separate *list, t_data *pipex)
 		if (ft_array_size(cmds) == 1)
 			builtin_env(false, list);
 		else
-			g_return_code = errmsg("env: ", "too many args", NULL);
+			g_status = errmsg("env: ", "too many args", NULL);
 	}
 	else if (!ft_strcmp(cmds[0], "exit"))
 		builtin_exit(list, pipex);
@@ -47,18 +47,18 @@ static void	open_fd_cmd(t_separate *list)
 	{
 		list->fdin = open(".heredoc.tmp", O_RDONLY, 0644);
 		if (list->fdin == -1)
-			g_return_code = errmsg(list->in, ": ", strerror(errno));
+			g_status = errmsg(list->in, ": ", strerror(errno));
 	}
 	if (list->fdin != -1)
 	{
 		if (dup2(list->fdin, STDIN_FILENO) == -1)
-			g_return_code = 1;
+			g_status = 1;
 		close(list->fdin);
 	}
 	if (list->fdout != -1)
 	{
 		if (dup2(list->fdout, STDOUT_FILENO) == -1)
-			g_return_code = 1;
+			g_status = 1;
 		close(list->fdout);
 	}
 }
@@ -70,7 +70,7 @@ void	exec_cmd(t_separate *list, bool builtin)
 		open_fd_cmd(list);
 		if (execve(list->cmds[0], list->cmds, list->begin->env) == -1)
 		{
-			g_return_code = cmderr("command not found", ": ", list->cmds[0]);
+			cmderr("command not found", ": ", list->cmds[0], 127);
 			ft_quit(list);
 		}
 	}

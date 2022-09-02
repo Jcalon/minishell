@@ -6,7 +6,7 @@
 #    By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/04 15:18:41 by jcalon            #+#    #+#              #
-#    Updated: 2022/08/09 15:43:53 by jcalon           ###   ########.fr        #
+#    Updated: 2022/09/02 11:35:17 by jcalon           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCS 	=	srcs/main.c	\
 			srcs/parsing/syntax_error.c \
 			srcs/parsing/syntax_error2.c \
 			srcs/exec/builtin.c \
+			srcs/exec/builtin_exit.c \
 			srcs/exec/builtin_echo.c \
 			srcs/exec/builtin_env.c \
 			srcs/exec/builtin_export.c \

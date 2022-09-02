@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:41:21 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:24:30 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:40:52 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	errmsg(char *str1, char *str2, char *str3)
 	return (1);
 }
 
-int	cmderr(char *str1, char *str2, char *str3)
+int	cmderr(char *str1, char *str2, char *str3, int code)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(str1, 2);
@@ -33,16 +33,18 @@ int	cmderr(char *str1, char *str2, char *str3)
 		ft_putstr_fd("\n", 2);
 	else
 		ft_putendl_fd(str3, 2);
-	g_return_code = 127;
-	return (127);
+	g_status = code;
+	return (g_status);
 }
 
 void	ft_quit(t_separate *list)
 {
-	ft_free_array(list->begin->env);
-	free_stuff(list->begin->next);
+	if (list->begin && list->begin->env)
+		ft_free_array(list->begin->env);
+	if (list->begin)
+		free_stuff(list->begin->next);
 	close_std();
-	exit(g_return_code);
+	exit(g_status);
 }
 
 void	ft_error(t_separate *list, t_data *pipex, int erno)
@@ -57,8 +59,6 @@ void	ft_error(t_separate *list, t_data *pipex, int erno)
 	}
 	if (list->begin && list->begin->env)
 		ft_free_array(list->begin->env);
-	if (list->env)
-		ft_free_array(list->env);
 	if (list->begin)
 		free_stuff(list->begin->next);
 	close_std();

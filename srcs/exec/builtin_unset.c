@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 14:56:30 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:00 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ size_t	num_to_unset(t_separate *list, char	**cmd)
 	{
 		if (!ft_isalpha(cmd[i][0]))
 		{
-			g_return_code = errmsg("unset: ", \
+			g_status = errmsg("unset: ", \
 				cmd[i], ": not a valid identifier");
 			return (0);
 		}
@@ -113,7 +113,7 @@ void	builtin_unset(t_separate *list, t_data *pipex)
 		while (cmds[j])
 		{
 			if (!ft_isalpha(cmds[j][0]))
-				g_return_code = errmsg("unset: ", \
+				g_status = errmsg("unset: ", \
 				cmds[j], ": not a valid identifier");
 			j++;
 		}

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/08 12:45:06 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:41:13 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:02 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ static void	exec_child(t_data *pipex, t_separate *list)
 		pipex->cmd[0] = save;
 		if (access(save, F_OK) == 0
 			&& (access(save, X_OK) != 0))
-			ft_error(list, pipex, errmsg(strerror(errno), ": ", save));
-		ft_error(list, pipex, cmderr("command not found", ": ", save));
+			ft_error(list, pipex, cmderr(strerror(errno), ": ", save, 127));
+		ft_error(list, pipex, cmderr("command not found", ": ", save, 127));
 	}
 	if (execve(pipex->cmd[0], pipex->cmd, list->begin->env) == -1)
 		ft_error(list, pipex, errmsg(pipex->cmd[0], ": ", strerror(errno)));
@@ -105,7 +105,7 @@ void	children(t_data *pipex, int i, t_separate *list)
 	{
 		pipex->fdin = open(".heredoc.tmp", O_RDONLY, 0644);
 		if (pipex->fdin == -1)
-			g_return_code = errmsg("Heredoc", ": ", strerror(errno));
+			g_status = errmsg("Heredoc", ": ", strerror(errno));
 	}
 	if (i == 0)
 	{

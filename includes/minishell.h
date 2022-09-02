@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 22:38:37 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:40:47 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-extern int	g_return_code;
+extern int	g_status;
 
 typedef struct s_pipe
 {
@@ -145,7 +145,7 @@ void	close_std(void);
 void	close_files(t_data *pipex);
 int		error_msg(char *str, int i, char c);
 int		errmsg(char *str1, char *str2, char *str3);
-int		cmderr(char *str1, char *str2, char *str3);
+int		cmderr(char *str1, char *str2, char *str3, int code);
 void	ft_error(t_separate *list, t_data *pipex, int err);
 void	ft_exit(t_separate *list);
 void	ft_quit(t_separate *list);

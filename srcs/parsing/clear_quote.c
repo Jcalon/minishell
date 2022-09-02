@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear_quote.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 22:38:14 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:19:57 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
 {
 	size_t	i;
 	size_t	j;
+	char	c;
 	char	*dequoted;
 
 	dequoted = malloc(sizeof(char) * (ft_strlen(cmd) - count_quote(cmd) + 1));
@@ -47,12 +48,17 @@ char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
 		ft_error(list, pipex, errmsg("Unexpected malloc error", "", ""));
 	i = 0;
 	j = 0;
+	c = 0;
 	while (cmd[i] != '\0')
 	{
-		if (cmd[i] == '\'' || cmd[i] == '\"')
+		if ((cmd[i] == '\'' || cmd[i] == '\"') && c == 0)
+			c = cmd[i++];
+		dequoted[j++] = cmd[i++];
+		if (cmd[i] == c && c != 0)
+		{
+			c = 0;
 			i++;
-		else
-			dequoted[j++] = cmd[i++];
+		}
 	}
 	dequoted[j] = '\0';
 	free(cmd);

@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 14:59:19 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:40:59 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	make_new_env(t_separate *list, char **cmd, char **new, size_t i)
 	while (cmd[++j])
 	{
 		if (!ft_isalpha(cmd[j][0]))
-			g_return_code = errmsg("export: ", \
+			g_status = errmsg("export: ", \
 			cmd[j], ": not a valid identifier");
 		else if (!check_double_env(list, cmd[j], ft_strlen_equal(cmd[j])))
 		{
@@ -122,7 +122,7 @@ void	builtin_export(t_separate *list, t_data *pipex)
 		cmds = pipex->cmd;
 	else
 		cmds = list->cmds;
-	g_return_code = 0;
+	g_status = 0;
 	if (!cmds[1])
 		builtin_env(true, list);
 	else

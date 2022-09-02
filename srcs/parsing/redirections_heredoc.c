@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/19 10:49:58 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 15:53:43 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	open_here(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 	list->fdin = open(".heredoc.tmp", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (list->fdin == -1)
 	{
-		g_return_code = errmsg(list->in, ": ", strerror(errno));
+		g_status = errmsg(list->in, ": ", strerror(errno));
 		return (-1);
 	}
 	list->heredoc = 1;
@@ -49,11 +49,11 @@ static void	get_heredoc_lines(t_separate *list)
 
 	ctl = rl_getc_function;
 	rl_getc_function = getc;
-	g_return_code = 0;
+	g_status = 0;
 	while (1)
 	{
 		line = readline("> ");
-		if (g_return_code == 130)
+		if (g_status == 130)
 			break ;
 		if (line == NULL)
 			break ;

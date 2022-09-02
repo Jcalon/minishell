@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_env_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmattera <nmattera@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 16:47:47 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 13:29:10 by nmattera         ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:06 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*replace_by_code_var_env(char *cmd)
 	char	*tmp;
 	char	*env;
 
-	env = ft_itoa(g_return_code);
+	env = ft_itoa(g_status);
 	if (!env)
 	{
 		free(cmd);

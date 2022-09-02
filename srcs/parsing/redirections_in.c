@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_in.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crazyd <crazyd@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 11:39:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/01 22:36:16 by crazyd           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:05 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	open_fdin(t_separate *list, t_data *pipex, char *cmd, size_t *size)
 	list->fdin = open(list->in, O_RDONLY);
 	if (list->fdin == -1)
 	{
-		g_return_code = errmsg(list->in, ": ", strerror(errno));
+		g_status = errmsg(list->in, ": ", strerror(errno));
 		return (-1);
 	}
 	return (0);
@@ -99,7 +99,7 @@ int	get_fdin(size_t i, t_separate *list, t_data *pipex)
 		size[2]++;
 	if (cmd[i] == '$')
 	{
-		g_return_code = errmsg(cmd + i, ": ", "ambiguous redirect");
+		g_status = errmsg(cmd + i, ": ", "ambiguous redirect");
 		return (-1);
 	}
 	size[0] = get_fd_name_len(cmd, size, i);

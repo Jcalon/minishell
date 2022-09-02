@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 13:23:22 by jcalon            #+#    #+#             */
-/*   Updated: 2022/08/09 14:10:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 14:41:04 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,11 @@ static void	exec_forked(t_separate *list)
 		get_absolute_path(list, list->cmds);
 		if (list->cmds[0] == NULL)
 		{
-			g_return_code = cmderr("command not found", ": ", save);
 			list->cmds[0] = save;
+			if (access(save, F_OK) == 0 && (access(save, X_OK) != 0))
+				cmderr(save, ": ", strerror(errno), 126);
+			else
+				cmderr("command not found", ": ", save, 127);
 			ft_quit(list);
 		}
 		else
@@ -65,7 +68,7 @@ static int	parse_token(t_separate *list)
 	clear_quote(list, NULL);
 	if (list->cmds[0] == NULL)
 	{
-		g_return_code = cmderr("command not found", ": null", NULL);
+		cmderr("command not found", ": null", NULL, 127);
 		return (0);
 	}
 	return (1);
@@ -92,7 +95,7 @@ static void	exec_no_pipe(t_separate *list)
 			signal(SIGQUIT, handle_process);
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
-				g_return_code = WEXITSTATUS(status);
+				g_status = WEXITSTATUS(status);
 			kill(pid, SIGTERM);
 		}
 		else
