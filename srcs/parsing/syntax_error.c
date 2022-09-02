@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 15:37:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:41:06 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 16:49:10 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,21 @@ static int	syntax_error_last(char *str, size_t i, char c)
 	return (0);
 }
 
-static size_t	utils_syntax_error(size_t i, char *str, char c)
+static int	utils_syntax_error(int i, char *str, char c)
 {
 	while (str[i])
 	{
-		i = in_quote(str, i);
+		i = in_quote(str, (size_t)i);
 		if (str[i] && str[i] == c)
 		{
 			while (str[++i] && (str[i] == ' ' || str[i] == '>'
 					|| str[i] == '<'))
 				i++;
 			if (str[i] == c)
-				return (error_msg(str, i, c));
+			{
+				error_msg(str, (size_t)i, c);
+				return (-1);
+			}
 			if (!str[i])
 				break ;
 		}
@@ -68,7 +71,7 @@ static size_t	utils_syntax_error(size_t i, char *str, char c)
 
 int	syntax_error(char *str, char c)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	if (!str)
@@ -78,7 +81,9 @@ int	syntax_error(char *str, char c)
 	while (str[i] && (str[i] == ' ' || str[i] == '>' || str[i] == '<'))
 		i++;
 	if (str[i] == c)
-		return (error_msg(str, i, c));
+		return (error_msg(str, (size_t)i, c));
 	i = utils_syntax_error(i, str, c);
-	return (syntax_error_last(str, i, c));
+	if (i == -1)
+		return (1);
+	return (syntax_error_last(str, (size_t)i, c));
 }

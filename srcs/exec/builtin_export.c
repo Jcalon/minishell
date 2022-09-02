@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 11:31:30 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:40:59 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 15:59:56 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void	builtin_export(t_separate *list, t_data *pipex)
 {
 	char	**cmds;
 
+	g_status = 0;
 	if (pipex)
 		cmds = pipex->cmd;
 	else

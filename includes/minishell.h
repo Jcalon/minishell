@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 15:22:08 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:40:47 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 16:22:05 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	ft_quit(t_separate *list);
 size_t	in_quote(char *str, size_t i);
 size_t	ft_lstsize(t_pipe *pipe);
 int		is_c(char s, char *c);
+int		test_empty(char *buffer);
 char	**ft_split_minishell(char const *s, char *c);
 
 #endif

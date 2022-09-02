@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:06:26 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:48:49 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 16:45:48 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	ft_signal(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-static int	test_empty(char *buffer)
+int	test_empty(char *buffer)
 {
 	size_t	i;
 

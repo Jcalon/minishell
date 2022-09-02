@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/13 14:47:48 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:41:00 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 16:00:20 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	builtin_unset(t_separate *list, t_data *pipex)
 	size_t	size;
 	char	**cmds;
 
+	g_status = 0;
 	if (pipex)
 		cmds = pipex->cmd;
 	else

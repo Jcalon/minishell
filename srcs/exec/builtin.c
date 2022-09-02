@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:12 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:41:02 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 17:11:24 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static void	update_env(t_separate *list, t_data *pipex)
 	size_t	j;
 
 	i = 0;
-	g_status = 0;
 	while (list->begin->env[i])
 	{
 		if (!ft_strncmp(list->begin->env[i], "PWD=", 4))
@@ -54,27 +53,26 @@ void	builtin_cd(t_separate *list, t_data *pipex)
 {
 	char	**cmds;
 
+	g_status = 0;
 	if (pipex)
 		cmds = pipex->cmd;
 	else
 		cmds = list->cmds;
 	if (ft_array_size(cmds) > 2)
+	{
 		g_status = errmsg("cd: ", "too many args", NULL);
-	else if (ft_array_size(cmds) > 1)
-	{
-		if (chdir(cmds[1]) == -1)
-		{
-			g_status = errmsg("cd: ", cmds[1], ": No such file or directory");
-			return ;
-		}
+		return ;
 	}
-	else
+	if (ft_array_size(cmds) > 1 && chdir(cmds[1]) == -1)
 	{
-		if (chdir("/") == -1)
-		{
-			g_status = errmsg("cd: ", cmds[1], ": No such file or directory");
-			return ;
-		}
+		g_status = errmsg("cd: ", cmds[1], ": No such file or directory");
+		return ;
+	}
+	else if (ft_array_size(cmds) == 1
+		&& chdir(ft_getenv(list, "HOME=") + 5) == -1)
+	{
+		g_status = errmsg("cd: ", cmds[1], ": No such file or directory");
+		return ;
 	}
 	update_env(list, pipex);
 }
