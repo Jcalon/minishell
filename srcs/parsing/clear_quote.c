@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 17:54:19 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:19:57 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 15:05:49 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,24 @@ static int	count_quote(char *str)
 	while (str[i])
 	{
 		k = in_quote((char *)str, i);
-		if (i == k)
-			i++;
-		else if (i < k)
+		if (i < k && k != i + 1)
 		{
 			count += 2;
 			i = k + 1;
 		}
+		if (i == k || k == i + 1)
+			i++;
 	}
 	return (count);
+}
+
+static int	test_quote(char *cmd, size_t i, char c)
+{
+	if (((cmd[i] == '\'' && cmd[i + 1] != '\'')
+			|| (cmd[i] == '"' && cmd[i + 1] != '"'))
+		&& c == 0 && cmd[i + 1] != '\0')
+		return (1);
+	return (0);
 }
 
 char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
@@ -51,18 +60,17 @@ char	*cut_quote(t_separate *list, t_data *pipex, char *cmd)
 	c = 0;
 	while (cmd[i] != '\0')
 	{
-		if ((cmd[i] == '\'' || cmd[i] == '\"') && c == 0)
+		if (test_quote(cmd, i, c))
 			c = cmd[i++];
 		dequoted[j++] = cmd[i++];
-		if (cmd[i] == c && c != 0)
+		if (cmd[i] && cmd[i] == c && c != 0)
 		{
 			c = 0;
 			i++;
 		}
 	}
 	dequoted[j] = '\0';
-	free(cmd);
-	return (dequoted);
+	return (free(cmd), dequoted);
 }
 
 static void	clear_list_str(t_separate *list)

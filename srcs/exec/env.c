@@ -6,7 +6,7 @@
 /*   By: jcalon <jcalon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/09 14:00:16 by jcalon            #+#    #+#             */
-/*   Updated: 2022/09/02 14:20:07 by jcalon           ###   ########.fr       */
+/*   Updated: 2022/09/02 15:32:41 by jcalon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,12 @@ char	*ft_shlvl(t_separate *list, char *str)
 	char	*val_up;
 	int		value;
 
-	shlvl = ft_strdup("SHLVL=");
-	if (!shlvl)
-		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
 	value = ft_atoi(str + 6);
 	value++;
 	val_up = ft_itoa(value);
 	if (!val_up)
 		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
-	ft_join_more(&shlvl, val_up);
+	shlvl = ft_strjoin("SHLVL=", val_up);
 	if (!shlvl)
 		ft_error(list, NULL, errmsg("Unexpected malloc error", "", ""));
 	free(val_up);
@@ -98,7 +95,7 @@ void	get_env(t_separate *list, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strnstr(envp[i], "SHLVL=", 6))
+		if (!ft_strncmp(envp[i], "SHLVL=", 6))
 			list->env[i] = ft_shlvl(list, envp[i]);
 		else
 			list->env[i] = ft_strdup(envp[i]);
