@@ -22,3 +22,6 @@ $> ./minishell
   - `exit`
  - `$?`
 - Finally, you can use Ctrl-C to interrupt and Ctrl-\ to quit a program, as well as Ctrl-D to throw an EOF, same as in bash.
+
+### Preview
+![](Minishell.JPG)
